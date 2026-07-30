@@ -3,6 +3,8 @@
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=99') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/activity-gallery.css?v=99') ?>">
+<?= $this->endSection(); ?>
+<?= $this->section('content'); ?>
 <!-- FullCalendar CSS -->
 <style>
     /* KPI Cards Styling (Adopted from apps-cat) */
@@ -341,7 +343,18 @@
         margin-bottom: 1.5rem;
     }
     
-    /* Force Modal Event Detail Styling */
+    /* Force Modal Event Detail Styling & Fix Dark Mode Overrides */
+    #modalEventDetail .modal-content {
+        border-radius: 12px !important;
+        border: none !important;
+        overflow: hidden !important;
+        background-color: #ffffff !important;
+    }
+    #modalEventDetail .modal-header,
+    #modalEventDetail .modal-body,
+    #modalEventDetail .modal-footer {
+        background-color: transparent !important;
+    }
     #modalEventDetail .text-dark {
         color: #1e293b !important;
     }
