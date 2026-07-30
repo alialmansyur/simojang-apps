@@ -339,6 +339,23 @@
     .filter-toolbar {
         margin-bottom: 1.5rem;
     }
+    /* Force Modal Event Detail Styling for Dark Mode */
+    #modalEventDetail .modal-content {
+        border-radius: 16px !important;
+        overflow: hidden !important;
+    }
+    #modalEventDetail .text-dark {
+        color: #1e293b !important;
+    }
+    #modalEventDetail .text-secondary {
+        color: #64748b !important;
+    }
+    #modalEventDetail .text-muted {
+        color: #94a3b8 !important;
+    }
+    #modalEventDetail .bg-white {
+        background-color: #ffffff !important;
+    }
 </style>
 <?= $this->endSection(); ?>
 
