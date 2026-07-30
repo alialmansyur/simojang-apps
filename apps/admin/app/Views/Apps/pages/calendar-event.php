@@ -342,7 +342,21 @@
     /* Force Modal Event Detail Styling for Dark Mode */
     #modalEventDetail .modal-content {
         border-radius: 16px !important;
-        overflow: hidden !important;
+        border: none !important;
+        background-color: transparent !important;
+    }
+    #modalEventDetail .modal-header {
+        border-top-left-radius: 16px !important;
+        border-top-right-radius: 16px !important;
+        background-color: #ffffff !important;
+    }
+    #modalEventDetail .modal-body {
+        background-color: #ffffff !important;
+    }
+    #modalEventDetail .modal-footer {
+        border-bottom-left-radius: 16px !important;
+        border-bottom-right-radius: 16px !important;
+        background-color: #ffffff !important;
     }
     #modalEventDetail .text-dark {
         color: #1e293b !important;
