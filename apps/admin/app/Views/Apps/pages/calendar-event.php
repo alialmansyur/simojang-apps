@@ -506,7 +506,7 @@
 <!-- Modal Event Detail -->
 <div class="modal fade" id="modalEventDetail" tabindex="-1" aria-labelledby="modalEventDetailLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content flat-modal p-0 shadow-lg" style="border-radius: 16px; border: none;">
+        <div class="modal-content p-0 shadow-lg" data-bs-theme="light" style="border-radius: 16px; border: none; overflow: hidden;">
             <div class="modal-header border-bottom px-4 pt-4 pb-3 position-relative bg-white" style="border-radius: 16px 16px 0 0;">
                 <div class="w-100 pe-4">
                     <div class="text-uppercase fw-bold text-muted mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">DETAIL AGENDA</div>
