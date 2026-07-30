@@ -531,15 +531,15 @@
 <!-- Modal Event Detail -->
 <div class="modal fade" id="modalEventDetail" tabindex="-1" aria-labelledby="modalEventDetailLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content flat-modal">
-            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 align-items-center">
+        <div class="modal-content flat-modal" style="border-radius: 12px !important; border: none !important; overflow: hidden !important; background-color: #ffffff !important; box-shadow: 0 4px 24px rgba(0,0,0,0.06) !important;">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 align-items-center" style="background-color: transparent !important;">
                 <div class="w-100 pe-4">
                     <div class="text-uppercase fw-bold text-muted mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">DETAIL AGENDA</div>
                     <h5 class="modal-title fw-bold" id="detailEventTitle" style="color: #1a202c; font-size: 1.25rem;">Judul Kegiatan</h5>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body px-4 pt-3 pb-4">
+            <div class="modal-body px-4 pt-3 pb-4" style="background-color: transparent !important;">
                 <div class="row gy-3">
                     <!-- Row: Deskripsi -->
                     <div class="col-12 d-flex justify-content-between align-items-start border-bottom pb-2">
@@ -600,7 +600,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-top-0 pt-0 pb-4 px-4 justify-content-end">
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4 justify-content-end" style="background-color: transparent !important;">
                 <button type="button" class="btn btn-light fw-bold px-4 flat-btn-light" data-bs-dismiss="modal">Tutup</button>
                 <button type="button" class="btn btn-primary fw-bold px-4 flat-btn-primary" style="background-color: #059669; border-color: #059669;">
                     <i class="bi bi-calendar-plus me-1"></i> Simpan (.ics)
