@@ -523,15 +523,15 @@
 <!-- Modal Event Detail -->
 <div class="modal fade" id="modalEventDetail" tabindex="-1" aria-labelledby="modalEventDetailLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content p-0 shadow-lg" data-bs-theme="light" style="border-radius: 16px; border: none; overflow: hidden;">
-            <div class="modal-header border-bottom px-4 pt-4 pb-3 position-relative bg-white" style="border-radius: 16px 16px 0 0;">
+        <div class="modal-content p-0 shadow-lg bg-white" data-bs-theme="light" style="border-radius: 16px !important; border: none; overflow: hidden !important;">
+            <div class="modal-header border-bottom px-4 pt-4 pb-3 position-relative">
                 <div class="w-100 pe-4">
                     <div class="text-uppercase fw-bold text-muted mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">DETAIL AGENDA</div>
                     <h4 class="modal-title fw-bold text-dark m-0" id="detailEventTitle" style="font-size: 1.4rem;">Judul Kegiatan</h4>
                 </div>
                 <button type="button" class="btn-close position-absolute" style="top: 1.5rem; right: 1.5rem;" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body px-4 py-2 bg-white">
+            <div class="modal-body px-4 py-2">
                 <!-- Row: Deskripsi -->
                 <div class="d-flex justify-content-between align-items-start py-3">
                     <div class="text-secondary fw-medium" style="width: 35%;">Deskripsi</div>
@@ -590,7 +590,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-0 px-4 pb-4 pt-3 bg-white" style="border-radius: 0 0 16px 16px;">
+            <div class="modal-footer border-0 px-4 pb-4 pt-3">
                 <div class="row w-100 g-3 m-0">
                     <div class="col-12 col-md-6 p-0 pe-md-2">
                         <button type="button" class="btn w-100 fw-bold py-2" style="background-color: #059669; color: white; border-radius: 8px;">
