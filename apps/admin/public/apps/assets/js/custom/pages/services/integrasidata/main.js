@@ -1,0 +1,131 @@
+$(document).ready(function () {
+
+    $(document).on('click', '.tab-btn', function () {
+        let key = $(this).data('key');
+        $('#jenis').val(key);
+        $('#dataTable').DataTable().ajax.reload();
+    });
+
+    $(document).on('shown.bs.modal', function (e) {
+        const modal = $(e.target);
+
+        modal.find('.select-instansi').each(function () {
+            if ($(this).hasClass("select2-hidden-accessible")) {
+                $(this).select2('destroy');
+            }
+
+            $(this).select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                dropdownParent: modal,
+                minimumInputLength: 0,
+                ajax: {
+                    url: AppConfig.initGlobal + 'instansi-list',
+                    type: 'POST',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function (params) {
+                        return {
+                            search: params.term 
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+        });
+
+        modal.find('.select-step').each(function () {
+            if ($(this).hasClass("select2-hidden-accessible")) {
+                $(this).select2('destroy');
+            }
+
+            $(this).select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                dropdownParent: modal,
+                multiple: true,                 
+                closeOnSelect: false,        
+                minimumInputLength: 0,
+                ajax: {
+                    url: AppConfig.initGlobal + 'step-integrasi-list',
+                    type: 'POST',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function (params) {
+                        return {
+                            search: params.term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+        });
+    });
+
+    $(document).on('click', '.sbmt', function () {
+        $('#form-usulan').submit();
+    });
+
+    $('#form-usulan').on('submit', function (e) {
+        e.preventDefault();
+        swlwaitProsessing();
+        
+        $.ajax({
+            url: AppConfig.initGlobal + 'store/save-data-integrasi',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (response) {
+
+                console.log(response);
+                if (response.status == 'error') {
+                    swlErrorHandler(response.message);
+                } else {
+                    if (response) {
+                        $('#dataTable').DataTable().ajax.reload();
+                        $('#DataModal').modal('hide');
+                        swlSuccess();
+                    }
+                }
+            }
+        });
+    });
+
+    $('#DataModal').on('hidden.bs.modal', function () {
+        const form = $('#form-usulan');
+        form[0].reset();
+        form.find('.select-instansi, .select-step').each(function () {
+            $(this).val(null).trigger('change');
+            if ($(this).hasClass("select2-hidden-accessible")) {
+                $(this).select2('destroy');
+            }
+        });
+    });
+
+    $(document).on('shown.bs.modal', function () {
+        $('#form-usulan')[0].reset();
+    });
+
+});
+
+function getCurrentDateTime() {
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const yyyy = now.getFullYear();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const ii = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    return `${dd}-${mm}-${yyyy} ${hh}:${ii}:${ss}`;
+}

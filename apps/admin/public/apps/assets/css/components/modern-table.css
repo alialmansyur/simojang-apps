@@ -1,0 +1,15 @@
+/* Skeleton Loader */
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background: #f6f7f8;
+    background-image: linear-gradient(90deg, #f6f7f8 0px, #edeef1 40px, #f6f7f8 80px);
+    background-size: 600px;
+    border-radius: .65rem;
+    animation: twSmoothShimmer 1.5s infinite linear;
+}
+
+@keyframes twSmoothShimmer {
+    0% { background-position: -600px 0; }
+    100% { background-position: 600px 0; }
+}

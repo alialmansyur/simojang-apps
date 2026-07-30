@@ -1,0 +1,122 @@
+.service-ui-period-dropdown {
+    min-width: 200px;
+}
+
+#pdbcTable {
+    width: 100% !important;
+}
+
+#pdbcDataModal .modal-content {
+    border-radius: 0 !important;
+}
+
+.pdbc-filter-year {
+    min-width: 150px;
+}
+
+.pdbc-filter-jenis {
+    min-width: 170px;
+}
+
+.pdbc-topbar {
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pdbc-topbar-group {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    min-width: 0;
+}
+
+.pdbc-topbar-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    margin-left: auto;
+}
+
+.pdbc-category-overview {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .45rem;
+    margin-bottom: .55rem;
+}
+
+#serviceUiRecap-pdbc {
+    display: none !important;
+}
+
+.pdbc-overview-card {
+    border: 1px solid #e8edf7;
+    border-radius: .82rem;
+    padding: .58rem .72rem;
+    background: #fff;
+    min-height: 66px;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.pdbc-overview-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    border-radius: 10px;
+    border: 1px solid rgba(var(--bs-primary-rgb), .24);
+    background: linear-gradient(145deg, rgba(var(--bs-primary-rgb), .15), rgba(var(--bs-primary-rgb), .05));
+    color: var(--bs-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pdbc-overview-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.pdbc-overview-content {
+    min-width: 0;
+}
+
+.pdbc-overview-card p {
+    margin: 0;
+    color: #6c757d;
+    font-size: .8rem;
+}
+
+.pdbc-overview-card h6 {
+    margin: .15rem 0 0;
+    color: #1f335b;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+@media (max-width: 992px) {
+    .pdbc-topbar {
+        flex-wrap: wrap;
+    }
+
+    .pdbc-topbar-group,
+    .pdbc-topbar-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .pdbc-filter-year,
+    .pdbc-filter-jenis {
+        min-width: 100%;
+    }
+
+    .pdbc-category-overview {
+        grid-template-columns: 1fr;
+    }
+}

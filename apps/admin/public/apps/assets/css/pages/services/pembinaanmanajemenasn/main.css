@@ -1,0 +1,14 @@
+.pmasn-card {
+    max-width: 840px;
+    margin: 0 auto;
+}
+
+.pmasn-actions .btn {
+    min-width: 168px;
+}
+
+@media (max-width: 767.98px) {
+    .pmasn-actions .btn {
+        width: 100%;
+    }
+}

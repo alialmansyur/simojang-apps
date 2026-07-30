@@ -1,0 +1,94 @@
+.service-ui-period-dropdown {
+    min-width: 180px;
+    border-radius: 1.25em;
+}
+
+#dataTable,
+#dataTableDetail {
+    width: 100% !important;
+}
+
+#fileDetailModal .modal-content {
+    border-radius: 0 !important;
+}
+
+#DataModal .form-label {
+    font-size: .85rem;
+    margin-bottom: .32rem;
+}
+
+#DataModal .form-control,
+#DataModal .form-select {
+    border-radius: .72rem;
+}
+
+.dms-form-section {
+    border: 1px solid #e5e7eb;
+    border-radius: .85rem;
+    padding: 14px;
+    margin-bottom: 16px;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+}
+
+.dms-form-section-title {
+    margin-bottom: 12px;
+}
+
+.dms-form-section-title-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.dms-item-table-wrap {
+    border: 1px solid #e5e7eb;
+    border-radius: .85rem;
+    overflow: hidden;
+}
+
+.dms-item-table thead th {
+    background: #f8fafc;
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+.dms-item-table .form-control,
+.dms-item-table .form-select {
+    border-radius: .55rem !important;
+}
+
+.dms-item-empty {
+    font-size: .85rem;
+    color: #6b7280;
+    padding-top: 10px;
+}
+
+.dms-item-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+    font-size: .88rem;
+    color: #334155;
+}
+
+.dms-item-table .btn-delete-row {
+    min-width: 40px;
+}
+
+@media (max-width: 767.98px) {
+    .dms-form-section-title-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dms-item-footer {
+        flex-direction: column;
+    }
+}
+
+#fileDetailModal {
+    border-radius: 0 !important;
+}

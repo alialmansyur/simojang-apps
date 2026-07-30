@@ -1,0 +1,22 @@
+.service-ui-period-dropdown {
+    min-width: 180px;
+    border-radius: 1.25em;
+}
+
+#dataTable,
+#dataTableDetail {
+    width: 100% !important;
+}
+
+#DataModal .modal-content,
+#fileDetailModal .modal-content {
+    border-radius: 0 !important;
+}
+
+#DataModal .modal-content {
+    overflow: visible;
+}
+
+#fileDetailModal {
+    border-radius: 0 !important;
+}

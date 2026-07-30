@@ -1,0 +1,30 @@
+.shct {
+        cursor: pointer !important;
+    }
+
+    .statistikinternal-filter-dropdown {
+        min-width: 220px;
+        border-radius: 1.25em;
+    }
+
+    #dataTable {
+        width: 100% !important;
+    }
+
+    .statistikinternal-gender-chart {
+        height: 180px;
+    }
+
+    .select2-selection {
+        border-radius: 5px !important;
+    }
+
+    .master-card {
+        transition: all .3s ease;
+        cursor: pointer;
+    }
+
+    .master-card:hover { 
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .1);
+    }

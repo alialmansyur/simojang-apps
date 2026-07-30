@@ -1,0 +1,99 @@
+.shct {
+        cursor: pointer !important;
+    }
+
+    /* Smooth fullscreen modal */
+    .modal.modal-smooth .modal-dialog {
+        transform: translateY(30px) scale(0.98);
+        opacity: 0;
+        transition: all 0.35s ease;
+    }
+
+    .modal.modal-smooth.show .modal-dialog {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+
+    /* Backdrop lebih lembut */
+    .modal-backdrop {
+        transition: opacity 0.2s ease;
+    }
+
+    /* Optional: isi modal lebih halus */
+    .modal-content {
+        border-radius: 0;
+        animation: modalContentFade 0.25s ease;
+    }
+
+    #DataModal .modal-dialog {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        height: 100vh !important;
+        margin: 0 !important;
+    }
+
+    #DataModal .modal-content {
+        height: 100vh !important;
+        min-height: 100vh !important;
+        border: 0;
+        border-radius: 0 !important;
+        overflow: visible;
+    }
+
+    #DataModal .modal-body {
+        border-radius: 0 !important;
+        overflow-y: auto;
+        overflow-x: visible;
+    }
+
+    .service-ui-period-dropdown {
+        min-width: 180px;
+        border-radius: 1.25em;
+    }
+
+    #dataTable {
+        width: 100% !important;
+    }
+
+    #DataModal {
+        border-radius: 0 !important;
+    }
+
+    #DataModal .select2-container {
+        width: 100% !important;
+    }
+
+    #DataModalDetail .modal-content {
+        overflow: visible;
+    }
+
+    #DataModalDetail .select2-container {
+        width: 100% !important;
+    }
+
+    .select2-container--open {
+        z-index: 2000;
+    }
+
+    @keyframes modalContentFade {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+
+
+/* Remove border from toolbar */
+.service-ui-topbar {
+    border: none !important;
+    background: transparent !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-shadow: none !important;
+}
+
+
+

@@ -1,0 +1,645 @@
+.anggaran-topbar {
+    margin-top: 0;
+}
+
+.anggaran-topbar-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.anggaran-topbar-filter {
+    min-width: 190px;
+    max-width: 260px;
+}
+
+.anggaran-date-range {
+    min-width: 170px;
+}
+
+.anggaran-topbar-filter .form-select,
+.anggaran-topbar-filter .form-control {
+    min-height: 38px;
+}
+
+.anggaran-recap {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+#dataTableAnggaran td,
+#dataTableAnggaran th,
+#AnggaranMasterModal .table td,
+#AnggaranMasterModal .table th {
+    vertical-align: middle !important;
+}
+
+#dataTableAnggaran .badge,
+#strukturTable .badge {
+    font-size: .72rem;
+    font-weight: 700;
+    border-radius: .55rem;
+    padding: .32rem .5rem;
+}
+
+#AnggaranModal .modal-content,
+#AnggaranMasterModal .modal-content,
+#AnggaranYearEditorModal .modal-content,
+#AnggaranStrukturEditorModal .modal-content,
+#AnggaranMasterModal .modal-dialog,
+#AnggaranYearEditorModal .modal-dialog,
+#AnggaranStrukturEditorModal .modal-dialog,
+#AnggaranMasterModal .modal-header,
+#AnggaranMasterModal .modal-footer,
+#AnggaranMasterModal .modal-body,
+#AnggaranYearEditorModal .modal-header,
+#AnggaranYearEditorModal .modal-footer,
+#AnggaranYearEditorModal .modal-body,
+#AnggaranStrukturEditorModal .modal-header,
+#AnggaranStrukturEditorModal .modal-footer,
+#AnggaranStrukturEditorModal .modal-body {
+    border-radius: 0 !important;
+}
+
+#AnggaranMasterModal .modal-content {
+    border: 0 !important;
+    overflow: hidden;
+}
+
+#AnggaranMasterModal .nav-pills .nav-link {
+    border-radius: .7rem;
+    font-weight: 700;
+    font-size: .82rem;
+}
+
+#AnggaranMasterModal .table td,
+#AnggaranMasterModal .table th {
+    font-size: .8rem;
+}
+
+#AnggaranMasterModal .table thead th {
+    background: #f3f4f6;
+    color: #111827;
+    font-weight: 700;
+    letter-spacing: .02em;
+}
+
+#AnggaranModal .form-label {
+    font-size: .85rem;
+    margin-bottom: .32rem;
+}
+
+#AnggaranViewModal .modal-body {
+    background: #fbfcfe;
+}
+
+#AnggaranModal .form-control,
+#AnggaranModal .form-select,
+#AnggaranViewModal .form-control,
+#AnggaranViewModal .form-select,
+#AnggaranMasterModal .form-control,
+#AnggaranMasterModal .form-select,
+#AnggaranYearEditorModal .form-control,
+#AnggaranYearEditorModal .form-select,
+#AnggaranStrukturEditorModal .form-control,
+#AnggaranStrukturEditorModal .form-select {
+    border-radius: .72rem;
+}
+
+#AnggaranModal textarea.form-control,
+#AnggaranYearEditorModal textarea.form-control,
+#AnggaranStrukturEditorModal textarea.form-control {
+    min-height: 88px;
+}
+
+.anggaran-form-section {
+    border: 1px solid #e5e7eb;
+    border-radius: .85rem;
+    padding: 14px;
+    margin-bottom: 16px;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+}
+
+.anggaran-form-section-title {
+    margin-bottom: 12px;
+}
+
+.anggaran-form-section-title-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.anggaran-item-table-wrap {
+    border: 1px solid #e5e7eb;
+    border-radius: .85rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.anggaran-item-table thead th {
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #223469;
+    font-weight: 800;
+    padding: .8rem .9rem;
+    border-color: #dbe3ef;
+}
+
+.anggaran-item-table {
+    width: 100%;
+    table-layout: auto;
+}
+
+.anggaran-item-table tbody td {
+    padding: .72rem .8rem;
+    border-color: #e6edf5;
+    background: #fff;
+    vertical-align: top !important;
+}
+
+.anggaran-item-row:hover td {
+    background: #fcfdff;
+}
+
+.anggaran-col-structure {
+    width: 48%;
+}
+
+.anggaran-col-nominal {
+    width: 22%;
+}
+
+.anggaran-col-keterangan {
+    width: 24%;
+}
+
+.anggaran-col-action {
+    width: 72px;
+}
+
+.anggaran-item-cell-action {
+    padding-left: .5rem !important;
+    padding-right: .5rem !important;
+}
+
+.anggaran-item-table .form-control,
+.anggaran-item-table .form-select {
+    border-radius: .55rem !important;
+    min-height: 38px;
+    border-color: #d7e1ef;
+}
+
+.anggaran-item-table .anggaran-item-nominal,
+.anggaran-item-cell-nominal .form-control {
+    text-align: right;
+}
+
+.anggaran-item-field-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.anggaran-item-budget-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 14px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed #d8e2f0;
+    font-size: .72rem;
+    color: #475569;
+}
+
+.anggaran-item-budget-note {
+    font-size: .72rem;
+    line-height: 1.45;
+    color: #526581;
+    background: #f8fbff;
+    border: 1px dashed #d8e6f7;
+    border-radius: .6rem;
+    padding: .42rem .6rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
+
+.anggaran-item-budget-note.is-warning {
+    color: #b42318;
+    font-weight: 600;
+    background: #fff4f2;
+    border-color: #f4b4ad;
+}
+
+.anggaran-item-action-wrap {
+    min-height: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.anggaran-item-action-wrap .btn-remove-anggaran-item {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.anggaran-item-empty {
+    font-size: .85rem;
+    color: #6b7280;
+    padding-top: 10px;
+}
+
+.anggaran-item-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+    font-size: .88rem;
+    color: #334155;
+}
+
+.anggaran-detail-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.anggaran-detail-card {
+    border: 1px solid #e5e7eb;
+    border-radius: .85rem;
+    padding: 12px 14px;
+    background: #fff;
+}
+
+.anggaran-detail-card-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+.anggaran-detail-card-value {
+    color: #0f172a;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.anggaran-detail-table-wrap {
+    border: 1px solid #e5e7eb;
+    border-radius: .85rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.anggaran-detail-table thead th {
+    background: #f8fafc;
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+.anggaran-detail-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+    font-size: .88rem;
+    color: #334155;
+}
+
+.anggaran-empty-state {
+    padding: 24px 0;
+    text-align: center;
+    color: #6c757d;
+}
+
+.anggaran-master-panel {
+    border: 1px solid #e5e7eb;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    padding: 14px;
+    margin-bottom: 14px;
+}
+
+.anggaran-master-panel-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.anggaran-master-panel-body {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.anggaran-master-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    flex: 1 1 680px;
+}
+
+.anggaran-master-filter-item {
+    min-width: 0;
+}
+
+.anggaran-master-toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.anggaran-master-table-scroll {
+    border: 1px solid #e5e7eb;
+    overflow: auto;
+    background: #fff;
+}
+
+.anggaran-master-table-scroll-year {
+    max-height: 420px;
+}
+
+.anggaran-master-table-scroll-structure {
+    max-height: calc(100vh - 320px);
+}
+
+.anggaran-master-table {
+    margin-bottom: 0;
+}
+
+.anggaran-master-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    box-shadow: inset 0 -1px 0 #dbe3ef;
+}
+
+.anggaran-structure-layout {
+    display: block;
+}
+
+.anggaran-structure-panel {
+    border: 1px solid #e5e7eb;
+    border-radius: 0 !important;
+    padding: 8px;
+    background: #ffffff;
+}
+
+.anggaran-editor-header {
+    border-bottom: 1px solid #eef2f7;
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+}
+
+.anggaran-editor-grid .form-label {
+    font-size: .75rem;
+}
+
+.anggaran-editor-actions .btn-sm {
+    min-width: 84px;
+}
+
+.anggaran-structure-table-panel {
+    min-height: 500px;
+}
+
+#strukturTable .tree-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 24px;
+}
+
+#strukturTable .tree-indent {
+    display: inline-block;
+    flex: 0 0 auto;
+}
+
+#strukturTable .tree-toggle {
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    border-radius: .3rem;
+    color: #2563eb;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .72rem;
+}
+
+#strukturTable .tree-toggle-placeholder {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+}
+
+#strukturTable .tree-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+#strukturTable .tree-meta-code {
+    font-size: .72rem;
+    color: #6b7280;
+    line-height: 1.2;
+}
+
+#strukturTable .tree-node {
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.2;
+    font-size: .82rem;
+}
+
+#strukturTable tr[data-depth="0"] .tree-node {
+    color: #1d4ed8;
+}
+
+#strukturTable .tree-level-badge {
+    text-transform: uppercase;
+    font-size: .66rem;
+    font-weight: 700;
+}
+
+#AnggaranModal .js-currency,
+#AnggaranMasterModal .js-currency,
+#AnggaranStrukturEditorModal .js-currency {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+#AnggaranModal .select2-container--bootstrap-5,
+#AnggaranModal .select2-container--bootstrap-5 .select2-selection {
+    width: 100% !important;
+}
+
+#AnggaranViewModal .modal-dialog {
+    width: auto !important;
+    max-width: min(1140px, calc(100vw - 2rem)) !important;
+    height: auto !important;
+    margin: 1rem auto !important;
+}
+
+#AnggaranViewModal .modal-content {
+    height: auto !important;
+    max-height: calc(100vh - 2rem);
+    overflow: hidden;
+    border-radius: 1rem !important;
+    border: 0 !important;
+}
+
+#AnggaranModal .modal-dialog,
+#AnggaranModal .modal-content {
+    overflow: visible !important;
+}
+
+#AnggaranViewModal .modal-header,
+#AnggaranViewModal .modal-body,
+#AnggaranViewModal .modal-footer {
+    padding: 1.5rem !important;
+}
+
+#AnggaranViewModal .modal-body {
+    overflow-y: auto !important;
+    border-radius: 0 !important;
+}
+
+#AnggaranViewModal .modal-header {
+    border-radius: 1rem 1rem 0 0 !important;
+}
+
+#AnggaranViewModal .modal-footer {
+    border-radius: 0 0 1rem 1rem !important;
+}
+
+#AnggaranModal .modal-body {
+    overflow-x: visible !important;
+    overflow-y: auto !important;
+}
+
+#AnggaranModal .select2-container--bootstrap-5 .select2-selection {
+    border-radius: .55rem !important;
+    min-height: 31px;
+}
+
+#AnggaranModal .anggaran-item-table .select2-container--bootstrap-5 .select2-selection--single {
+    height: auto;
+    min-height: 38px;
+    padding-top: .28rem;
+    padding-bottom: .28rem;
+    border-color: #d7e1ef;
+}
+
+#AnggaranModal .anggaran-item-table .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    display: block;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.35;
+    padding-right: 1.8rem;
+    color: #334155;
+}
+
+#AnggaranModal .anggaran-item-table .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#AnggaranModal .select2-container {
+    z-index: 1060;
+}
+
+#AnggaranModal .select2-dropdown {
+    z-index: 1065;
+}
+
+#strukturTable tr.row-hidden {
+    display: none;
+}
+
+#strukturTable.table > :not(caption) > * > * {
+    padding: .28rem .42rem !important;
+}
+
+@media (max-width: 1199px) {
+    .anggaran-recap {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991px) {
+    .anggaran-detail-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .anggaran-topbar-filters {
+        width: 100%;
+    }
+
+    .anggaran-topbar-filter {
+        min-width: calc(50% - 5px);
+        max-width: none;
+    }
+
+    .anggaran-master-filter-grid {
+        grid-template-columns: 1fr 1fr;
+        flex-basis: 100%;
+    }
+
+    .anggaran-master-toolbar {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 767px) {
+    .anggaran-detail-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .anggaran-item-budget-meta {
+        grid-template-columns: 1fr;
+    }
+
+    .anggaran-topbar-filter,
+    .anggaran-date-range {
+        min-width: 100%;
+        max-width: 100%;
+    }
+
+    .anggaran-form-section-title-inline,
+    .anggaran-item-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .anggaran-master-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .anggaran-recap {
+        grid-template-columns: 1fr;
+    }
+
+    .anggaran-item-table {
+        min-width: 760px;
+    }
+}
