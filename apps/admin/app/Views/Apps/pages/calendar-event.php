@@ -2,6 +2,7 @@
 <?= $this->section('style'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=99') ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/activity-gallery.css?v=99') ?>">
 <!-- FullCalendar CSS -->
 <style>
     /* KPI Cards Styling (Adopted from apps-cat) */
@@ -517,86 +518,80 @@
 <!-- Modal Event Detail -->
 <div class="modal fade" id="modalEventDetail" tabindex="-1" aria-labelledby="modalEventDetailLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.06);">
-            <div class="modal-header border-bottom px-4 pt-4 pb-3 position-relative" style="background-color: transparent !important; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+        <div class="modal-content flat-modal">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 align-items-center">
                 <div class="w-100 pe-4">
                     <div class="text-uppercase fw-bold text-muted mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">DETAIL AGENDA</div>
-                    <h4 class="modal-title fw-bold text-dark m-0" id="detailEventTitle" style="font-size: 1.4rem;">Judul Kegiatan</h4>
+                    <h5 class="modal-title fw-bold" id="detailEventTitle" style="color: #1a202c; font-size: 1.25rem;">Judul Kegiatan</h5>
                 </div>
-                <button type="button" class="btn-close position-absolute" style="top: 1.5rem; right: 1.5rem;" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body px-4 py-2" style="background-color: transparent !important;">
-                <!-- Row: Deskripsi -->
-                <div class="d-flex justify-content-between align-items-start py-3">
-                    <div class="text-secondary fw-medium" style="width: 35%;">Deskripsi</div>
-                    <div class="text-dark text-end flex-grow-1 fw-semibold" id="detailDescription">-</div>
-                </div>
-                
-                <!-- Row: Status -->
-                <div class="d-flex justify-content-between align-items-center py-3">
-                    <div class="text-secondary fw-medium" style="width: 35%;">Status</div>
-                    <div class="text-end flex-grow-1">
-                        <span class="badge rounded-pill px-3 py-2" id="detailStatusBadge" style="font-weight: 600;">Status</span>
+            <div class="modal-body px-4 pt-3 pb-4">
+                <div class="row gy-3">
+                    <!-- Row: Deskripsi -->
+                    <div class="col-12 d-flex justify-content-between align-items-start border-bottom pb-2">
+                        <div class="fw-bold" style="width: 35%; color: #1a202c; font-size: 0.95rem;">Deskripsi</div>
+                        <div class="text-end flex-grow-1" id="detailDescription" style="color: #1e293b; font-size: 0.95rem;">-</div>
                     </div>
-                </div>
-                
-                <!-- Row: Kategori -->
-                <div class="d-flex justify-content-between align-items-center py-3">
-                    <div class="text-secondary fw-medium" style="width: 35%;">Kategori</div>
-                    <div class="text-end flex-grow-1">
-                        <span class="badge rounded-pill px-3 py-2" id="detailCategoryBadge" style="background-color: #f1f5f9; color: #475569; font-weight: 600;">Kategori</span>
+                    
+                    <!-- Row: Status -->
+                    <div class="col-12 d-flex justify-content-between align-items-center border-bottom pb-2">
+                        <div class="fw-bold" style="width: 35%; color: #1a202c; font-size: 0.95rem;">Status</div>
+                        <div class="text-end flex-grow-1">
+                            <span class="badge rounded-pill px-3 py-2" id="detailStatusBadge" style="font-weight: 600;">Status</span>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Row: Waktu Pelaksanaan -->
-                <div class="d-flex justify-content-between align-items-center py-3">
-                    <div class="text-secondary fw-medium" style="width: 35%;">Waktu Pelaksanaan</div>
-                    <div class="text-dark text-end flex-grow-1 fw-semibold">
-                        <i class="bi bi-calendar-event text-primary me-1"></i> <span id="detailTimeText">-</span>
+                    
+                    <!-- Row: Kategori -->
+                    <div class="col-12 d-flex justify-content-between align-items-center border-bottom pb-2">
+                        <div class="fw-bold" style="width: 35%; color: #1a202c; font-size: 0.95rem;">Kategori</div>
+                        <div class="text-end flex-grow-1">
+                            <span class="badge rounded-pill px-3 py-2" id="detailCategoryBadge" style="background-color: #f1f5f9; color: #475569; font-weight: 600;">Kategori</span>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Row: Lokasi -->
-                <div class="d-flex justify-content-between align-items-center py-3">
-                    <div class="text-secondary fw-medium" style="width: 35%;">Lokasi</div>
-                    <div class="text-dark text-end flex-grow-1 fw-semibold">
-                        <i class="bi bi-geo-alt text-primary me-1"></i> <span id="detailLocation">-</span>
+                    <!-- Row: Waktu Pelaksanaan -->
+                    <div class="col-12 d-flex justify-content-between align-items-center border-bottom pb-2">
+                        <div class="fw-bold" style="width: 35%; color: #1a202c; font-size: 0.95rem;">Waktu Pelaksanaan</div>
+                        <div class="text-end flex-grow-1" style="color: #1e293b; font-size: 0.95rem;">
+                            <i class="bi bi-calendar-event text-primary me-1"></i> <span id="detailTimeText">-</span>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Row: No Surat Tugas -->
-                <div class="d-flex justify-content-between align-items-center py-3">
-                    <div class="text-secondary fw-medium" style="width: 35%;">No Surat Tugas</div>
-                    <div class="text-dark text-end flex-grow-1 fw-semibold" id="detailLetter">-</div>
-                </div>
+                    <!-- Row: Lokasi -->
+                    <div class="col-12 d-flex justify-content-between align-items-center border-bottom pb-2">
+                        <div class="fw-bold" style="width: 35%; color: #1a202c; font-size: 0.95rem;">Lokasi</div>
+                        <div class="text-end flex-grow-1" style="color: #1e293b; font-size: 0.95rem;">
+                            <i class="bi bi-geo-alt text-primary me-1"></i> <span id="detailLocation">-</span>
+                        </div>
+                    </div>
 
-                <!-- Row: Tim Kerja -->
-                <div class="d-flex justify-content-between align-items-center py-3">
-                    <div class="text-secondary fw-medium" style="width: 35%;">Tim Kerja</div>
-                    <div class="text-dark text-end flex-grow-1 fw-semibold" id="detailTeam">-</div>
-                </div>
+                    <!-- Row: No Surat Tugas -->
+                    <div class="col-12 d-flex justify-content-between align-items-center border-bottom pb-2">
+                        <div class="fw-bold" style="width: 35%; color: #1a202c; font-size: 0.95rem;">No Surat Tugas</div>
+                        <div class="text-end flex-grow-1" id="detailLetter" style="color: #1e293b; font-size: 0.95rem;">-</div>
+                    </div>
 
-                <!-- Row: Partisipan -->
-                <div class="d-flex justify-content-between align-items-center py-3">
-                    <div class="text-secondary fw-medium" style="width: 35%;">Partisipan</div>
-                    <div class="text-end flex-grow-1 fw-semibold" id="detailStaffContainer">
-                        -
+                    <!-- Row: Tim Kerja -->
+                    <div class="col-12 d-flex justify-content-between align-items-center border-bottom pb-2">
+                        <div class="fw-bold" style="width: 35%; color: #1a202c; font-size: 0.95rem;">Tim Kerja</div>
+                        <div class="text-end flex-grow-1" id="detailTeam" style="color: #1e293b; font-size: 0.95rem;">-</div>
+                    </div>
+
+                    <!-- Row: Partisipan -->
+                    <div class="col-12 d-flex justify-content-between align-items-center pb-2">
+                        <div class="fw-bold" style="width: 35%; color: #1a202c; font-size: 0.95rem;">Partisipan</div>
+                        <div class="text-end flex-grow-1" id="detailStaffContainer" style="color: #1e293b; font-size: 0.95rem;">
+                            -
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-0 px-4 pb-4 pt-3" style="background-color: transparent !important; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-                <div class="row w-100 g-3 m-0">
-                    <div class="col-12 col-md-6 p-0 pe-md-2">
-                        <button type="button" class="btn w-100 fw-bold py-2" style="background-color: #059669; color: white; border-radius: 8px;">
-                            <i class="bi bi-calendar-plus me-1"></i> Simpan Jadwal (.ics)
-                        </button>
-                    </div>
-                    <div class="col-12 col-md-6 p-0 ps-md-2">
-                        <button type="button" class="btn w-100 fw-bold py-2 bg-white" style="color: #475569; border: 1px solid #cbd5e1; border-radius: 8px;">
-                            <i class="bi bi-box-arrow-up-right me-1"></i> Google Calendar
-                        </button>
-                    </div>
-                </div>
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4 justify-content-end">
+                <button type="button" class="btn btn-light fw-bold px-4 flat-btn-light" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary fw-bold px-4 flat-btn-primary" style="background-color: #059669; border-color: #059669;">
+                    <i class="bi bi-calendar-plus me-1"></i> Simpan (.ics)
+                </button>
             </div>
         </div>
     </div>
