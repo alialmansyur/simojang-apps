@@ -398,7 +398,7 @@
         const submessage = escapeHtml(desc);
         return `
             <div class="d-flex flex-column align-items-center justify-content-center text-center mt-5 mb-5 pb-4 tw-animate-entry">
-                <img src="${window.location.origin}/apps/assets/images/empty-content-profile.png" alt="Tidak Ditemukan" style="max-width: 320px; margin-bottom: 2rem;">
+                <img src="`${AppConfig.initGlobal}apps/assets/images/empty-content-profile.png" alt="Tidak Ditemukan" style="max-width: 320px; margin-bottom: 2rem;">
                 <h5 class="fw-bold" style="color: #1a202c; font-size: 1.35rem;">${message}</h5>
                 <p class="text-muted" style="font-size: 1.05rem; max-width: 480px;">${submessage}</p>
             </div>

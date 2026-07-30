@@ -55,7 +55,7 @@ $(document).ready(function() {
             if ($('#noSearchInfo').length === 0) {
                 var emptyHtml = '<div class="col-12" id="noSearchInfo">' +
                                 '<div class="d-flex flex-column align-items-center justify-content-center text-center mt-5 mb-5 pb-4 tw-animate-entry">' +
-                                '<img src="' + window.location.origin + '/apps/assets/images/empty-content-profile.png" alt="Tidak Ditemukan" style="max-width: 320px; margin-bottom: 2rem;">' +
+                                '<img src="' + AppConfig.initGlobal + 'apps/assets/images/empty-content-profile.png" alt="Tidak Ditemukan" style="max-width: 320px; margin-bottom: 2rem;">' +
                                 '<h5 class="fw-bold" style="color: #1a202c; font-size: 1.35rem;">Pencarian Tidak Ditemukan</h5>' +
                                 '<p class="text-muted mb-0" style="font-size: 1.05rem; max-width: 450px; margin: 0 auto; line-height: 1.6;">Tidak ada proyek yang cocok dengan kata kunci tersebut.</p>' +
                                 '</div></div>';
@@ -73,7 +73,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...');
         
         $.ajax({
-            url: window.location.origin + '/store/save-project',
+            url: AppConfig.initGlobal + 'store/save-project',
             type: 'POST',
             data: $(this).serialize(),
             dataType: 'json',
@@ -114,7 +114,7 @@ window.deleteProject = function(uid, name) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: window.location.origin + '/kill/data-project',
+                url: AppConfig.initGlobal + 'kill/data-project',
                 type: 'POST',
                 data: { uid: uid },
                 dataType: 'json',

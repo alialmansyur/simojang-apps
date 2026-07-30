@@ -40,7 +40,7 @@ $(document).ready(function() {
             }
         },
         ajax: {
-            url: window.location.origin + '/fetch/data-manage-project',
+            url: AppConfig.initGlobal + 'fetch/data-manage-project',
             type: 'POST',
             data: function (d) {
                 d.project_uid = projectUid;
@@ -127,7 +127,7 @@ $(document).ready(function() {
             }
         },
         ajax: {
-            url: window.location.origin + '/fetch/data-manage-project',
+            url: AppConfig.initGlobal + 'fetch/data-manage-project',
             type: 'POST',
             data: function (d) {
                 d.project_uid = projectUid;
@@ -191,7 +191,7 @@ $(document).ready(function() {
 
     function loadProjectOverview() {
         $.ajax({
-            url: window.location.origin + '/fetch/project-overview',
+            url: AppConfig.initGlobal + 'fetch/project-overview',
             type: 'POST',
             data: { project_uid: projectUid },
             dataType: 'json',
@@ -275,7 +275,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...');
         
         $.ajax({
-            url: window.location.origin + '/store/save-project-progress',
+            url: AppConfig.initGlobal + 'store/save-project-progress',
             type: 'POST',
             data: $(this).serialize(),
             dataType: 'json',
@@ -314,7 +314,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...');
         
         $.ajax({
-            url: window.location.origin + '/store/save-project-budget',
+            url: AppConfig.initGlobal + 'store/save-project-budget',
             type: 'POST',
             data: $(this).serialize(),
             dataType: 'json',
@@ -353,7 +353,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...');
         
         $.ajax({
-            url: window.location.origin + '/store/update-project',
+            url: AppConfig.initGlobal + 'store/update-project',
             type: 'POST',
             data: $(this).serialize(),
             dataType: 'json',

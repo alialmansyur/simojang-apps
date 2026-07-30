@@ -91,7 +91,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: window.location.origin + '/activity-gallery/store',
+            url: AppConfig.initGlobal + 'activity-gallery/store',
             type: 'POST',
             data: formData,
             processData: false,
@@ -161,7 +161,7 @@ $(document).ready(function () {
                 else Swal.fire({ title: 'Memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                 
                 $.ajax({
-                    url: window.location.origin + '/activity-gallery/delete',
+                    url: AppConfig.initGlobal + 'activity-gallery/delete',
                     type: 'POST',
                     data: { id: id },
                     dataType: 'json',
@@ -247,7 +247,7 @@ function loadGalleryData(isInitial = false) {
         const filterMonth = $('#filterBulan').val(); // format: YYYY-MM
 
         $.ajax({
-            url: window.location.origin + '/activity-gallery/get-data',
+            url: AppConfig.initGlobal + 'activity-gallery/get-data',
             type: 'POST',
             data: {
                 search: searchVal,
