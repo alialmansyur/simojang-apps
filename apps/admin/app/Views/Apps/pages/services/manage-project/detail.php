@@ -1,6 +1,6 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=2') ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/components/modern-table.css') ?>">
 <style>
     .info-box {
@@ -514,5 +514,5 @@
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/service-table-ui.js') ?>"></script>
-<script src="<?= asset_url('apps/assets/js/custom/pages/services/manage-project/detail.js?v=7') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/services/manage-project/detail.js?v=99') ?>"></script>
 <?= $this->endSection(); ?>

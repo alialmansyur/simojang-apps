@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simojang | Kanreg Tilu</title>
-    <link rel="shortcut icon" href="<?= base_url('apps/');?>assets/images/logo/favicon.png?v=2" type="image/x-icon">
-    <link rel="shortcut icon" href="<?= base_url('apps/');?>assets/images/logo/favicon.png?v=2" type="image/png">
+    <link rel="shortcut icon" href="<?= base_url('apps/');?>assets/images/logo/favicon.png?v=99" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= base_url('apps/');?>assets/images/logo/favicon.png?v=99" type="image/png">
     <link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/app.css?v=' . time()) ?>">
     <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/auth.css') ?>">
     <link rel="stylesheet" href="<?= base_url('apps/');?>assets/extensions/toastify-js/src/toastify.css">

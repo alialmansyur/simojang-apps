@@ -55,7 +55,7 @@
 </div>
 <?= view('Apps/partials/modal/changepass'); ?>
 <?= view('Apps/partials/footer'); ?>
-<script src="<?= base_url('apps/assets/js/custom/change-password.js?v=3'); ?>"></script>
+<script src="<?= base_url('apps/assets/js/custom/change-password.js?v=99'); ?>"></script>
 <?= $this->renderSection('scripts'); ?>
 
 <script>

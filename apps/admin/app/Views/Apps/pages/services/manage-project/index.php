@@ -1,7 +1,7 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=12') ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=99') ?>">
 <style>
     .progress-bar-custom {
         height: 8px;
@@ -232,5 +232,5 @@
 
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
-<script src="<?= asset_url('apps/assets/js/custom/pages/services/manage-project/index.js?v=3') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/services/manage-project/index.js?v=99') ?>"></script>
 <?= $this->endSection(); ?>

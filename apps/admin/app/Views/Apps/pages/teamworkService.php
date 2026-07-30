@@ -165,7 +165,7 @@
 </template>
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
-<script src="<?= asset_url('apps/assets/js/custom/pages/teamWorkService.js?v=3.0') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/teamWorkService.js?v=99.0') ?>"></script>
 <?= $this->endSection(); ?>
 
 

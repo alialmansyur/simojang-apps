@@ -6,7 +6,7 @@ $anggaranMainJsVersion = @filemtime(FCPATH . 'apps/assets/js/custom/pages/servic
 $anggaranTablesJsVersion = @filemtime(FCPATH . 'apps/assets/js/custom/pages/services/anggaran/tables.js') ?: time();
 $serviceTableUiJsVersion = @filemtime(FCPATH . 'apps/assets/js/custom/pages/services/service-table-ui.js') ?: time();
 ?>
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=2') ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/anggaran/main.css') ?>?v=<?= $anggaranCssVersion ?>">
 <?= $this->endSection(); ?>
 

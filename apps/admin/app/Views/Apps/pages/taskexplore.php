@@ -69,5 +69,5 @@
 </div>
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
-<script src="<?= asset_url('apps/assets/js/custom/pages/taskExplore.js?v=1.1') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/taskExplore.js?v=99.1') ?>"></script>
 <?= $this->endSection(); ?>

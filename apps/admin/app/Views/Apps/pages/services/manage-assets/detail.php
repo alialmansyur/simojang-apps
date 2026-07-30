@@ -1,6 +1,6 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=2') ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
 <style>
     .service-ui-recap {
         grid-template-columns: repeat(2, 1fr) !important;
@@ -70,5 +70,5 @@
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/service-table-ui.js') ?>"></script>
-<script src="<?= asset_url('apps/assets/js/custom/pages/services/manage-assets/detail.js?v=1') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/services/manage-assets/detail.js?v=99') ?>"></script>
 <?= $this->endSection(); ?>

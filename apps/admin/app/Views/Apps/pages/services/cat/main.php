@@ -1,7 +1,7 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=12') ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=99') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/cat/main.css?v=' . time()) ?>">
 <style>
     .btn-trash-hover {

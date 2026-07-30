@@ -10,7 +10,7 @@ $sampleFile = 'uploads/sample/sample_general_1.xlsx';
 ?>
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=2') ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
 <link rel="stylesheet" href="<?= base_url('apps/assets/extensions/filepond/filepond.css'); ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/kenaikanpangkat/main.css') ?>">
 <?= $this->endSection(); ?>

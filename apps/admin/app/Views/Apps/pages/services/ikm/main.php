@@ -1,6 +1,6 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=2') ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/ikm/main.css') ?>">

@@ -1,7 +1,7 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=11') ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=99') ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
 <main class="page-content" aria-labelledby="teamworkPageTitle">
@@ -51,5 +51,5 @@
 </template>
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
-<script src="<?= asset_url('apps/assets/js/custom/pages/teamWork.js?v=4') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/teamWork.js?v=99') ?>"></script>
 <?= $this->endSection(); ?>
