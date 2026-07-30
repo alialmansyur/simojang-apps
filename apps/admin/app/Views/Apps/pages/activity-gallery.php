@@ -193,5 +193,5 @@
 
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
-<script src="<?= asset_url('apps/assets/js/custom/pages/activity-gallery.js?v=2') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/activity-gallery.js?v=3') ?>"></script>
 <?= $this->endSection(); ?>
