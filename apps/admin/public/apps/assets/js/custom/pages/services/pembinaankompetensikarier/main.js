@@ -3,9 +3,22 @@ $(document).ready(function () {
 
     const PKKApp = window.PKKApp || {};
     PKKApp.options = PKKApp.options || {};
-    PKKApp.options.years = Array.isArray(PKKApp.options.years) ? PKKApp.options.years : [];
-    PKKApp.selectedYear = Number(PKKApp.selectedYear || 2025);
-    PKKApp.selectedMonths = Array.isArray(PKKApp.selectedMonths) ? PKKApp.selectedMonths : [];
+    
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1; // 1-12
+    let t1 = currentMonth - 1;
+
+    PKKApp.options.years = Array.isArray(PKKApp.options.years) && PKKApp.options.years.length > 0
+        ? PKKApp.options.years 
+        : [currentYear - 1, currentYear, currentYear + 1];
+    
+    PKKApp.selectedYear = PKKApp.selectedYear || '';
+    
+    PKKApp.selectedMonths = Array.isArray(PKKApp.selectedMonths) && PKKApp.selectedMonths.length > 0
+        ? PKKApp.selectedMonths 
+        : [];
+        
     PKKApp.table = PKKApp.table || null;
     window.PKKApp = PKKApp;
 
@@ -34,11 +47,11 @@ $(document).ready(function () {
 
     function fillYearOptions() {
         const $year = $('#pkkYearFilter');
-        const years = PKKApp.options.years.length ? PKKApp.options.years : [new Date().getFullYear()];
+        const years = PKKApp.options.years;
 
-        $year.html('');
+        $year.html('<option value="">Pilih Tahun</option>');
         years.forEach((year) => {
-            const selected = Number(year) === Number(PKKApp.selectedYear) ? 'selected' : '';
+            const selected = String(year) === String(PKKApp.selectedYear) ? 'selected' : '';
             $year.append(`<option value="${year}" ${selected}>Periode ${year}</option>`);
         });
     }
@@ -76,6 +89,40 @@ $(document).ready(function () {
         $btn.text(labels.join(', '));
     }
 
+    function updateActiveFilterLabels() {
+        const $container = $('#activeFilterContainer');
+        if (!$container.length) return;
+        
+        $container.find('.filter-badge').remove();
+
+        let hasActiveFilters = false;
+
+        if (PKKApp.selectedYear && $('#pkkYearFilter').val()) {
+            const yearLabel = PKKApp.selectedYear;
+            $container.append(`<span class="badge bg-light text-primary border border-primary me-1 mb-1 filter-badge" style="font-weight: 500;">${yearLabel}</span>`);
+            hasActiveFilters = true;
+        }
+
+        if (PKKApp.selectedMonths && PKKApp.selectedMonths.length > 0) {
+            const $monthCheckboxes = $('#pkkMonthList input.pkk-month-check:checked');
+            if ($monthCheckboxes.length > 0) {
+                const monthLabels = $monthCheckboxes.map(function() {
+                    return $(this).next('label').text().trim();
+                }).get().join(', ');
+                $container.append(`<span class="badge bg-light text-primary border border-primary mb-1 filter-badge" style="font-weight: 500;">Bulan: ${monthLabels}</span>`);
+                hasActiveFilters = true;
+            }
+        }
+
+        if (hasActiveFilters) {
+            $container.show();
+            $container.addClass('d-flex');
+        } else {
+            $container.hide();
+            $container.removeClass('d-flex');
+        }
+    }
+
     function loadOptions() {
         return $.ajax({
             url: AppConfig.initGlobal + 'fetch/options-pembinaan-kompetensi-karier',
@@ -84,18 +131,20 @@ $(document).ready(function () {
         }).done((response) => {
             if (response?.status !== 'success') return;
             PKKApp.options.years = Array.isArray(response.years) ? response.years : [];
-            if (PKKApp.options.years.length && !PKKApp.options.years.includes(PKKApp.selectedYear)) {
-                PKKApp.selectedYear = Number(PKKApp.options.years[0]);
+            if (PKKApp.options.years.length && !PKKApp.selectedYear) {
+                // leave it blank if no year is selected initially
             }
             fillYearOptions();
             fillMonthOptions();
             updateMonthButtonLabel();
+            updateActiveFilterLabels();
         });
     }
 
     function attachFilterActions() {
         $('#pkkYearFilter').on('change', function () {
-            PKKApp.selectedYear = Number($(this).val() || new Date().getFullYear());
+            PKKApp.selectedYear = $(this).val() || '';
+            updateActiveFilterLabels();
             if (PKKApp.table) PKKApp.table.ajax.reload();
             if (typeof PKKApp.refreshSummary === 'function') PKKApp.refreshSummary();
         });
@@ -115,6 +164,7 @@ $(document).ready(function () {
                 .filter((v) => v >= 1 && v <= 12);
 
             updateMonthButtonLabel();
+            updateActiveFilterLabels();
             if (PKKApp.table) PKKApp.table.ajax.reload();
             if (typeof PKKApp.refreshSummary === 'function') PKKApp.refreshSummary();
         });
@@ -138,6 +188,7 @@ $(document).ready(function () {
 
         $('#pkkForm').on('submit', function (event) {
             event.preventDefault();
+            $('#pkkDataModal').modal('hide');
             swlwaitProsessing();
 
             $.ajax({
@@ -151,7 +202,6 @@ $(document).ready(function () {
                     return;
                 }
 
-                $('#pkkDataModal').modal('hide');
                 swlSuccess();
                 if (PKKApp.table) PKKApp.table.ajax.reload(null, false);
                 if (typeof PKKApp.refreshSummary === 'function') PKKApp.refreshSummary();

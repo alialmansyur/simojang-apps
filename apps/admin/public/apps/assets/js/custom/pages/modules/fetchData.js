@@ -99,6 +99,45 @@ function getDefaultDocCategory() {
     return String(first || '').trim();
 }
 
+function updateActiveFilterLabels() {
+    const $container = $('#activeFiltersLabel');
+    const $catBadge = $('#filterCategoryBadge');
+    const $monthBadge = $('#filterMonthBadge');
+
+    if (!$container.length) return;
+
+    let hasFilter = false;
+
+    if ($('#docCategoryPicker').length) {
+        const catText = $('#docCategoryPicker option:selected').text().trim();
+        if (catText) {
+            $catBadge.text('Kategori: ' + catText).show();
+            hasFilter = true;
+        } else {
+            $catBadge.hide();
+        }
+    } else {
+        $catBadge.hide();
+    }
+
+    if (selectedMonths && selectedMonths.length > 0) {
+        const monthNames = MODULE_MONTHS
+            .filter((m) => selectedMonths.includes(m.val))
+            .map((m) => m.text)
+            .join(', ');
+        $monthBadge.text('Bulan: ' + monthNames).show();
+        hasFilter = true;
+    } else {
+        $monthBadge.hide();
+    }
+
+    if (hasFilter) {
+        $container.fadeIn(200);
+    } else {
+        $container.fadeOut(200);
+    }
+}
+
 function setSummary(summary = {}) {
     const totalFile = Number(summary.total_file ?? 0);
     const totalDetail = Number(summary.total_baris_detail ?? 0);
@@ -121,8 +160,14 @@ function setSummary(summary = {}) {
     $('.js-active-periods').text(formatNumber(activePeriods));
 }
 
+let summaryXhr = null;
+
 function loadSummary() {
-    $.ajax({
+    if (summaryXhr) {
+        summaryXhr.abort();
+    }
+    
+    summaryXhr = $.ajax({
         url: AppConfig.initGlobal + 'fetch/summary-uploaders',
         type: 'POST',
         dataType: 'json',
@@ -136,8 +181,13 @@ function loadSummary() {
                 setSummary(response.summary || {});
             }
         },
-        error: function () {
-            setSummary({});
+        error: function (xhr, status) {
+            if (status !== 'abort') {
+                setSummary({});
+            }
+        },
+        complete: function () {
+            summaryXhr = null;
         }
     });
 }
@@ -317,6 +367,7 @@ $(document).ready(function () {
             table,
             loadSummary,
             reloadSummaryOnClick: false,
+            disableRecap: true,
             processingText: 'Memuat data...'
         });
     }
@@ -352,11 +403,13 @@ $(document).ready(function () {
         }
 
         table.ajax.reload(null, false);
+        if (typeof updateActiveFilterLabels === 'function') updateActiveFilterLabels();
     });
 
     $('#docCategoryPicker').on('change', function () {
         $('#doc_category').val($(this).val() || '');
         table.ajax.reload(null, false);
+        if (typeof updateActiveFilterLabels === 'function') updateActiveFilterLabels();
     });
 
     $('.sbmt').on('click', function (e) {
@@ -383,6 +436,7 @@ $(document).ready(function () {
             });
         }
 
+        $('#uploadModal').modal('hide');
         swlwaitProsessing();
         submitBtn.prop('disabled', true);
 
@@ -405,7 +459,6 @@ $(document).ready(function () {
                     const defaultCategory = getDefaultDocCategory();
                     $('#docCategoryPicker').val(defaultCategory).trigger('change');
                 }
-                $('#uploadModal').modal('hide');
                 swlSuccess();
             },
             error: function (xhr) {
@@ -473,5 +526,8 @@ $(document).ready(function () {
     }
 
     setDetailHeaderByLayanan($('#layanan_id').val());
-    loadSummary();
+    
+    if (typeof updateActiveFilterLabels === 'function') {
+        updateActiveFilterLabels();
+    }
 });

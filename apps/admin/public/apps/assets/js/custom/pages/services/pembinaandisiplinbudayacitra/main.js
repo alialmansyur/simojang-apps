@@ -142,6 +142,53 @@ $(document).ready(function () {
         $btn.text(labels.join(', '));
     }
 
+    function updateActiveFilterLabels() {
+        const $container = $('#activeFiltersLabel');
+        const $jenisBadge = $('#filterJenisBadge');
+        const $monthBadge = $('#filterMonthBadge');
+    
+        if (!$container.length) return;
+    
+        let hasFilter = false;
+    
+        // Update Jenis Filter
+        if ($('#pdbcJenisFilter').length) {
+            const jenisText = $('#pdbcJenisFilter option:selected').text().trim();
+            if (jenisText && $('#pdbcJenisFilter').val() !== 'ALL') {
+                $jenisBadge.html(`<i class="bi bi-tag me-1"></i>Kategori: ${jenisText}`).show();
+                hasFilter = true;
+            } else {
+                $jenisBadge.hide();
+            }
+        } else {
+            $jenisBadge.hide();
+        }
+    
+        // Update Month Filter
+        if (PDBCApp.selectedMonths && PDBCApp.selectedMonths.length > 0) {
+            const monthOptions = [
+                { val: 1, text: 'Januari' }, { val: 2, text: 'Februari' }, { val: 3, text: 'Maret' },
+                { val: 4, text: 'April' }, { val: 5, text: 'Mei' }, { val: 6, text: 'Juni' },
+                { val: 7, text: 'Juli' }, { val: 8, text: 'Agustus' }, { val: 9, text: 'September' },
+                { val: 10, text: 'Oktober' }, { val: 11, text: 'November' }, { val: 12, text: 'Desember' }
+            ];
+            const labels = monthOptions
+                .filter((item) => PDBCApp.selectedMonths.includes(item.val))
+                .map((item) => item.text.slice(0, 3));
+            
+            $monthBadge.html(`<i class="bi bi-calendar me-1"></i>Bulan: ${labels.join(', ')}`).show();
+            hasFilter = true;
+        } else {
+            $monthBadge.hide();
+        }
+    
+        if (hasFilter) {
+            $container.show();
+        } else {
+            $container.hide();
+        }
+    }
+
     function loadOptions() {
         return $.ajax({
             url: AppConfig.initGlobal + 'fetch/options-pembinaan-disiplin-budaya-citra',
@@ -252,6 +299,7 @@ $(document).ready(function () {
 
         $('#pdbcForm').on('submit', function (event) {
             event.preventDefault();
+            $('#pdbcDataModal').modal('hide');
             swlwaitProsessing();
 
             $.ajax({
@@ -265,7 +313,6 @@ $(document).ready(function () {
                     return;
                 }
 
-                $('#pdbcDataModal').modal('hide');
                 swlSuccess();
                 if (PDBCApp.table) PDBCApp.table.ajax.reload(null, false);
                 if (typeof PDBCApp.refreshSummary === 'function') PDBCApp.refreshSummary();
@@ -282,6 +329,7 @@ $(document).ready(function () {
             syncFormByKategori();
             if (PDBCApp.table) PDBCApp.table.ajax.reload();
             if (typeof PDBCApp.refreshSummary === 'function') PDBCApp.refreshSummary();
+            updateActiveFilterLabels();
         });
 
         $(document).on('change', '.pdbc-month-check', function () {
@@ -301,6 +349,7 @@ $(document).ready(function () {
             updateMonthButtonLabel();
             if (PDBCApp.table) PDBCApp.table.ajax.reload();
             if (typeof PDBCApp.refreshSummary === 'function') PDBCApp.refreshSummary();
+            updateActiveFilterLabels();
         });
     }
 
@@ -352,5 +401,6 @@ $(document).ready(function () {
         $('#pdbcJenisFilter').val(PDBCApp.selectedJenis);
         $('#pdbcKategoriInput').on('change', syncFormByKategori);
         syncFormByKategori();
+        updateActiveFilterLabels();
     });
 });

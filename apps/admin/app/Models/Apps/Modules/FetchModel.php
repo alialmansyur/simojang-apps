@@ -41,46 +41,35 @@ class FetchModel extends Model
 
     public function getUploaderSummary(int $layananId, array $bulan = [], string $docCategory = '')
     {
-        $applyFilters = function ($builder) use ($layananId, $bulan, $docCategory) {
-            $builder->where('a.layanan_id', $layananId);
+        $builder = $this->db->table('txn_activity_upload_logs a')
+            ->select('
+                COUNT(DISTINCT a.id) AS total_file,
+                MAX(a.created_at) AS last_upload,
+                MIN(a.created_at) AS first_upload,
+                COUNT(DISTINCT DATE_FORMAT(a.created_at, "%Y-%m")) AS active_periods,
+                COUNT(d.id) AS total_baris_detail,
+                COUNT(DISTINCT d.instansi_id) AS total_instansi
+            ')
+            ->join('txn_activity_upload_detail d', 'd.upload_id = a.id', 'left')
+            ->where('a.layanan_id', $layananId);
 
-            if (!empty($bulan)) {
-                $builder->whereIn('MONTH(a.created_at)', $bulan);
-            }
+        if (!empty($bulan)) {
+            $builder->whereIn('MONTH(a.created_at)', $bulan);
+        }
 
-            if ($docCategory !== '') {
-                $builder->where('a.doc_category', $docCategory);
-            }
+        if ($docCategory !== '') {
+            $builder->where('a.doc_category', $docCategory);
+        }
 
-            return $builder;
-        };
-
-        $uploadSummary = $applyFilters(
-            $this->db->table('txn_activity_upload_logs a')
-                ->select('
-                    COUNT(1) AS total_file,
-                    MAX(a.created_at) AS last_upload,
-                    MIN(a.created_at) AS first_upload,
-                    COUNT(DISTINCT DATE_FORMAT(a.created_at, "%Y-%m")) AS active_periods
-                ')
-        )->get()->getRowArray();
-
-        $detailSummary = $applyFilters(
-            $this->db->table('txn_activity_upload_logs a')
-                ->select('
-                    COUNT(d.id) AS total_baris_detail,
-                    COUNT(DISTINCT d.instansi_id) AS total_instansi
-                ')
-                ->join('txn_activity_upload_detail d', 'd.upload_id = a.id', 'left')
-        )->get()->getRowArray();
+        $summary = $builder->get()->getRowArray();
 
         return [
-            'total_file' => (int) ($uploadSummary['total_file'] ?? 0),
-            'total_baris_detail' => (int) ($detailSummary['total_baris_detail'] ?? 0),
-            'total_instansi' => (int) ($detailSummary['total_instansi'] ?? 0),
-            'last_upload' => $uploadSummary['last_upload'] ?? null,
-            'first_upload' => $uploadSummary['first_upload'] ?? null,
-            'active_periods' => (int) ($uploadSummary['active_periods'] ?? 0),
+            'total_file' => (int) ($summary['total_file'] ?? 0),
+            'total_baris_detail' => (int) ($summary['total_baris_detail'] ?? 0),
+            'total_instansi' => (int) ($summary['total_instansi'] ?? 0),
+            'last_upload' => $summary['last_upload'] ?? null,
+            'first_upload' => $summary['first_upload'] ?? null,
+            'active_periods' => (int) ($summary['active_periods'] ?? 0),
         ];
     }
 

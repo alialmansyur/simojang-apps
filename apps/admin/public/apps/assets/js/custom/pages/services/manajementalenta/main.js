@@ -59,6 +59,9 @@ $(document).ready(function () {
 
     $('#form-usulan').on('submit', function (e) {
         e.preventDefault();
+        
+        // Hide modal first to avoid overlapping with sweetalert loader
+        $('#DataModal').modal('hide');
         swlwaitProsessing();
         
         $.ajax({
@@ -66,17 +69,20 @@ $(document).ready(function () {
             type: 'POST',
             data: $(this).serialize(),
             success: function (response) {
-
                 console.log(response);
                 if (response.status == 'error') {
                     swlErrorHandler(response.message);
                 } else {
                     if (response) {
-                        $('#dataTable').DataTable().ajax.reload();
-                        $('#DataModal').modal('hide');
+                        if ($.fn.DataTable.isDataTable('#dataTable')) {
+                            $('#dataTable').DataTable().ajax.reload(null, false);
+                        }
                         swlSuccess();
                     }
                 }
+            },
+            error: function (xhr) {
+                swlErrorHandler('Gagal menyimpan data.');
             }
         });
     });

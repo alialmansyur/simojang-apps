@@ -114,7 +114,7 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: .45rem;
     margin-top: .45rem;
-    margin-bottom: .45rem;
+    margin-bottom: 1.25rem;
 }
 
 .service-ui-topbar .dropdown-menu {
@@ -467,4 +467,11 @@
         min-width: 100%;
         max-width: 100%;
     }
+}
+
+/* Layout constraints to match /apps-cat design across all service pages */
+.page-content > .container-fluid {
+    width: 100% !important;
+    max-width: 1160px !important;
+    margin: 0 auto !important;
 }

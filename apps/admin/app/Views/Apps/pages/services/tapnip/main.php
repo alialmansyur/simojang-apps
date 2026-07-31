@@ -28,7 +28,7 @@ $sampleFile = 'apps/samples/sample-tapnip.xlsx';
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
 <div class="page-content py-4">
-    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px; padding: 0 .85rem 1.05rem;">
+    <div class="container-fluid text-start tw-wrap" style="padding: 0 .85rem 1.05rem;">
         <div class="page-heading mb-0">
             <div class="row align-items-center d-flex justify-content-between">
                 <div class="col-md-8 text-start">
@@ -95,92 +95,133 @@ $sampleFile = 'apps/samples/sample-tapnip.xlsx';
                             </div>
                         </div>
 
-                        <div id="uploadSummary" class="service-ui-recap mb-3">
-                          <div class="card border">
-                              <div class="card-body p-3">
-                                  <div class="service-ui-recap-card">
-                                <span class="service-ui-recap-icon">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M7 3v4"/><path d="M17 3v4"/><rect x="4" y="7" width="16" height="14" rx="2"/></svg>
-                                </span>
-                                <div>
-                                    <p class="service-ui-recap-label">Total File</p>
-                                    <h6 class="service-ui-recap-value js-total-file">0</h6>
+                        <!-- KPI Cards Section -->
+                        <div id="uploadSummary" class="row g-3 mb-4">
+                            <!-- KPI 1 -->
+                            <div class="col-12 col-md-4">
+                                <div class="card border h-100 mb-0 shadow-sm">
+                                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                                        <span class="service-ui-recap-icon">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M7 3v4"/><path d="M17 3v4"/><rect x="4" y="7" width="16" height="14" rx="2"/></svg>
+                                        </span>
+                                        <div>
+                                            <p class="service-ui-recap-label mb-1">Total File</p>
+                                            <h6 class="service-ui-recap-value js-total-file mb-0">0</h6>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="service-ui-recap-card">
-                                <span class="service-ui-recap-icon">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3z"/><path d="M7 7h10"/><path d="M7 12h10"/><path d="M7 17h6"/></svg>
-                                </span>
-                                <div>
-                                    <p class="service-ui-recap-label">Total Detail</p>
-                                    <h6 class="service-ui-recap-value js-total-detail">0</h6>
+                            <!-- KPI 2 -->
+                            <div class="col-12 col-md-4">
+                                <div class="card border h-100 mb-0 shadow-sm">
+                                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                                        <span class="service-ui-recap-icon">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3z"/><path d="M7 7h10"/><path d="M7 12h10"/><path d="M7 17h6"/></svg>
+                                        </span>
+                                        <div>
+                                            <p class="service-ui-recap-label mb-1">Total Detail</p>
+                                            <h6 class="service-ui-recap-value js-total-detail mb-0">0</h6>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="service-ui-recap-card">
-                                <span class="service-ui-recap-icon">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                                </span>
-                                <div>
-                                    <p class="service-ui-recap-label">Instansi Tercakup</p>
-                                    <h6 class="service-ui-recap-value js-total-instansi">0</h6>
+                            <!-- KPI 3 -->
+                            <div class="col-12 col-md-4">
+                                <div class="card border h-100 mb-0 shadow-sm">
+                                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                                        <span class="service-ui-recap-icon">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                        </span>
+                                        <div>
+                                            <p class="service-ui-recap-label mb-1">Instansi Tercakup</p>
+                                            <h6 class="service-ui-recap-value js-total-instansi mb-0">0</h6>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="service-ui-recap-card">
-                                <span class="service-ui-recap-icon">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                                </span>
-                                <div>
-                                    <p class="service-ui-recap-label">Upload Terakhir</p>
-                                    <h6 class="service-ui-recap-value js-last-upload">-</h6>
+                            <!-- KPI 4 -->
+                            <div class="col-12 col-md-4">
+                                <div class="card border h-100 mb-0 shadow-sm">
+                                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                                        <span class="service-ui-recap-icon">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                                        </span>
+                                        <div>
+                                            <p class="service-ui-recap-label mb-1">Upload Terakhir</p>
+                                            <h6 class="service-ui-recap-value js-last-upload mb-0">-</h6>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="service-ui-recap-card">
-                                <span class="service-ui-recap-icon">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M12 7v10"/><path d="M8 13l4 4 4-4"/></svg>
-                                </span>
-                                <div>
-                                    <p class="service-ui-recap-label">Upload Pertama</p>
-                                    <h6 class="service-ui-recap-value js-first-upload">-</h6>
+                            <!-- KPI 5 -->
+                            <div class="col-12 col-md-4">
+                                <div class="card border h-100 mb-0 shadow-sm">
+                                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                                        <span class="service-ui-recap-icon">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M12 7v10"/><path d="M8 13l4 4 4-4"/></svg>
+                                        </span>
+                                        <div>
+                                            <p class="service-ui-recap-label mb-1">Upload Pertama</p>
+                                            <h6 class="service-ui-recap-value js-first-upload mb-0">-</h6>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="service-ui-recap-card">
-                                <span class="service-ui-recap-icon">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 2 4-5"/></svg>
-                                </span>
-                                <div>
-                                    <p class="service-ui-recap-label">Periode Aktif</p>
-                                    <h6 class="service-ui-recap-value js-active-periods">0</h6>
+                            <!-- KPI 6 -->
+                            <div class="col-12 col-md-4">
+                                <div class="card border h-100 mb-0 shadow-sm">
+                                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                                        <span class="service-ui-recap-icon">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 2 4-5"/></svg>
+                                        </span>
+                                        <div>
+                                            <p class="service-ui-recap-label mb-1">Periode Aktif</p>
+                                            <h6 class="service-ui-recap-value js-active-periods mb-0">0</h6>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                                  <div class="table-responsive">
-                            <table id="dataTable" class="table table-bordered table-hover nowrap">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>File Unggah</th>
-                                        <th>Periode Bulan</th>
-                                        <th>Periode Hari</th>
-                                        <th>Tanggal Upload</th>
-                                        <th>Pengupload</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th></th>
-                                        <th>File Unggah</th>
-                                        <th>Periode Bulan</th>
-                                        <th>Periode Hari</th>
-                                        <th>Tanggal Upload</th>
-                                        <th>Pengupload</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+
+                        <!-- Table Card Section -->
+                <!-- Active Filters Indicator -->
+                                <div id="activeFiltersLabel" class="mb-3" style="display: none;">
+                                    <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
+                                    <span id="filterCategoryBadge" class="badge bg-light text-primary border border-primary me-1 mb-1" style="font-weight: 500;"></span>
+                                    <span id="filterMonthBadge" class="badge bg-light text-primary border border-primary mb-1" style="font-weight: 500; display: none;"></span>
+                                </div>
+
+                        <div class="card border shadow-sm">
+                            <div class="card-body p-3">
+<div class="table-responsive">
+                                    <table id="dataTable" class="table table-bordered table-hover nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>File Unggah</th>
+                                                <th>Periode Bulan</th>
+                                                <th>Periode Hari</th>
+                                                <th>Tanggal Upload</th>
+                                                <th>Pengupload</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th>File Unggah</th>
+                                                <th>Periode Bulan</th>
+                                                <th>Periode Hari</th>
+                                                <th>Tanggal Upload</th>
+                                                <th>Pengupload</th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </section>

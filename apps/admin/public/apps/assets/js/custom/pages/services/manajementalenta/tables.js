@@ -155,7 +155,30 @@ const table = $('#dataTable').DataTable({
         emptyTable: (window.ServiceTableUI ? ServiceTableUI.createEmptyState() : 'Tidak ada data'),
         zeroRecords: (window.ServiceTableUI ? ServiceTableUI.createEmptyState() : 'Tidak ada data'),
         processing: processingState
-    }     
+    },
+    initComplete: function(settings, json) {
+        if (window.ServiceTableUI) {
+            ServiceTableUI.init({
+                key: 'mt',
+                table: table,
+                disableRecap: true
+            });
+        }
+    }
+});
+
+table.on('draw', function() {
+    var info = table.page.info();
+    var data = table.rows().data().toArray();
+    
+    $('.js-total-data').text(info.recordsTotal);
+    $('.js-data-ditampilkan').text(info.recordsDisplay);
+    
+    if (data.length > 0 && data[0].diperbaharui) {
+        $('.js-last-update').text(data[0].diperbaharui);
+    } else {
+        $('.js-last-update').text('-');
+    }
 });
 
 const MAX_BULAN = 2;
@@ -191,8 +214,36 @@ $('#applyBulan').on('click', function () {
         $('#dropdownBulan').text('Pilih Bulan');
     }
 
+    updateActiveFiltersLabel();
     table.ajax.reload();
 });
+
+function updateActiveFiltersLabel() {
+    const $container = $('.active-filters-container');
+    const $list = $('.active-filters-list');
+    $list.empty();
+    
+    let hasFilters = false;
+
+    if (selectedBulan.length > 0) {
+        hasFilters = true;
+        const labels = bulanList
+            .filter(b => selectedBulan.includes(b.val))
+            .map(b => b.text.substring(0, 3));
+        
+        $list.append(`
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1">
+                <i class="bi bi-calendar3 me-1"></i> Bulan: ${labels.join(', ')}
+            </span>
+        `);
+    }
+
+    if (hasFilters) {
+        $container.removeClass('d-none').addClass('d-block');
+    } else {
+        $container.removeClass('d-block').addClass('d-none');
+    }
+}
 
 function ynIcon(data) {
     return data === '1'
@@ -273,4 +324,3 @@ $('#dataTable tbody').on('click', '.btn-update', function () {
     });
 
 });
-

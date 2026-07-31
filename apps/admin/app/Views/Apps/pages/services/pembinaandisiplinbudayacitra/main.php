@@ -5,7 +5,7 @@
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
 <div class="page-content py-4">
-    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px; padding: 0 .85rem 1.05rem;">
+    <div class="container-fluid text-start mx-auto" style="padding: 0 .85rem 1.05rem;">
         <div class="page-heading mb-0">
             <div class="row align-items-center d-flex justify-content-between">
                 <div class="col-md-8 text-start">
@@ -28,7 +28,7 @@
         <section class="row">
             <div class="col-md-12">
                 <div class="service-ui-topbar mb-3 service-ui-static-topbar pdbc-topbar">
-                            <div class="service-ui-topbar-filters pdbc-topbar-group">
+                            <div class="service-ui-topbar-filters module-filter-row d-flex align-items-center gap-2">
                                 <div class="dropdown">
                                     <button
                                         class="btn btn-outline-primary dropdown-toggle px-3 fw-semibold d-flex align-items-center gap-2"
@@ -45,7 +45,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <select id="pdbcJenisFilter" class="form-select form-select-sm pdbc-filter-jenis">
+                                <select id="pdbcJenisFilter" class="form-select form-select-sm w-auto">
                                     <option value="ALL">Semua Jenis</option>
                                     <option value="ASISTENSI">Asistensi</option>
                                     <option value="KONSULTASI">Konsultasi</option>
@@ -60,7 +60,15 @@
                         </div>
 
                         <div class="pdbc-category-overview" id="pdbcCategoryOverview"></div>
-                          <div class="card border">
+                        
+                        <!-- Active Filters Indicator -->
+                        <div id="activeFiltersLabel" class="mb-3" style="display: none;">
+                            <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
+                            <span id="filterJenisBadge" class="badge bg-light text-primary border border-primary me-1 mb-1" style="font-weight: 500;"></span>
+                            <span id="filterMonthBadge" class="badge bg-light text-primary border border-primary mb-1" style="font-weight: 500; display: none;"></span>
+                        </div>
+
+                          <div class="card border shadow-sm">
                               <div class="card-body p-3">
                                   <div class="table-responsive">
                             <table id="pdbcTable" class="table table-bordered table-hover nowrap">

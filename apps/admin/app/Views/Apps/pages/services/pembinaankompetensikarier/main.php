@@ -25,37 +25,40 @@
             </div>
         </div>
 
-        <section class="row">
-            <div class="col-md-12">
-                <div class="service-ui-topbar mb-3 service-ui-static-topbar pkk-topbar">
-                            <div class="service-ui-topbar-filters pkk-topbar-group">
-                                <select id="pkkYearFilter" class="form-select form-select-sm pkk-filter-year"></select>
-                                <div class="dropdown">
-                                    <button
-                                        class="btn btn-outline-primary dropdown-toggle px-3 fw-semibold d-flex align-items-center gap-2"
-                                        type="button" id="pkkMonthDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Pilih Bulan
-                                    </button>
-                                    <ul class="dropdown-menu shadow rounded-3 border-0 p-3 mt-2 service-ui-period-dropdown" id="pkkMonthDropdown">
-                                        <div id="pkkMonthList"></div>
-                                        <li><hr class="dropdown-divider my-2"></li>
-                                        <li>
-                                            <button type="button" class="btn btn-primary w-100 fw-semibold" id="pkkApplyMonth">
-                                                <i class="bi bi-check-circle me-1"></i> Terapkan
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="service-ui-topbar-actions pkk-topbar-actions">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pkkDataModal">
-                                    <i class="bi bi-plus me-1"></i> Tambah Data
-                                </button>
-                            </div>
-                        </div>
-                          <div class="card border">
-                              <div class="card-body p-3">
-                                  <div class="table-responsive">
+        <div class="service-ui-topbar mb-3 service-ui-static-topbar pkk-topbar">
+            <div class="service-ui-topbar-filters module-filter-row d-flex align-items-center gap-2 pkk-topbar-group">
+                <select id="pkkYearFilter" class="form-select form-select-sm w-auto pkk-filter-year"></select>
+                <div class="dropdown">
+                    <button
+                        class="btn btn-outline-primary dropdown-toggle px-3 fw-semibold d-flex align-items-center gap-2 w-auto"
+                        type="button" id="pkkMonthDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                        Pilih Bulan
+                    </button>
+                    <ul class="dropdown-menu shadow rounded-3 border-0 p-3 mt-2 service-ui-period-dropdown" id="pkkMonthDropdown">
+                        <div id="pkkMonthList"></div>
+                        <li><hr class="dropdown-divider my-2"></li>
+                        <li>
+                            <button type="button" class="btn btn-primary w-100 fw-semibold" id="pkkApplyMonth">
+                                <i class="bi bi-check-circle me-1"></i> Terapkan
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="service-ui-topbar-actions pkk-topbar-actions">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pkkDataModal">
+                    <i class="bi bi-plus me-1"></i> Tambah Data
+                </button>
+            </div>
+        </div>
+
+        <div class="active-filters-container mt-4 mb-3 align-items-center flex-wrap gap-2" id="activeFilterContainer" style="display: none;">
+            <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
+        </div>
+
+        <div class="card border">
+            <div class="card-body p-3">
+                <div class="table-responsive">
                             <table id="pkkTable" class="table table-bordered table-hover nowrap">
                                 <thead>
                                     <tr>
@@ -76,7 +79,6 @@
                     </div>
                 </div>
             </div>
-        </section>
 
         <div class="modal fade" id="pkkDataModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">

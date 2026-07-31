@@ -5,7 +5,7 @@
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
 <div class="page-content py-4">
-    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px; padding: 0 .85rem 1.05rem;">
+    <div class="container-fluid text-start tw-wrap" style="padding: 0 .85rem 1.05rem;">
         <div class="page-heading mb-0">
             <div class="row align-items-center d-flex justify-content-between">
                 <div class="col-md-6 text-start">
@@ -55,9 +55,63 @@
                                         class="bi bi-plus me-2"></i>Tambah Data</button>
                             </div>
                         </div>
-                          <div class="card border">
-                              <div class="card-body p-3">
-                                  <div class="table-responsive">
+
+                        <!-- KPI Cards Section -->
+                        <div id="mtSummary" class="row g-3 mb-4">
+                            <!-- KPI 1 -->
+                            <div class="col-12 col-md-4">
+                                <div class="card border h-100 mb-0 shadow-sm">
+                                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                                        <span class="service-ui-recap-icon">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        </span>
+                                        <div>
+                                            <p class="service-ui-recap-label mb-1">Total Data</p>
+                                            <h6 class="service-ui-recap-value js-total-data mb-0">0</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- KPI 2 -->
+                            <div class="col-12 col-md-4">
+                                <div class="card border h-100 mb-0 shadow-sm">
+                                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                                        <span class="service-ui-recap-icon">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                                        </span>
+                                        <div>
+                                            <p class="service-ui-recap-label mb-1">Data Ditampilkan</p>
+                                            <h6 class="service-ui-recap-value js-data-ditampilkan mb-0">0</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- KPI 3 -->
+                            <div class="col-12 col-md-4">
+                                <div class="card border h-100 mb-0 shadow-sm">
+                                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                                        <span class="service-ui-recap-icon">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        </span>
+                                        <div>
+                                            <p class="service-ui-recap-label mb-1">Update Terakhir</p>
+                                            <h6 class="service-ui-recap-value js-last-update mb-0">-</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="active-filters-container mb-3 d-none">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-muted small">Filter aktif:</span>
+                                <div class="active-filters-list d-flex flex-wrap gap-2"></div>
+                            </div>
+                        </div>
+
+                        <div class="card border shadow-sm">
+                            <div class="card-body p-3">
+                                <div class="table-responsive">
                             <table id="dataTable" class="table table-bordered table-hover nowrap">
                                 <thead>
                                     <tr>
@@ -145,6 +199,7 @@
 </div>
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
+<script src="<?= asset_url('apps/assets/js/custom/pages/services/service-table-ui.js') ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/manajementalenta/main.js') ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/manajementalenta/tables.js') ?>"></script>
 <?= $this->endSection(); ?>

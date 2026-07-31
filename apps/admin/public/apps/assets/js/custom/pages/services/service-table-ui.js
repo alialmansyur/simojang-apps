@@ -206,6 +206,7 @@
     }
 
     function mountRecap(config, table) {
+        if (config.disableRecap === true) return null;
         const recapId = `serviceUiRecap-${config.key}`;
         if ($(`#${recapId}`).length) return recapId;
         $(`#generic-recap-${config.key}`).remove();
@@ -239,17 +240,23 @@
                     }
                     return $existingRecap.attr('id');
                 }
-                const $staticTopbar = $cardBody.find('.service-ui-static-topbar').first();
-                if ($staticTopbar.length) {
-                    $staticTopbar.after(`<div id="${recapId}" class="service-ui-recap">${html}</div>`);
-                    return recapId;
-                }
-
-                const $tableWrap = $cardBody.find('.table-responsive').first();
-                if ($tableWrap.length) {
-                    $tableWrap.before(`<div id="${recapId}" class="service-ui-recap">${html}</div>`);
-                    return recapId;
-                }
+                  const $staticTopbar = $cardBody.find('.service-ui-static-topbar').first();
+                  if ($staticTopbar.length) {
+                      $staticTopbar.after(`<div id="${recapId}" class="service-ui-recap mb-3">${html}</div>`);
+                      return recapId;
+                  }
+  
+                  const $card = $cardBody.closest('.card');
+                  if ($card.length) {
+                      const $parent = $card.parent();
+                      const $activeFilters = $parent.find('.active-filters-container').first();
+                      if ($activeFilters.length) {
+                          $activeFilters.before(`<div id="${recapId}" class="service-ui-recap mb-4">${html}</div>`);
+                      } else {
+                          $card.before(`<div id="${recapId}" class="service-ui-recap mb-4">${html}</div>`);
+                      }
+                      return recapId;
+                  }
             }
         }
 
@@ -389,18 +396,20 @@
         });
     }
 
-    function createEmptyLottie(text = 'Maaf, kami tidak dapat menemukan data yang Anda cari. Silakan periksa kembali kata kunci atau filter pencarian Anda.') {
+    function createEmptyLottie(text = 'Data tidak ditemukan. Silakan periksa kembali kata kunci atau filter pencarian.') {
         return createEmptyState('Pencarian Tidak Ditemukan', text);
     }
 
-    function createEmptyState(text = 'Pencarian Tidak Ditemukan', desc = 'Maaf, kami tidak dapat menemukan data yang Anda cari. Silakan periksa kembali kata kunci atau filter pencarian Anda.') {
+    function createEmptyState(text = 'Pencarian Tidak Ditemukan', desc = 'Data tidak ditemukan. Silakan periksa kembali kata kunci atau filter pencarian.') {
         const message = escapeHtml(text);
-        const submessage = escapeHtml(desc);
+        // We do not escape HTML for desc here because we might want to pass <br> manually, 
+        // but since we rely on CSS text-wrap, it's safer to just use it as string.
+        const submessage = String(desc).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         return `
-            <div class="d-flex flex-column align-items-center justify-content-center text-center mt-5 mb-5 pb-4 tw-animate-entry">
-                <img src="${AppConfig.initGlobal}apps/assets/images/empty-content-profile.png" alt="Tidak Ditemukan" style="max-width: 320px; margin-bottom: 2rem;">
-                <h5 class="fw-bold" style="color: #1a202c; font-size: 1.35rem;">${message}</h5>
-                <p class="text-muted" style="font-size: 1.05rem; max-width: 480px;">${submessage}</p>
+            <div class="d-flex flex-column align-items-center justify-content-center text-center mt-5 mb-5 pb-4 tw-animate-entry" style="white-space: normal !important; width: 100%;">
+                <img src="${AppConfig.initGlobal}apps/assets/images/empty-content-profile.png" alt="Tidak Ditemukan" style="max-width: 250px; margin-bottom: 1.5rem;">
+                <h5 class="fw-bold" style="color: #1a202c; font-size: 1.25rem;">${message}</h5>
+                <p class="text-muted" style="font-size: 0.95rem; max-width: 400px; white-space: normal !important; word-wrap: break-word;">${submessage}</p>
             </div>
         `;
     }

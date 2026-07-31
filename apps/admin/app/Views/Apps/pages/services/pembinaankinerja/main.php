@@ -5,7 +5,7 @@
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
 <div class="page-content py-4">
-    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px; padding: 0 .85rem 1.05rem;">
+    <div class="container-fluid text-start mx-auto tw-wrap" style="padding: 0 .85rem 1.05rem;">
         <div class="page-heading mb-0">
             <div class="row align-items-center d-flex justify-content-between">
                 <div class="col-md-8 text-start">
@@ -28,8 +28,8 @@
         <section class="row">
             <div class="col-md-12">
                 <div class="service-ui-topbar mb-3 service-ui-static-topbar pk-topbar">
-                            <div class="service-ui-topbar-filters pk-topbar-group">
-                                <select id="pkYearFilter" class="form-select form-select-sm pk-filter-year"></select>
+                            <div class="service-ui-topbar-filters module-filter-row d-flex align-items-center gap-2">
+                                <select id="pkYearFilter" class="form-select form-select-sm w-auto"></select>
                                 <div class="dropdown">
                                     <button
                                         class="btn btn-outline-primary dropdown-toggle px-3 fw-semibold d-flex align-items-center gap-2"
@@ -46,7 +46,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <select id="pkCategoryFilter" class="form-select form-select-sm pk-filter-category">
+                                <select id="pkCategoryFilter" class="form-select form-select-sm w-auto">
                                     <option value="0">Semua Kategori</option>
                                 </select>
                             </div>
@@ -58,7 +58,16 @@
                         </div>
 
                         <div class="pk-category-overview" id="pkCategoryOverview"></div>
-                          <div class="card border">
+                        
+                        <!-- Active Filters Indicator -->
+                        <div id="activeFiltersLabel" class="active-filters-container mt-4 mb-3 align-items-center flex-wrap gap-2" style="display: none;">
+                            <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
+                            <span id="filterYearBadge" class="badge bg-light text-primary border border-primary me-1 mb-1" style="font-weight: 500; display: none;"></span>
+                            <span id="filterKategoriBadge" class="badge bg-light text-primary border border-primary me-1 mb-1" style="font-weight: 500; display: none;"></span>
+                            <span id="filterMonthBadge" class="badge bg-light text-primary border border-primary mb-1" style="font-weight: 500; display: none;"></span>
+                        </div>
+
+                          <div class="card border shadow-sm">
                               <div class="card-body p-3">
                                   <div class="table-responsive">
                             <table id="pkTable" class="table table-bordered table-hover nowrap">
