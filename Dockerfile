@@ -38,5 +38,7 @@ WORKDIR /var/www/html
 
 COPY apps/admin/ /var/www/html/
 
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+RUN mkdir -p /var/www/html/public/uploads/excel \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 775 /var/www/html/public/uploads
