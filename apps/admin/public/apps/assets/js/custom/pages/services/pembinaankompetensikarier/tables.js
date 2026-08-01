@@ -111,11 +111,7 @@
         ServiceTableUI.setup({
             key: 'pkk',
             table,
-            cards: [
-                { id: 'recap-total', label: 'Total Data', value: '0' },
-                { id: 'recap-partisipan', label: 'Partisipan', value: '0' },
-                { id: 'recap-update', label: 'Update Terakhir', value: '-' }
-            ],
+            disableRecap: true,
             loadSummary,
             reloadSummaryOnClick: false,
             processingText: 'Memuat data kompetensi dan karier...'

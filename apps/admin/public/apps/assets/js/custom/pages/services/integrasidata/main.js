@@ -6,7 +6,7 @@ $(document).ready(function () {
         $('#dataTable').DataTable().ajax.reload();
     });
 
-    $(document).on('shown.bs.modal', function (e) {
+    $(document).off('shown.bs.modal', '#DataModal').on('shown.bs.modal', '#DataModal', function (e) {
         const modal = $(e.target);
 
         modal.find('.select-instansi').each(function () {
@@ -111,10 +111,8 @@ $(document).ready(function () {
                 $(this).select2('destroy');
             }
         });
-    });
-
-    $(document).on('shown.bs.modal', function () {
-        $('#form-usulan')[0].reset();
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('overflow', '');
     });
 
 });

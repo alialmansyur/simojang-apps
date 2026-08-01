@@ -158,7 +158,7 @@ const table = $('#dataTable').DataTable({
     },
     initComplete: function(settings, json) {
         if (window.ServiceTableUI) {
-            ServiceTableUI.init({
+            ServiceTableUI.setup({
                 key: 'mt',
                 table: table,
                 disableRecap: true
@@ -207,7 +207,7 @@ $('#applyBulan').on('click', function () {
     if (selectedBulan.length) {
         const namaBulan = bulanList
             .filter(b => selectedBulan.includes(b.val))
-            .map(b => b.text.substring(0, 3));
+            .map(b => b.text);
 
         $('#dropdownBulan').text(namaBulan.join(', '));
     } else {
@@ -229,19 +229,15 @@ function updateActiveFiltersLabel() {
         hasFilters = true;
         const labels = bulanList
             .filter(b => selectedBulan.includes(b.val))
-            .map(b => b.text.substring(0, 3));
+            .map(b => b.text);
         
-        $list.append(`
-            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1">
-                <i class="bi bi-calendar3 me-1"></i> Bulan: ${labels.join(', ')}
-            </span>
-        `);
+        $list.append(`<span class="badge bg-light text-primary border border-primary mb-1 filter-badge" style="font-weight: 500;">Bulan: ${labels.join(', ')}</span>`);
     }
 
     if (hasFilters) {
-        $container.removeClass('d-none').addClass('d-block');
+        $container.addClass('d-flex').show();
     } else {
-        $container.removeClass('d-block').addClass('d-none');
+        $container.removeClass('d-flex').hide();
     }
 }
 

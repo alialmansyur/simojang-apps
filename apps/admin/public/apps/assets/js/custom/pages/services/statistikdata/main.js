@@ -60,6 +60,10 @@ $(document).ready(function () {
         window.statistikState.jenis = jenis;
         updateSampleLinks(jenis);
 
+        // Update active filter badge
+        $('#filterCategoryBadge').text(jenis);
+        $('#activeFilterContainer').css('display', 'flex').show();
+
         if ($.fn.DataTable.isDataTable('#dataTable')) {
             $('#dataTable').DataTable().ajax.reload(null, false);
         }
@@ -137,4 +141,10 @@ $(document).ready(function () {
     });
 
     updateSampleLinks('');
+
+    $('#exampleModalFullscreen').on('hidden.bs.modal', function () {
+        $('#UploadData')[0].reset();
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('overflow', '');
+    });
 });

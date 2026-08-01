@@ -20,6 +20,7 @@ $(document).ready(function () {
         : [];
         
     PKKApp.table = PKKApp.table || null;
+    PKKApp.pond = null;
     window.PKKApp = PKKApp;
 
     const monthOptions = [
@@ -85,7 +86,7 @@ $(document).ready(function () {
 
         const labels = monthOptions
             .filter((item) => PKKApp.selectedMonths.includes(item.val))
-            .map((item) => item.text.slice(0, 3));
+            .map((item) => item.text);
         $btn.text(labels.join(', '));
     }
 
@@ -218,6 +219,80 @@ $(document).ready(function () {
             $form.find('[name="period_year"]').val(PKKApp.selectedYear);
             $form.find('[name="tanggal_kegiatan"]').val(getCurrentDate());
             $form.find('[name="metode"]').val('');
+            
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open').css('overflow', '');
+        });
+        
+        $('.btn-upload-submit').on('click', function (e) {
+            e.preventDefault();
+            const form = document.getElementById('UploadData');
+            const submitBtn = $(this);
+
+            if (PKKApp.pond && PKKApp.pond.getFiles().length === 0) {
+                swlErrorHandler('Silakan pilih file Excel terlebih dahulu.');
+                return;
+            }
+
+            const fd = new FormData(form);
+
+            if (PKKApp.pond) {
+                PKKApp.pond.getFiles().forEach((item) => {
+                    fd.append('file', item.file, item.file.name);
+                });
+            }
+
+            $('#uploadModal').modal('hide');
+            swlwaitProsessing();
+            submitBtn.prop('disabled', true);
+
+            $.ajax({
+                url: AppConfig.initGlobal + 'store/import-excel',
+                type: 'POST',
+                data: fd,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.status === 'error') {
+                        swlErrorHandler(response.message);
+                        return;
+                    }
+
+                    if (PKKApp.table) PKKApp.table.ajax.reload(null, false);
+                    if (typeof PKKApp.refreshSummary === 'function') PKKApp.refreshSummary();
+                    if (PKKApp.pond) PKKApp.pond.removeFiles();
+                    form.reset();
+                    swlSuccess();
+                },
+                error: function (xhr) {
+                    const message = xhr.responseJSON && xhr.responseJSON.message
+                        ? xhr.responseJSON.message
+                        : 'Upload data gagal diproses.';
+                    swlErrorHandler(message);
+                },
+                complete: function () {
+                    submitBtn.prop('disabled', false);
+                }
+            });
+        });
+    }
+
+    function initPond() {
+        const inputElement = document.querySelector('.basic-filepond');
+        if (!inputElement || typeof FilePond === 'undefined') return null;
+
+        return FilePond.create(inputElement, {
+            credits: false,
+            instantUpload: false,
+            allowMultiple: false,
+            acceptedFileTypes: [
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ],
+            labelIdle: 'Hanya file Excel (.xls, .xlsx) <span class="filepond--label-action">Browse</span>',
+            labelFileTypeNotAllowed: 'File hanya boleh Excel (.xls, .xlsx)',
+            fileValidateTypeLabelExpectedTypes: 'Hanya file Excel (.xls, .xlsx) yang diperbolehkan',
+            fileValidateTypeDetectType: (source, type) => new Promise((resolve) => resolve(type))
         });
     }
 
@@ -241,6 +316,7 @@ $(document).ready(function () {
     loadOptions().always(function () {
         attachFilterActions();
         attachFormActions();
+        PKKApp.pond = initPond();
         $('#pkkForm [name="period_year"]').val(PKKApp.selectedYear);
         $('#pkkForm [name="tanggal_kegiatan"]').val(getCurrentDate());
     });

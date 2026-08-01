@@ -96,6 +96,8 @@ $(document).ready(function () {
                 $(this).select2('destroy');
             }
         });
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('overflow', '');
     });
 
 });

@@ -47,9 +47,33 @@ $('#applyFilter').on('click', function () {
         $('#dropdownFilterBtn').text('Pilih Tim Kerja / Bidang');
     }
 
+    updateActiveFiltersLabel();
     loadData(selectedData);
     table.ajax.reload();
     if (typeof loadSummaryStatistikInternal === 'function') {
         loadSummaryStatistikInternal();
     }
 });
+
+function updateActiveFiltersLabel() {
+    const $container = $('#activeFilterContainer');
+    const $list = $container.find('.active-filters-list');
+    $list.empty();
+    
+    let hasFilters = false;
+
+    if (selectedData.length > 0) {
+        hasFilters = true;
+        const labels = filterList
+            .filter(f => selectedData.includes(String(f.text)))
+            .map(f => f.text);
+        
+        $list.append(`<span class="badge bg-light text-primary border border-primary mb-1 filter-badge" style="font-weight: 500;">Tim/Bidang: ${labels.join(', ')}</span>`);
+    }
+
+    if (hasFilters) {
+        $container.addClass('d-flex').show();
+    } else {
+        $container.removeClass('d-flex').hide();
+    }
+}

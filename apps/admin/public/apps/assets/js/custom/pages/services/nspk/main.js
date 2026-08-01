@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    $(document).on('shown.bs.modal', function (e) {
+    $(document).off('shown.bs.modal', '#DataModal');
+    $('#DataModal').on('shown.bs.modal', function (e) {
         const modal = $(e.target);
 
         modal.find('.select-instansi').each(function () {
@@ -102,5 +103,8 @@ $(document).ready(function () {
                 $(this).select2('destroy');
             }
         });
+        
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('overflow', '');
     });
 });

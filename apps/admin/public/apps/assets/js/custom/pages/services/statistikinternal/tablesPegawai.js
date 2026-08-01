@@ -148,11 +148,6 @@ const table = $('#dataTable').DataTable({
                     { id: 'last-update', label: 'Update Terakhir', value: '-' }
                 ]
             });
-            const $recap = $('#serviceUiRecap-stkin');
-            const $nav = $('#pegawaiTab');
-            if ($recap.length && $nav.length) {
-                $nav.after($recap);
-            }
         }
         updateShownStkin();
         loadSummaryStatistikInternal();

@@ -137,4 +137,6 @@ $(document).ready(function () {
 
 $('#DataModal').on('hidden.bs.modal', function () {
     resetPdmForm();
+    $('.modal-backdrop').remove();
+    $('body').removeClass('modal-open').css('overflow', '');
 });

@@ -168,6 +168,7 @@ const table = $('#dataTable').DataTable({
             ServiceTableUI.setup({
                 key: 'merit',
                 table,
+                disableRecap: true,
                 loadSummary: loadMeritSummary,
                 reloadSummaryOnClick: false,
                 processingText: 'Memuat data merit...'
@@ -202,15 +203,39 @@ $('#applyBulan').on('click', function () {
     if (selectedBulan.length) {
         const namaBulan = bulanList
             .filter((b) => selectedBulan.includes(b.val))
-            .map((b) => b.text.substring(0, 3));
+            .map((b) => b.text);
 
         $('#dropdownBulan').text(namaBulan.join(', '));
     } else {
         $('#dropdownBulan').text('Pilih Bulan');
     }
 
+    updateActiveFiltersLabel();
+
     table.ajax.reload(null, false);
 });
+
+function updateActiveFiltersLabel() {
+    let hasFilter = false;
+    const $container = $('.active-filters-container');
+    
+    $container.find('.filter-badge').remove();
+    
+    if (selectedBulan && selectedBulan.length > 0) {
+        const labels = bulanList
+            .filter((item) => selectedBulan.includes(item.val))
+            .map((item) => item.text);
+            
+        $container.append(`<span class="badge bg-light text-primary border border-primary mb-1 filter-badge" style="font-weight: 500;">Bulan: ${labels.join(', ')}</span>`);
+        hasFilter = true;
+    }
+    
+    if (hasFilter) {
+        $container.addClass('d-flex').show();
+    } else {
+        $container.removeClass('d-flex').hide();
+    }
+}
 
 $('#dataTable tbody').on('click', 'tr td .btn-remove', function () {
     const key = $(this).attr('data-id');

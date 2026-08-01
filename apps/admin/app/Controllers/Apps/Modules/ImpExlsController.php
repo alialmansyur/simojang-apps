@@ -103,6 +103,9 @@ class ImpExlsController extends BaseController
         }elseif ($layananId == 24) {
             $mappingFunction = $this->getMapperForJenis($layananId, $sess['username'],$logID);
             $table = 'txn_activity_integrasi';            
+        }elseif ($layananId == 16) {
+            $mappingFunction = $this->getMapperForPembinaanKompetensiKarier($sess['username'], $logID);
+            $table = 'txn_pembinaan_kompetensi_karier';
         }else{
             $mappingFunction = $this->getMapperForJenis($layananId, $sess['username'],$logID);
             $table = 'txn_activity_upload_detail';
@@ -231,6 +234,28 @@ class ImpExlsController extends BaseController
         }
 
         throw new \Exception('Jenis tidak dikenali.');
+    }
+
+    private function getMapperForPembinaanKompetensiKarier($sessname, $logID) {
+        return function ($row) use ($sessname, $logID) {
+            return [
+                'layanan_id'       => 16,
+                'period_year'      => $row[1] ?? date('Y'),
+                'tanggal_kegiatan' => ExcelUploader::excelDate($row[2] ?? null) ?? date('Y-m-d'),
+                'judul_kegiatan'   => $row[3] ?? '',
+                'materi'           => $row[4] ?? '',
+                'total_partisipan' => (int)($row[5] ?? 0),
+                'metode'           => $row[6] ?? '',
+                'lokasi'           => $row[7] ?? null,
+                'penyelenggara'    => $row[8] ?? null,
+                'eviden_link'      => $row[9] ?? null,
+                'catatan'          => $row[10] ?? null,
+                'created_by'       => $sessname,
+                'created_at'       => date('Y-m-d H:i:s'),
+                'updated_by'       => $sessname,
+                'updated_at'       => date('Y-m-d H:i:s'),
+            ];
+        };
     }
 
     private function getMapperForStatistik($jenis, $insertID, $syncdate){

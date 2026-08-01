@@ -47,17 +47,7 @@
     }
 
     function ensureOverviewPlacement() {
-        const $overview = $('#pdbcCategoryOverview');
-        if (!$overview.length) return;
-
-        const $cardBody = $overview.closest('.card-body');
-        const $topbar = $cardBody.find('.service-ui-static-topbar.pdbc-topbar').first();
-        const $tableWrap = $cardBody.find('.table-responsive').first();
-
-        if (!$topbar.length || !$tableWrap.length) return;
-
-        $overview.insertAfter($topbar);
-        $overview.insertBefore($tableWrap);
+        // Obsolete: #pdbcCategoryOverview is manually placed outside .card-body in main.php
     }
 
     function loadSummary() {
@@ -220,11 +210,7 @@
         ServiceTableUI.setup({
             key: 'pdbc',
             table,
-            cards: [
-                { id: 'recap-total', label: 'Total Data', value: '0' },
-                { id: 'recap-fasilitasi', label: 'Konsultasi', value: '0' },
-                { id: 'recap-update', label: 'Update Terakhir', value: '-' }
-            ],
+            disableRecap: true,
             loadSummary,
             reloadSummaryOnClick: false,
             processingText: 'Memuat data pembinaan disiplin...'

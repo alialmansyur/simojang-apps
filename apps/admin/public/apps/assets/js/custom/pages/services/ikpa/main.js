@@ -1,4 +1,4 @@
-﻿$(document).on('click', '.selectType', function (e) {
+$(document).on('click', '.selectType', function (e) {
     e.preventDefault();
     var tipe = $(this).data('type');
     $('.doc_type').val(tipe);
@@ -51,6 +51,9 @@ $(document).ready(function () {
                         if (typeof loadSummaryIKPA === 'function') { loadSummaryIKPA(); }
                     }
                     pond.removeFiles();
+                        if (typeof loadSummaryIKPA === 'function') { loadSummaryIKPA(); }
+                    }
+                    pond.removeFiles();
                     form.reset();
                     $('#DataModal').modal('hide');
                     swlSuccess();
@@ -58,8 +61,13 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#DataModal').on('hidden.bs.modal', function () {
+        const form = document.getElementById('UploadData');
+        form.reset();
+        pond.removeFiles();
+        
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('overflow', '');
+    });
 });
-
-
-
-

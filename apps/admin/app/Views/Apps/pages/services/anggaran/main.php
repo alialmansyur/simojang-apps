@@ -67,9 +67,8 @@ $serviceTableUiJsVersion = @filemtime(FCPATH . 'apps/assets/js/custom/pages/serv
                                 </button>
                             </div>
                         </div>
-                          <div class="card border">
-                              <div class="card-body p-3">
-                                  <div class="service-ui-recap anggaran-recap">
+
+                        <div class="service-ui-recap anggaran-recap mb-3">
                             <div class="service-ui-recap-card">
                                 <div>
                                     <p class="service-ui-recap-label">Total Record Posted</p>
@@ -119,7 +118,17 @@ $serviceTableUiJsVersion = @filemtime(FCPATH . 'apps/assets/js/custom/pages/serv
                                 </div>
                             </div>
                         </div>
-                                  <div class="table-responsive">
+
+                        <div id="activeFilterContainer" class="active-filters-container my-3 align-items-center flex-wrap gap-2" style="display: none;">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
+                                <div class="active-filters-list d-flex flex-wrap gap-2"></div>
+                            </div>
+                        </div>
+
+                        <div class="card border shadow-sm">
+                            <div class="card-body p-3">
+                                <div class="table-responsive">
                             <table id="dataTableAnggaran" class="table table-bordered table-hover nowrap" style="width:100%">
                                 <thead>
                                     <tr>

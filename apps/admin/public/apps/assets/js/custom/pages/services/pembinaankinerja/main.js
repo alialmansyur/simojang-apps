@@ -103,12 +103,12 @@ $(document).ready(function () {
 
         const labels = monthOptions
             .filter((item) => PKApp.selectedMonths.includes(item.val))
-            .map((item) => item.text.slice(0, 3));
+            .map((item) => item.text);
         $btn.text(labels.join(', '));
     }
 
     function updateActiveFilterLabels() {
-        const $container = $('#activeFiltersLabel');
+        const $container = $('#activeFilterContainer');
         const $yearBadge = $('#filterYearBadge');
         const $kategoriBadge = $('#filterKategoriBadge');
         const $monthBadge = $('#filterMonthBadge');
@@ -122,7 +122,7 @@ $(document).ready(function () {
             const yearVal = $('#pkYearFilter').val();
             const yearText = $('#pkYearFilter option:selected').text().trim();
             if (yearVal && yearVal !== '') {
-                $yearBadge.html(`<i class="bi bi-calendar me-1"></i>Tahun: ${yearText}`).show();
+                $yearBadge.text(`Tahun: ${yearText}`).show();
                 hasFilter = true;
             } else {
                 $yearBadge.hide();
@@ -135,7 +135,7 @@ $(document).ready(function () {
         if ($('#pkCategoryFilter').length) {
             const kategoriText = $('#pkCategoryFilter option:selected').text().trim();
             if (kategoriText && $('#pkCategoryFilter').val() !== '0') {
-                $kategoriBadge.html(`<i class="bi bi-tag me-1"></i>Kategori: ${kategoriText}`).show();
+                $kategoriBadge.html(`Kategori: ${kategoriText}`).show();
                 hasFilter = true;
             } else {
                 $kategoriBadge.hide();
@@ -148,9 +148,9 @@ $(document).ready(function () {
         if (PKApp.selectedMonths && PKApp.selectedMonths.length > 0) {
             const labels = monthOptions
                 .filter((item) => PKApp.selectedMonths.includes(item.val))
-                .map((item) => item.text.slice(0, 3));
+                .map((item) => item.text);
             
-            $monthBadge.html(`<i class="bi bi-calendar me-1"></i>Bulan: ${labels.join(', ')}`).show();
+            $monthBadge.text(`Bulan: ${labels.join(', ')}`).show();
             hasFilter = true;
         } else {
             $monthBadge.hide();
@@ -230,6 +230,9 @@ $(document).ready(function () {
                 $instansi.val(null).trigger('change');
                 $instansi.select2('destroy');
             }
+            
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open').css('overflow', '');
         });
     }
 

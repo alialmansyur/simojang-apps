@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/pembinaankinerja/main.css') ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
-<div class="page-content py-4">
-    <div class="container-fluid text-start mx-auto tw-wrap" style="padding: 0 .85rem 1.05rem;">
+<div class="page-content p-2 p-md-4">
+    <div class="container-fluid" style="max-width: 1160px; margin: 0 auto;">
         <div class="page-heading mb-0">
             <div class="row align-items-center d-flex justify-content-between">
                 <div class="col-md-8 text-start">
@@ -57,10 +57,10 @@
                             </div>
                         </div>
 
-                        <div class="pk-category-overview" id="pkCategoryOverview"></div>
+                        <div class="pk-category-overview mb-3" id="pkCategoryOverview"></div>
                         
                         <!-- Active Filters Indicator -->
-                        <div id="activeFiltersLabel" class="active-filters-container mt-4 mb-3 align-items-center flex-wrap gap-2" style="display: none;">
+                        <div id="activeFilterContainer" class="active-filters-container my-3 align-items-center flex-wrap gap-2" style="display: none;">
                             <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
                             <span id="filterYearBadge" class="badge bg-light text-primary border border-primary me-1 mb-1" style="font-weight: 500; display: none;"></span>
                             <span id="filterKategoriBadge" class="badge bg-light text-primary border border-primary me-1 mb-1" style="font-weight: 500; display: none;"></span>

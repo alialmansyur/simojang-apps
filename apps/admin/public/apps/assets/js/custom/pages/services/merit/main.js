@@ -44,5 +44,7 @@ $(document).ready(function () {
         const form = $('#form-usulan');
         form[0].reset();
         $('#DataModalLabel').text('Tambah Data');
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('overflow', '');
     });
 });

@@ -8,22 +8,23 @@
 </style>
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
-<div class="page-content py-4">
-    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px; padding: 0 .85rem 1.05rem;">
+<div class="page-content p-2 p-md-4">
+    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px;">
         <div class="page-heading mb-0">
-            <div class="row align-items-center mt-4 mb-3" role="banner">
-                <div class="col-12 col-md-8 text-start">
-                    <h1 class="tw-title lh-1" style="color: #1a202c; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem;">
-                        Detail Asset: <?= esc($category['name']) ?>
-                    </h1>
-                    <p class="tw-subtitle text-secondary mb-0" style="font-size: 1rem; font-weight: 400;">
-                        Simojang | Kantor Regional III Badan Kepegawaian Negara
-                    </p>
+            <div class="row align-items-center d-flex justify-content-between">
+                <div class="col-md-6 text-start">
+                    <h3 class="mt-3"><b>Detail Asset: <?= esc($category['name']) ?></b></h3>
+                    <p class="text-subtitle text-muted">Simojang | Kantor Regional III Badan Kepegawaian Negara</p>
                 </div>
-                <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0">
-                    <a href="<?= base_url('apps-manage-assets') ?>" class="btn btn-primary">
-                        <i class="bi bi-chevron-left fs-6"></i> Kembali
-                    </a>
+                <div class="col-md-6 text-end">
+                    <div class="service-page-inline-actions">
+                        <button type="button" class="btn btn-outline-primary js-service-reload">
+                            <i class="bi bi-arrow-clockwise me-1"></i> Muat Ulang
+                        </button>
+                        <a href="<?= base_url('apps-manage-assets') ?>" class="btn btn-primary">
+                            <i class="bi bi-chevron-left fs-6"></i> <strong>Kembali</strong>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,7 +41,15 @@
                                 </button> -->
                             </div>
                         </div>
-                          <div class="card border">
+
+                        <div id="activeFilterContainer" class="active-filters-container my-3 align-items-center flex-wrap gap-2" style="display: none;">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
+                                <div class="active-filters-list d-flex flex-wrap gap-2"></div>
+                            </div>
+                        </div>
+
+                          <div class="card border shadow-sm">
                               <div class="card-body p-3">
                                   <div class="table-responsive">
                             <input type="hidden" id="category_uid" value="<?= esc($category['uid']) ?>">

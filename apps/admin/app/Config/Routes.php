@@ -257,6 +257,18 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->get('/apps-cat', 'Apps\Services\FasilitasiCAT::index');  
     $routes->get('/apps-cat-tilok/(:any)', 'Apps\Services\FasilitasiCAT::tilok/$1');
     $routes->get('/apps-cat-detail/(:any)', 'Apps\Services\FasilitasiCAT::detail/$1');
+    $routes->get('/apps-karier', 'Apps\Services\Karier::index');
+    $routes->post('/apps-karier/get-data', 'Apps\Services\Karier::getData');
+    $routes->post('/apps-karier/get-summary', 'Apps\Services\Karier::getSummary');
+    $routes->post('/apps-karier/store-data', 'Apps\Services\Karier::storeData');
+    $routes->post('/apps-karier/remove-data', 'Apps\Services\Karier::removeData');
+    $routes->post('/apps-karier/import-data', 'Apps\Services\Karier::importData');
+    $routes->get('/apps-kompetensi', 'Apps\Services\Kompetensi::index');
+    $routes->post('/apps-kompetensi/get-data', 'Apps\Services\Kompetensi::getData');
+    $routes->post('/apps-kompetensi/get-summary', 'Apps\Services\Kompetensi::getSummary');
+    $routes->post('/apps-kompetensi/store-data', 'Apps\Services\Kompetensi::storeData');
+    $routes->post('/apps-kompetensi/remove-data', 'Apps\Services\Kompetensi::removeData');
+    $routes->post('/apps-kompetensi/import-data', 'Apps\Services\Kompetensi::importData');
     $routes->get('/api/apps-cat/events', 'Apps\Services\FasilitasiCAT::getJenisTesList');
     $routes->post('/api/apps-cat/events', 'Apps\Services\FasilitasiCAT::createJenisTes');
     $routes->post('/api/apps-cat/events/update', 'Apps\Services\FasilitasiCAT::updateJenisTes');

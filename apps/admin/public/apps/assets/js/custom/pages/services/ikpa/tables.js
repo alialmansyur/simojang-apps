@@ -153,9 +153,33 @@ $('#applyBulan').on('click', function () {
         $('#dropdownBulan').text('Pilih Bulan');
     }
 
+    updateActiveFiltersLabel();
     table.ajax.reload();
     loadSummaryIKPA();
 });
+
+function updateActiveFiltersLabel() {
+    const $container = $('#activeFilterContainer');
+    const $list = $container.find('.active-filters-list');
+    $list.empty();
+    
+    let hasFilters = false;
+
+    if (selectedBulan.length > 0) {
+        hasFilters = true;
+        const labels = bulanList
+            .filter(b => selectedBulan.includes(b.val))
+            .map(b => b.text);
+        
+        $list.append(`<span class="badge bg-light text-primary border border-primary mb-1 filter-badge" style="font-weight: 500;">Bulan: ${labels.join(', ')}</span>`);
+    }
+
+    if (hasFilters) {
+        $container.addClass('d-flex').show();
+    } else {
+        $container.removeClass('d-flex').hide();
+    }
+}
 
 $('#dataTable tbody').on('click', '.btn-remove', function () {
     const key = $(this).attr('data-id');

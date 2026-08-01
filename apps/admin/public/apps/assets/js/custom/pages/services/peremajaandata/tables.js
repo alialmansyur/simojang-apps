@@ -108,19 +108,14 @@ const table = $('#dataTable').DataTable({
             ServiceTableUI.setup({
                 key: 'pdm',
                 table,
+                disableRecap: true,
                 loadSummary: loadSummaryPeremajaan,
-                cards: [
-                    { id: 'total-skema', label: 'Total Skema', value: '0' },
-                    { id: 'total-acc', label: 'Total ACC', value: '0' },
-                    { id: 'total-btl', label: 'Total BTL', value: '0' },
-                    { id: 'total-tms', label: 'Total TMS', value: '0' },
-                    { id: 'data-shown', label: 'Data Ditampilkan', value: '0' },
-                    { id: 'last-update', label: 'Update Terakhir', value: '-' }
-                ]
+                processingText: 'Memuat data peremajaan...'
             });
         }
         updateShownPeremajaan();
         loadSummaryPeremajaan();
+        if (typeof updateActiveFiltersLabel === 'function') updateActiveFiltersLabel();
     }
 });
 table.on('xhr.dt', function () { loadSummaryPeremajaan(); });
@@ -147,7 +142,7 @@ $('#applyBulan').on('click', function () {
     }
 
     if (selectedBulan.length) {
-        const namaBulan = bulanList.filter((b) => selectedBulan.includes(b.val)).map((b) => b.text.substring(0, 3));
+        const namaBulan = bulanList.filter((b) => selectedBulan.includes(b.val)).map((b) => b.text);
         $('#dropdownBulan').text(namaBulan.join(', '));
     } else {
         $('#dropdownBulan').text('Pilih Bulan');
@@ -155,6 +150,7 @@ $('#applyBulan').on('click', function () {
 
     table.ajax.reload();
     loadSummaryPeremajaan();
+    if (typeof updateActiveFiltersLabel === 'function') updateActiveFiltersLabel();
 });
 
 $('#dataTable tbody').on('click', 'tr td .btn-remove', function () {
@@ -183,3 +179,39 @@ $('#dataTable tbody').on('click', 'tr td .btn-remove', function () {
         }
     });
 });
+
+function updateActiveFiltersLabel() {
+    const container = $('#activeFilterContainer');
+    if (!container.length) return;
+    
+    container.find('.filter-badge').remove();
+    
+    let hasFilters = false;
+    const selectedBulanElements = $('.bulan-check:checked');
+    
+    if (selectedBulanElements.length > 0) {
+        hasFilters = true;
+        const text = selectedBulanElements.map(function() {
+            return $(this).next('label').text();
+        }).get().join(', ');
+        
+        container.append(`
+            <span class="badge bg-light text-primary border border-primary mb-1 filter-badge" style="font-weight: 500;">Bulan: ${text}</span>
+        `);
+    }
+
+    if (hasFilters) {
+        container.addClass('d-flex').show();
+    } else {
+        container.removeClass('d-flex').hide();
+    }
+}
+
+function resetBulanFilter() {
+    $('.bulan-check').prop('checked', false);
+    $('#applyBulan').click();
+}
+
+function resetAllFilters() {
+    resetBulanFilter();
+}

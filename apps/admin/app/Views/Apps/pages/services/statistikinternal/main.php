@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/statistikinternal/main.css') ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
-<div class="page-content py-4">
-    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px; padding: 0 .85rem 1.05rem;">
+<div class="page-content p-2 p-md-4">
+    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px;">
         <div class="page-heading mb-0">
             <div class="row align-items-center d-flex justify-content-between">
                 <div class="col-md-6 text-start">
@@ -25,43 +25,55 @@
             </div>
         </div>
 
+        <section class="row mb-3">
+            <div class="col-md-12">
+                <div class="service-ui-topbar mb-3 service-ui-static-topbar">
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-outline-primary dropdown-toggle px-4 py-2 fw-semibold d-flex align-items-center gap-2"
+                            type="button" id="dropdownFilterBtn" data-bs-toggle="dropdown">
+                            Pilih Tim Kerja / Bidang
+                        </button>
+
+                        <ul class="dropdown-menu shadow rounded-3 border-0 p-3 mt-2 statistikinternal-filter-dropdown">
+
+                            <li id="filterList"></li>
+
+                            <li>
+                                <hr class="dropdown-divider my-2">
+                            </li>
+
+                            <li>
+                                <button class="btn btn-primary w-100 fw-semibold" id="applyFilter">
+                                    <i class="bi bi-check-circle me-1"></i> Terapkan
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DataModal">
+                            <i class="bi bi-plus me-2"></i>Tambah Data
+                        </button>
+                    </div>
+                </div>
+
+                <div id="activeFilterContainer" class="active-filters-container my-3 align-items-center flex-wrap gap-2" style="display: none;">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
+                        <div class="active-filters-list d-flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="row g-3 mb-3">
 
             <div id="bup-alert" class="mb-0"></div>
 
             <!-- NAV TAB FILTER -->
-            <div class="col-md-9 mt-0">
-                <div class="card border">
+            <div class="col-md-8 mt-0">
+                <div class="card border shadow-sm">
                     <div class="card-body py-2 mt-2">
-                        <div class="service-ui-topbar service-ui-static-topbar">
-                            <div class="dropdown">
-                                <button
-                                    class="btn btn-outline-primary dropdown-toggle px-4 py-2 fw-semibold d-flex align-items-center gap-2"
-                                    type="button" id="dropdownFilterBtn" data-bs-toggle="dropdown">
-                                    Pilih Tim Kerja / Bidang
-                                </button>
-
-                                <ul class="dropdown-menu shadow rounded-3 border-0 p-3 mt-2 statistikinternal-filter-dropdown">
-
-                                    <li id="filterList"></li>
-
-                                    <li>
-                                        <hr class="dropdown-divider my-2">
-                                    </li>
-
-                                    <li>
-                                        <button class="btn btn-primary w-100 fw-semibold" id="applyFilter">
-                                            <i class="bi bi-check-circle me-1"></i> Terapkan
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-end">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DataModal">
-                                    <i class="bi bi-plus me-2"></i>Tambah Data
-                                </button>
-                            </div>
-                        </div>
                         <ul class="nav nav-pills gap-2 mt-3 mb-1" id="pegawaiTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="tab-pegawai" data-bs-toggle="pill"
@@ -234,8 +246,8 @@
             </div>
 
             <!-- STATISTIK PEGAWAI -->
-            <div class="col-md-3 mt-0">
-                <div class="card border">
+            <div class="col-md-4 mt-0">
+                <div class="card border shadow-sm">
                     <div class="card-body">
                         <h6 class="fw-bold mb-1">
                             Statistik Pegawai

@@ -1,6 +1,7 @@
 $(document).ready(function () {
-    $(document).on('shown.bs.modal', function (e) {
-        const modal = $(e.target);
+    $(document).off('shown.bs.modal', '#DataModal');
+    $('#DataModal').on('shown.bs.modal', function () {
+        const modal = $(this);
 
         modal.find('.select-instansi').each(function () {
             if ($(this).hasClass("select2-hidden-accessible")) {
@@ -83,6 +84,9 @@ $(document).ready(function () {
                 $(this).select2('destroy');
             }
         });
+        
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('overflow', '');
     });
 
 });

@@ -98,15 +98,9 @@ const table = $('#dataTable').DataTable({
             ServiceTableUI.setup({
                 key: 'itg',
                 table,
+                disableRecap: true,
                 loadSummary: loadSummaryIntegrasi,
-                cards: [
-                    { id: 'total-data', label: 'Total Data', value: '0' },
-                    { id: 'total-instansi', label: 'Total Instansi', value: '0' },
-                    { id: 'total-riwayat', label: 'Jenis Riwayat Aktif', value: '0' },
-                    { id: 'total-wilayah', label: 'Cakupan Wilayah', value: '0' },
-                    { id: 'data-shown', label: 'Data Ditampilkan', value: '0' },
-                    { id: 'last-update', label: 'Update Terakhir', value: '-' }
-                ]
+                processingText: 'Memuat data integrasi...'
             });
         }
         updateShownIntegrasi();

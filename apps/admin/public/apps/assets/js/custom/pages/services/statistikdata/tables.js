@@ -107,15 +107,9 @@ const table = $('#dataTable').DataTable({
             ServiceTableUI.setup({
                 key: 'stk',
                 table,
+                disableRecap: true,
                 loadSummary: loadSummaryStatistik,
-                cards: [
-                    { id: 'total-upload', label: 'Total Upload', value: '0' },
-                    { id: 'total-data', label: 'Total Data Detail', value: '0' },
-                    { id: 'total-instansi', label: 'Total Instansi', value: '0' },
-                    { id: 'total-periode', label: 'Total Periode', value: '0' },
-                    { id: 'data-shown', label: 'Data Ditampilkan', value: '0' },
-                    { id: 'last-update', label: 'Update Terakhir', value: '-' }
-                ]
+                processingText: 'Memuat data statistik...'
             });
         }
         updateShownStatistik();

@@ -57,4 +57,10 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#DataModal').on('hidden.bs.modal', function () {
+        $('#UploadData')[0].reset();
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('overflow', '');
+    });
 });

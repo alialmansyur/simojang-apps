@@ -51,18 +51,7 @@
     }
 
     function ensureOverviewPlacement() {
-        const $overview = $('#pkCategoryOverview');
-        if (!$overview.length) return;
-
-        const $cardBody = $overview.closest('.card-body');
-        const $topbar = $cardBody.find('.service-ui-static-topbar.pk-topbar').first();
-        const $tableWrap = $cardBody.find('.table-responsive').first();
-
-        if (!$topbar.length || !$tableWrap.length) return;
-
-        // Force overview between topbar and table, even if global UI script reorders nodes.
-        $overview.insertAfter($topbar);
-        $overview.insertBefore($tableWrap);
+        // Obsolete: #pkCategoryOverview is manually placed outside .card-body in main.php
     }
 
     function renderCategoryOverview(summary = {}, items = []) {
@@ -221,11 +210,7 @@
         ServiceTableUI.setup({
             key: 'pk',
             table,
-            cards: [
-                { id: 'recap-total', label: 'Total Data', value: '0' },
-                { id: 'recap-avg', label: 'Rata-rata Capaian', value: '0%' },
-                { id: 'recap-update', label: 'Update Terakhir', value: '-' }
-            ],
+            disableRecap: true,
             loadSummary,
             reloadSummaryOnClick: false,
             processingText: 'Memuat data pembinaan kinerja...'

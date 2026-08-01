@@ -5,7 +5,7 @@
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
 <div class="page-content py-4">
-    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px; padding: 0 .85rem 1.05rem;">
+    <div class="container-fluid text-start mx-auto" style="padding: 0 .85rem 1.05rem; max-width: 1160px;">
         <div class="page-heading mb-0">
             <div class="row align-items-center d-flex justify-content-between">
                 <div class="col-md-6 text-start">
@@ -55,8 +55,6 @@
                             </div>
                         </div>
                         <div id="wasdalSummary" class="service-ui-recap mb-3">
-                          <div class="card border">
-                              <div class="card-body p-3">
                                   <div class="service-ui-recap-card">
                                 <span class="service-ui-recap-icon">
                                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M7 3v4"/><path d="M17 3v4"/><rect x="4" y="7" width="16" height="14" rx="2"/></svg>
@@ -112,6 +110,13 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div id="activeFilterContainer" class="active-filters-container my-3 align-items-center flex-wrap gap-2" style="display: none;">
+                            <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
+                        </div>
+
+                        <div class="card border shadow-sm">
+                            <div class="card-body p-3">
                                   <div class="table-responsive">
                             <table id="dataTable" class="table table-bordered table-hover nowrap">
                                 <thead>

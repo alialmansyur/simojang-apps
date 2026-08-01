@@ -138,12 +138,12 @@ $(document).ready(function () {
 
         const labels = monthOptions
             .filter((item) => PDBCApp.selectedMonths.includes(item.val))
-            .map((item) => item.text.slice(0, 3));
+            .map((item) => item.text);
         $btn.text(labels.join(', '));
     }
 
     function updateActiveFilterLabels() {
-        const $container = $('#activeFiltersLabel');
+        const $container = $('#activeFilterContainer');
         const $jenisBadge = $('#filterJenisBadge');
         const $monthBadge = $('#filterMonthBadge');
     
@@ -155,7 +155,7 @@ $(document).ready(function () {
         if ($('#pdbcJenisFilter').length) {
             const jenisText = $('#pdbcJenisFilter option:selected').text().trim();
             if (jenisText && $('#pdbcJenisFilter').val() !== 'ALL') {
-                $jenisBadge.html(`<i class="bi bi-tag me-1"></i>Kategori: ${jenisText}`).show();
+                $jenisBadge.html(`Jenis: ${jenisText}`).show();
                 hasFilter = true;
             } else {
                 $jenisBadge.hide();
@@ -174,18 +174,18 @@ $(document).ready(function () {
             ];
             const labels = monthOptions
                 .filter((item) => PDBCApp.selectedMonths.includes(item.val))
-                .map((item) => item.text.slice(0, 3));
+                .map((item) => item.text);
             
-            $monthBadge.html(`<i class="bi bi-calendar me-1"></i>Bulan: ${labels.join(', ')}`).show();
+            $monthBadge.text(`Bulan: ${labels.join(', ')}`).show();
             hasFilter = true;
         } else {
             $monthBadge.hide();
         }
     
         if (hasFilter) {
-            $container.show();
+            $container.addClass('d-flex').show();
         } else {
-            $container.hide();
+            $container.removeClass('d-flex').hide();
         }
     }
 
@@ -289,6 +289,9 @@ $(document).ready(function () {
                 $pegawai.val(null).trigger('change');
                 $pegawai.select2('destroy');
             }
+
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open').css('overflow', '');
         });
     }
 

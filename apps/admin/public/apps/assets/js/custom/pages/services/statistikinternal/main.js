@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
 
     $(document).on('shown.bs.modal', function (e) {
         const modal = $(e.target);
@@ -71,6 +71,8 @@ $('#DataModal').on('hidden.bs.modal', function () {
             $(this).select2('destroy');
         }
     });
+    $('.modal-backdrop').remove();
+    $('body').removeClass('modal-open').css('overflow', '');
 });
  
 function getCurrentDateTime() {
@@ -83,8 +85,3 @@ function getCurrentDateTime() {
     const ss = String(now.getSeconds()).padStart(2, '0');
     return `${dd}-${mm}-${yyyy} ${hh}:${ii}:${ss}`;
 }
-
-
-
-
-

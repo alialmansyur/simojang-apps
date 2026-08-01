@@ -1024,8 +1024,42 @@ function loadAnggaranSettings() {
     });
 }
 
+function updateActiveFiltersLabel() {
+    const $container = $('#activeFilterContainer');
+    const $list = $container.find('.active-filters-list');
+    $list.empty();
+    
+    let hasFilters = false;
+
+    const filterTahun = $('#filterTahun option:selected').text();
+    if (filterTahun && filterTahun !== 'Semua Tahun') {
+        hasFilters = true;
+        $list.append(`<span class="badge bg-light text-primary border border-primary mb-1 filter-badge" style="font-weight: 500;">Tahun: ${filterTahun}</span>`);
+    }
+
+    const filterDateMode = $('#filterDateMode').val();
+    const filterDateModeText = $('#filterDateMode option:selected').text();
+    if (filterDateMode && filterDateModeText !== 'Semua Tanggal') {
+        hasFilters = true;
+        const start = $('#filterDateStart').val();
+        const end = $('#filterDateEnd').val();
+        let label = filterDateModeText;
+        if (start || end) {
+            label += ` (${start || '*'} - ${end || '*'})`;
+        }
+        $list.append(`<span class="badge bg-light text-primary border border-primary mb-1 filter-badge" style="font-weight: 500;">Tanggal: ${label}</span>`);
+    }
+
+    if (hasFilters) {
+        $container.addClass('d-flex').show();
+    } else {
+        $container.removeClass('d-flex').hide();
+    }
+}
+
 function reloadAnggaranTable() {
     if (window.dtAnggaran && $.fn.DataTable.isDataTable('#dataTableAnggaran')) {
+        updateActiveFiltersLabel();
         window.dtAnggaran.ajax.reload(null, false);
     }
 }
@@ -1474,5 +1508,10 @@ $(document).ready(function () {
 
     $('#AnggaranStrukturEditorModal').on('hidden.bs.modal', function () {
         resetStrukturForm();
+    });
+
+    $('.modal').on('hidden.bs.modal', function () {
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('overflow', '');
     });
 });

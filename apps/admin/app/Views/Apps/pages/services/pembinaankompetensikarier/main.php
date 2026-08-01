@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/pembinaankompetensikarier/main.css') ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
-<div class="page-content py-4">
-    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px; padding: 0 .85rem 1.05rem;">
+<div class="page-content p-2 p-md-4">
+    <div class="container-fluid" style="max-width: 1160px; margin: 0 auto;">
         <div class="page-heading mb-0">
             <div class="row align-items-center d-flex justify-content-between">
                 <div class="col-md-8 text-start">
@@ -52,11 +52,41 @@
             </div>
         </div>
 
-        <div class="active-filters-container mt-4 mb-3 align-items-center flex-wrap gap-2" id="activeFilterContainer" style="display: none;">
+        <div id="pkkSummary" class="service-ui-recap mb-3">
+            <div class="service-ui-recap-card">
+                <span class="service-ui-recap-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M7 3v4"/><path d="M17 3v4"/><rect x="4" y="7" width="16" height="14" rx="2"/></svg>
+                </span>
+                <div>
+                    <p class="service-ui-recap-label">Total Data</p>
+                    <h6 class="service-ui-recap-value" id="pkk-recap-total">0</h6>
+                </div>
+            </div>
+            <div class="service-ui-recap-card">
+                <span class="service-ui-recap-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                </span>
+                <div>
+                    <p class="service-ui-recap-label">Partisipan</p>
+                    <h6 class="service-ui-recap-value" id="pkk-recap-partisipan">0</h6>
+                </div>
+            </div>
+            <div class="service-ui-recap-card">
+                <span class="service-ui-recap-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </span>
+                <div>
+                    <p class="service-ui-recap-label">Update Terakhir</p>
+                    <h6 class="service-ui-recap-value" id="pkk-recap-update">-</h6>
+                </div>
+            </div>
+        </div>
+
+        <div id="activeFilterContainer" class="active-filters-container my-3 align-items-center flex-wrap gap-2" style="display: none;">
             <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
         </div>
 
-        <div class="card border">
+        <div class="card border shadow-sm">
             <div class="card-body p-3">
                 <div class="table-responsive">
                             <table id="pkkTable" class="table table-bordered table-hover nowrap">
