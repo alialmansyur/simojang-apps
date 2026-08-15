@@ -2107,7 +2107,7 @@ body.theme-dark .navbar-top .container-fluid {
     inset: 0;
     background: rgba(11, 22, 42, .22);
     backdrop-filter: blur(1.8px);
-    z-index: 1600;
+    z-index: 99999 !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2405,4 +2405,48 @@ body, #main, .page-content, .main-bg {
 
 
 
+
+
+/* ==========================================================================
+   GLOBAL DATATABLES FOOTER STANDARDIZATION
+   ========================================================================== */
+.dataTables_wrapper .dataTables_info {
+    font-size: .95rem !important;
+    font-weight: 500;
+    color: #4b5563;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+}
+
+.dataTables_wrapper .dataTables_length {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    line-height: 1 !important;
+}
+
+.dataTables_wrapper .dataTables_length label {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    line-height: 1 !important;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    min-width: 65px;
+    padding: .35rem .5rem !important;
+    font-size: .9rem !important;
+    border-radius: .45rem !important;
+    border: 1px solid #d1d5db !important;
+    outline: none !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    height: auto !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+}
+
+.swal2-container { z-index: 99999 !important; }
 

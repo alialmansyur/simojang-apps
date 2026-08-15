@@ -27,43 +27,45 @@
 
         <section class="row">
             <div class="col-md-12">
-                <div class="card mt-3 border shadow-sm">
+                <div class="service-ui-topbar mb-3 service-ui-static-topbar">
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-outline-primary dropdown-toggle px-4 py-2 fw-semibold d-flex align-items-center gap-2"
+                            type="button" id="dropdownBulan" data-bs-toggle="dropdown" aria-expanded="false">
+                            Pilih Bulan
+                        </button>
+
+                        <ul class="dropdown-menu shadow rounded-3 border-0 p-3 mt-2" id="bulanDropdown"
+                            style="min-width: 180px; border-radius:1.25em;">
+                                <div id="bulanList"></div>
+                            <li>
+                                <hr class="dropdown-divider my-2">
+                            </li>
+                            <li>
+                                <button class="btn btn-primary w-100 fw-semibold" id="applyBulan">
+                                    <i class="bi bi-check-circle me-1"></i> Terapkan
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DataModal">
+                            <i class="bi bi-plus me-2"></i>Tambah Data
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="service-ui-recap mb-3" id="generic-recap-ikm"></div>
+
+                <div id="activeFilterContainer" class="active-filters-container my-3 align-items-center flex-wrap gap-2" style="display: none;">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
+                        <div class="active-filters-list d-flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+
+                <div class="card border shadow-sm">
                     <div class="card-body p-3">
-                        <div class="service-ui-topbar service-ui-static-topbar">
-                            <div class="dropdown">
-                                <button
-                                    class="btn btn-outline-primary dropdown-toggle px-4 py-2 fw-semibold d-flex align-items-center gap-2"
-                                    type="button" id="dropdownBulan" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Pilih Bulan
-                                </button>
-
-                                <ul class="dropdown-menu shadow rounded-3 border-0 p-3 mt-2" id="bulanDropdown"
-                                    style="min-width: 180px; border-radius:1.25em;">
-                                        <div id="bulanList"></div>
-                                    <li>
-                                        <hr class="dropdown-divider my-2">
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-primary w-100 fw-semibold" id="applyBulan">
-                                            <i class="bi bi-check-circle me-1"></i> Terapkan
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-end">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DataModal">
-                                    <i class="bi bi-plus me-2"></i>Tambah Data
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div id="activeFilterContainer" class="active-filters-container my-3 align-items-center flex-wrap gap-2" style="display: none;">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted small me-2"><i class="bi bi-funnel me-1"></i>Filter Aktif:</span>
-                                <div class="active-filters-list d-flex flex-wrap gap-2"></div>
-                            </div>
-                        </div>
-
                         <div class="table-responsive">
                             <table id="dataTable" class="table table-bordered table-hover nowrap" style="width:100%">
                                 <thead>

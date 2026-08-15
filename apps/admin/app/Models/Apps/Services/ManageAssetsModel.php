@@ -83,4 +83,27 @@ class ManageAssetsModel extends Model
         return $builder->get()->getRowArray();
     }
 
+    public function insertDetail(array $data)
+    {
+        $data['uid'] = isset($data['uid']) ? $data['uid'] : sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x', mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0x0fff) | 0x4000, mt_rand(0, 0x3fff) | 0x8000, mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
+        $data['created_at'] = date('Y-m-d H:i:s');
+        return $this->db->table($this->table)->insert($data);
+    }
+
+    public function updateDetail($id, array $data)
+    {
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        return $this->db->table($this->table)->where('id', $id)->update($data);
+    }
+
+    public function deleteDetail($id)
+    {
+        return $this->db->table($this->table)->where('id', $id)->delete();
+    }
+
+    public function getDetailById($id)
+    {
+        return $this->db->table($this->table)->where('id', $id)->get()->getRowArray();
+    }
+
 }

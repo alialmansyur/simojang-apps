@@ -47,13 +47,7 @@ class EKINData extends BaseController
                         : null;
 
 
-        $rows = $this->uploader->parseExcel($file);
-        if (empty($rows)) {
-            throw new \Exception('Data kosong atau format salah.');
-        }
-
-        $rows   = $this->uploader->parseExcel($localPath);
-
+        $rows = $this->uploader->parseExcel($localPath);
         if (!is_array($rows) || count($rows) < 1) {
             return $this->response->setJSON([
                 'status' => 'error',
@@ -61,13 +55,14 @@ class EKINData extends BaseController
             ]);
         }      
         
+        $this->apps->db->transBegin();
+        
         $dataLog = [
             'action'     => 'create',
             'period'     => $period,
             'period_date'       => $syncdate1,
             'period_start_date' => $syncdate1,
             'period_end_date'   => $syncdate2,
-            'period'     => $period,
             'file_name'  => $file->getClientName(),
             'file_size'  => $fileSize,
             'file_type'  => $mimeType,
@@ -111,6 +106,7 @@ class EKINData extends BaseController
             $nip  = trim($row[2] ?? '');
             if ($nip !== '') {
                 if (!$this->isValidNIP($nip)) {
+                    $this->apps->db->transRollback();
                     return $this->response->setJSON([
                         'status' => 'error',
                         'message' => "NIP tidak valid: {$nip}"
@@ -120,6 +116,7 @@ class EKINData extends BaseController
             }
 
             if (!$lastNip) {
+                $this->apps->db->transRollback();
                 return $this->response->setJSON([
                     'status' => 'error',
                     'message' => 'NIP tidak terbaca sebelum data kegiatan'
@@ -138,6 +135,7 @@ class EKINData extends BaseController
         }
 
         if (empty($dataDetail)) {
+            $this->apps->db->transRollback();
             return $this->response->setJSON([
                 'status' => 'error',
                 'message' => 'Data detail tidak ditemukan'
@@ -148,13 +146,23 @@ class EKINData extends BaseController
             $this->apps->insertBatchData($dataDetail, 'txn_ekin_detail');
             $this->apps->storeData(
                 [
-                    'layanan_id' => 36,
+                    'layanan_id' => 26,
                     'tanggal'    => date('Y-m-d'),
                     'created_by' => $session['username']
                 ],
                 'activity_daily_logs'
             );            
         }
+
+        if ($this->apps->db->transStatus() === false) {
+            $this->apps->db->transRollback();
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message'=> 'Gagal menyimpan data ke database.'
+            ]);
+        }
+
+        $this->apps->db->transCommit();
 
         return $this->response->setJSON([
             'header'    => $header,

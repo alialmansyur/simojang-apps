@@ -50,6 +50,8 @@ class IKMController extends BaseController
                 'rules' => 'regex_match[/^(100|[0-9]{1,2})([.,][0-9]+)?$/]'
             ],
             'period'    => 'required',
+
+
             'syncdate1' => 'required',
             'syncdate2' => 'required',
         ];
@@ -75,7 +77,10 @@ class IKMController extends BaseController
         ];
 
         if (!empty($key)) {
-            $this->apps->updateData($dataInsert,$key,'txn_survey_ikm');
+            $dataUpdate = $dataInsert;
+            unset($dataUpdate['created_by']);
+            $dataUpdate['updated_by'] = $sess['username'];
+            $this->apps->updateData($dataUpdate,$key,'txn_survey_ikm');
         } else {
             $this->apps->storeData($dataInsert, 'txn_survey_ikm');
             $this->apps->storeData(

@@ -1,5 +1,11 @@
 $(document).ready(function () {
 
+    $('[data-bs-target="#DataModal"]').on('click', function() {
+        $('#DataModalLabel').text('Tambah Data');
+        $('#form-usulan')[0].reset();
+        $('#form-usulan').find('[name="key"]').val('');
+    });
+
     $(document).on('click', '.btn-submit-form', function () {
         $('#form-usulan').submit();
     });
@@ -7,16 +13,23 @@ $(document).ready(function () {
     $('#form-usulan').on('submit', function (e) {
         e.preventDefault();
 
-         $('.number-format').each(function () {
-            this.value = this.value.replace(/,/g, '');
+        let formData = $(this).serializeArray();
+        formData.forEach(function(item) {
+            if (['contens', 'followers', 'viewers'].includes(item.name)) {
+                item.value = item.value.replace(/,/g, '');
+            }
         });
 
-        swlwaitProsessing();
+        let data = $.param(formData);
+        let btnSubmit = $('.btn-submit-form');
+        let originalText = btnSubmit.html();
+        
+        btnSubmit.prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-1"></i> Menyimpan...');
 
         $.ajax({
             url: AppConfig.initGlobal + 'store/save-data-humas', 
             type: 'POST',
-            data: $(this).serialize(),
+            data: data,
             success: function (response) {
                 if (response.status == 'error') {
                     swlErrorHandler(response.message);
@@ -28,6 +41,12 @@ $(document).ready(function () {
                         swlSuccess();
                     }
                 }
+            },
+            error: function() {
+                swlErrorHandler('Terjadi kesalahan pada server.');
+            },
+            complete: function() {
+                btnSubmit.prop('disabled', false).html(originalText);
             }
         });
     }); 
@@ -35,6 +54,7 @@ $(document).ready(function () {
     $('#DataModal').on('hidden.bs.modal', function () {
         const form = $('#form-usulan');
         form[0].reset();
+        form.find('[name="key"]').val(''); // Ensure hidden key is removed
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open').css('overflow', '');
     });

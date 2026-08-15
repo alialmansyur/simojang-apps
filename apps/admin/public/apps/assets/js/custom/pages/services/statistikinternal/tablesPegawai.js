@@ -37,13 +37,12 @@ const table = $('#dataTable').DataTable({
     processing: true,
     serverSide: true,
     lengthChange: true,
-    pageLength: 25,   
+    pageLength: 10,   
     lengthMenu: [
-        [25, 50, 100, 150, 200],
-        [25, 50, 100, 150, 200]
+        [10, 25, 50, 100],
+        [10, 25, 50, 100]
     ],    
     order: [[1, 'asc']],    
-    dom: 'Bfrtip',
     // dom: 'lBfrtip',
     buttons: ['copy', 'excel', 'pdf', 'print'],
     ajax: {
@@ -140,7 +139,7 @@ const table = $('#dataTable').DataTable({
             ServiceTableUI.setup({
                 key: 'stkin',
                 table,
-                recapMountSelector: '.page-heading',
+
                 loadSummary: loadSummaryStatistikInternal,
                 cards: [
                     { id: 'total-data', label: 'Total Pegawai', value: '0' },
@@ -222,64 +221,32 @@ $('#dataTable tbody').on('click', '.btn-update', function () {
     // ========================
     $('#DataModal').one('shown.bs.modal', function () {
 
-        setSelect2Value(form, 'status_pegawai', row.status_pegawai, row.status_pegawai);
-        setSelect2Value(form, 'agama', row.agama, row.agama);
-        setSelect2Value(form, 'pendidikan', row.pendidikan, row.pendidikan);
-
-        setSelect2Value(form, 'unit_kerja', row.unit_kerja_id, row.unit_kerja);
-        setSelect2Value(form, 'unit_sk', row.unit_sk_id, row.unit_sk);
-        setSelect2Value(form, 'jenis_jabatan', row.jenis_jabatan_id, row.jenis_jabatan);
-    });
-
-    $('#DataModal').one('shown.bs.modal', function () {
-
         const mapSelect = (selectEl, value, text) => {
             if (!value) return;
-            const option = new Option(text, value, true, true);
-            selectEl.append(option).trigger('change');
+            selectEl.empty();
+            if (value.toString().includes(',')) {
+                const vals = value.toString().split(',');
+                const txts = text.toString().split(',');
+                for (let i = 0; i < vals.length; i++) {
+                    const option = new Option(txts[i].trim(), vals[i].trim(), true, true);
+                    selectEl.append(option);
+                }
+                selectEl.trigger('change');
+            } else {
+                const option = new Option(text, value, true, true);
+                selectEl.append(option).trigger('change');
+            }
         };
 
-        const agama            = row.agama_id || '';
-        const agmaText         = row.agama || '';
-
-        const pendidikan       = row.pendidikan_id || '';
-        const pendidikanText   = row.pendidikan || '';
-
-        const statusPegawai    = row.status_pegawai_id || '';
-        const statusPegawaiText= row.status_pegawai || '';     
-
-        const jenisjabatan     = row.jenis_jabatan_id || '';
-        const jenisjabatanText = row.jenis_jabatan || '';             
-
-        const unitKerja        = row.unit_kerja_id || '';
-        const unitKerjaText    = row.unit_kerja || '';        
-
-        const unitSK           = row.unit_sk_id || '';
-        const unitSKText       = row.unit_sk || '';       
-        
-        const golongan         = row.gol_id || ''; 
-        const golonganText     = row.golongan || '';           
-
-        const pangkat         = row.pangkat_id || '';
-        const pangkatText     = row.pangkat || '';                  
-
-        const select1 = form.find('[name="status_pegawai"]');
-        const select2 = form.find('[name="agama"]');
-        const select3 = form.find('[name="pendidikan"]');
-        const select4 = form.find('[name="unit_kerja"]');
-        const select5 = form.find('[name="unit_sk"]');
-        const select6 = form.find('[name="jenis_jabatan"]');
-        const select7 = form.find('[name="golongan"]');
-        const select8 = form.find('[name="pangkat"]');
-
-        mapSelect(select1, statusPegawai, statusPegawaiText);
-        mapSelect(select2, agama, agmaText);
-        mapSelect(select3, pendidikan, pendidikanText);
-        mapSelect(select4, unitKerja, unitKerjaText);
-        mapSelect(select5, unitSK, unitSKText);
-        mapSelect(select6, jenisjabatan, jenisjabatanText);
-        mapSelect(select7, golongan, golonganText);
-        mapSelect(select8, pangkat, pangkatText);
+        mapSelect(form.find('[name="agama"]'), row.agama_id || '', row.agama || '');
+        mapSelect(form.find('[name="pendidikan"]'), row.pendidikan_id || '', row.pendidikan || '');
+        mapSelect(form.find('[name="status_pegawai"]'), row.status_pegawai_id || '', row.status_pegawai || '');
+        mapSelect(form.find('[name="unit_kerja[]"]'), row.unit_kerja_id || '', row.unit_kerja || '');
+        mapSelect(form.find('[name="unit_sk"]'), row.unit_sk_id || '', row.unit_sk || '');
+        mapSelect(form.find('[name="jenis_jabatan"]'), row.jenis_jabatan_id || '', row.jenis_jabatan || '');
+        mapSelect(form.find('[name="jabatan"]'), row.jabatan_id || '', row.jabatan || '');
+        mapSelect(form.find('[name="golongan"]'), row.gol_id || '', row.golongan || '');
+        mapSelect(form.find('[name="pangkat"]'), row.pangkat_id || '', row.pangkat || '');
 
     });
 

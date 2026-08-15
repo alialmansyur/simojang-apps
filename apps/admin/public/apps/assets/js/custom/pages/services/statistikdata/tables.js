@@ -51,7 +51,6 @@ const table = $('#dataTable').DataTable({
     processing: true,
     serverSide: true,
     order: [[1, 'desc']],
-    dom: 'Bfrtip',
     buttons: ['copy', 'excel', 'pdf', 'print'],
     ajax: {
         url: AppConfig.initGlobal + 'fetch/data-statistik',

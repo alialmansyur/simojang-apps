@@ -49,7 +49,13 @@ $(document).ready(function () {
 
     $('#form-usulan').on('submit', function (e) {
         e.preventDefault();
+        $('#DataModal').modal('hide');
+        
+        const btnSubmit = $(this).find('.btn-submit-form');
+        const originalText = btnSubmit.html();
+        btnSubmit.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Loading...');
         swlwaitProsessing();
+        
         $.ajax({
             url: AppConfig.initGlobal + 'store/save-data-surat', 
             type: 'POST',
@@ -57,14 +63,18 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.status == 'error') {
                     swlErrorHandler(response.message);
+                    btnSubmit.prop('disabled', false).html(originalText);
                 } else { 
                     if (response) {
                         $('#dataTable').DataTable().ajax.reload(null, false);
                         if (typeof loadSummarySurat === 'function') { loadSummarySurat(); }
-                        $('#DataModal').modal('hide');
                         swlSuccess();
                     }
                 }
+            },
+            error: function () {
+                swlErrorHandler('Terjadi kesalahan pada server saat memproses data.');
+                btnSubmit.prop('disabled', false).html(originalText);
             }
         });
     });
@@ -72,6 +82,9 @@ $(document).ready(function () {
     $('#DataModal').on('hidden.bs.modal', function () {
         const form = $('#form-usulan');
         form[0].reset();
+        form.find('input[type="hidden"]').val('');
+        $('#DataModalLabel').text('Tambah Data');
+        $('.btn-submit-form').prop('disabled', false).text('Simpan Data');
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open').css('overflow', '');
     });

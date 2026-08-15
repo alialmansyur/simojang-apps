@@ -245,7 +245,7 @@ $serviceTableUiJsVersion = @filemtime(FCPATH . 'apps/assets/js/custom/pages/serv
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary btn-save-anggaran">Simpan Data</button>
+                <button type="submit" form="form-anggaran" class="btn btn-primary btn-save-anggaran">Simpan Data</button>
             </div>
         </div>
     </div>
@@ -426,9 +426,6 @@ $serviceTableUiJsVersion = @filemtime(FCPATH . 'apps/assets/js/custom/pages/serv
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
         </div>
     </div>
 </div>
@@ -461,7 +458,7 @@ $serviceTableUiJsVersion = @filemtime(FCPATH . 'apps/assets/js/custom/pages/serv
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" id="resetTahunForm">Reset</button>
-                <button type="button" class="btn btn-primary" id="submitTahunForm">Simpan</button>
+                <button type="submit" form="form-tahun-anggaran" class="btn btn-primary" id="submitTahunForm">Simpan</button>
             </div>
         </div>
     </div>
@@ -507,7 +504,7 @@ $serviceTableUiJsVersion = @filemtime(FCPATH . 'apps/assets/js/custom/pages/serv
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" id="resetStrukturForm">Reset</button>
-                <button type="button" class="btn btn-primary" id="submitStrukturForm">Simpan</button>
+                <button type="submit" form="form-struktur-anggaran" class="btn btn-primary" id="submitStrukturForm">Simpan</button>
             </div>
         </div>
     </div>

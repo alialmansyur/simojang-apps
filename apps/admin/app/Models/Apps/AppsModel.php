@@ -172,6 +172,14 @@ public function getLayananTimkerja($param, $keyword = '')
     }
 
     public function getInstansiID($param){
+        // Check if param is already a numeric ID
+        if (is_numeric($param)) {
+            $check = $this->db->table('data_instansi')->select('kodeins')->where('kodeins', $param)->get()->getRow();
+            if ($check) {
+                return $check->kodeins;
+            }
+        }
+
         $normalized = strtolower(str_replace('.', '', (string) $param));
         $escapedPattern = '%' . $this->db->escapeLikeString($normalized) . '%';
 

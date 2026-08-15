@@ -1,7 +1,7 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
-<link rel="stylesheet" href="<?= base_url('apps/assets/extensions/filepond/filepond.css'); ?>">
+
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/ekin/main.css') ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
@@ -144,16 +144,27 @@
                         </div>
                         <div class="col-md-12">
                             <div class="upload-card mt-3">
-                                <div class="upload-card-body text-center">
-                                    <i class="bi bi-upload me-3 fs-3 text-muted"></i>
-                                    <h5 class="mt-3">Unggah File</h5>
-                                    <p>Unduh format file
-                                        <a href="<?= base_url('apps/samples/sample-ekin.xlsx') ?>"
-                                            download><strong>disini</strong></a>
-                                    </p>
-                                    <input type="file" class="basic-filepond" name="filepond" id="excelUpload"
-                                        accept=".xls,.xlsx" />
+                                <div class="upload-card-body text-center dropzone-area" id="dropzoneArea" style="border: 2px dashed #0d6efd; border-radius: 8px; padding: 30px; cursor: pointer; transition: all 0.3s ease;">
+                                    <h5 class="mt-2">Drag & Drop file Anda di sini</h5>
+                                    <p class="text-muted mb-2">atau</p>
+                                    <button type="button" class="btn btn-outline-primary btn-sm mb-3" id="btnBrowse">Pilih File</button>
+                                    <p class="text-muted small mb-0">Hanya file Excel (.xls, .xlsx)</p>
+                                    
+                                    <div id="filePreview" class="d-none mt-3 p-3 border rounded bg-light d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-file-text fs-4 text-success me-2"></i>
+                                        <div class="text-start me-auto">
+                                            <span id="fileName" class="fw-bold d-block"></span>
+                                            <small id="fileSize" class="text-muted"></small>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-light text-danger ms-2" id="btnRemoveFile" aria-label="Remove">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                    <input type="file" class="d-none" name="file" id="excelUpload" accept=".xls,.xlsx" />
                                 </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <p class="text-muted">Unduh format file <a href="<?= base_url('apps/samples/sample-ekin.xlsx') ?>" download><strong>di sini</strong></a></p>
                             </div>
                         </div>
                     </div>
@@ -212,7 +223,7 @@
 
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
-<script src="<?= base_url('apps/assets/extensions/filepond/filepond.js'); ?>"></script>
+
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/service-table-ui.js') ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/ekin/main.js') ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/ekin/tables.js') ?>"></script>

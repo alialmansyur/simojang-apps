@@ -54,7 +54,6 @@ const table = $('#dataTable').DataTable({
     processing: true,
     serverSide: true,
     order: [[1, 'asc']],
-    dom: 'Bfrtip',
     buttons: ['copy', 'excel', 'pdf', 'print'],
     ajax: {
         url: AppConfig.initGlobal + 'fetch/data-konsultasi',
@@ -105,7 +104,7 @@ const table = $('#dataTable').DataTable({
             ServiceTableUI.setup({
                 key: 'konsul',
                 table,
-                recapMountSelector: '.page-heading',
+
                 loadSummary: loadSummaryKonsul,
                 cards: [
                     { id: 'total-data', label: 'Total Periode', value: '0' },
@@ -185,16 +184,23 @@ $('#dataTable tbody').on('click', '.btn-remove', function () {
         cancelButtonText: 'Tidak'
     }).then((result) => {
         if (!result.isConfirmed) return;
+        swlwaitProsessing();
         $.ajax({
             type: 'POST',
             url: AppConfig.initGlobal + 'kill/data-konsultasi',
             data: { key },
             dataType: 'json',
             success: function (res) {
-                if (!res?.status) return;
-                swlSuccess();
+                if (!res?.status) {
+                     swlErrorHandler(res?.message || 'Gagal menghapus data.');
+                     return;
+                }
+                swlSuccess(res?.message || 'Data berhasil dihapus.');
                 table.ajax.reload(null, false);
                 loadSummaryKonsul();
+            },
+            error: function () {
+                swlErrorHandler('Terjadi kesalahan pada server.');
             }
         });
     });

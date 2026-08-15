@@ -54,7 +54,6 @@ const table = $('#dataTable').DataTable({
     processing: true,
     serverSide: true,
     order: [[1, 'asc']],
-    dom: 'Bfrtip',
     buttons: ['copy', 'excel', 'pdf', 'print'],
     ajax: {
         url: AppConfig.initGlobal + 'fetch/data-humas',
@@ -114,7 +113,7 @@ const table = $('#dataTable').DataTable({
             ServiceTableUI.setup({
                 key: 'humas',
                 table,
-                recapMountSelector: '.page-heading',
+
                 loadSummary: loadSummaryHumas,
                 cards: [
                     { id: 'total-data', label: 'Total Periode', value: '0' },

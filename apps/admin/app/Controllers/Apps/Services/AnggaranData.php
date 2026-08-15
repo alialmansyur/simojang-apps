@@ -234,9 +234,14 @@ class AnggaranData extends BaseController
             if (!$existingById) {
                 return $this->respondError('Data tahun yang akan diubah tidak ditemukan.');
             }
+            if ($existingByYear && (int) $existingByYear['id'] !== $key) {
+                return $this->respondError('Tahun anggaran ' . $tahun . ' sudah digunakan oleh data lain.');
+            }
             $idToUpdate = (int) $existingById['id'];
-        } elseif ($existingByYear) {
-            $idToUpdate = (int) $existingByYear['id'];
+        } else {
+            if ($existingByYear) {
+                return $this->respondError('Tahun anggaran ' . $tahun . ' sudah tersedia. Silakan gunakan fitur ubah.');
+            }
         }
 
         $payload = [

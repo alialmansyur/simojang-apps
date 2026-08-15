@@ -46,12 +46,6 @@ class IKPAData extends BaseController
                         ? $this->request->getUserAgent()->getAgentString()
                         : null;
 
-
-        $rows = $this->uploader->parseExcel($file);
-        if (empty($rows)) {
-            throw new \Exception('Data kosong atau format salah.');
-        }
-
         $rows   = $this->uploader->parseExcel($localPath);
 
         if (!is_array($rows) || count($rows) < 1) {
@@ -67,7 +61,6 @@ class IKPAData extends BaseController
             'period_date'       => $syncdate1,
             'period_start_date' => $syncdate1,
             'period_end_date'   => $syncdate2,
-            'period'     => $period,
             'file_name'  => $file->getClientName(),
             'file_size'  => $fileSize,
             'file_type'  => $mimeType,

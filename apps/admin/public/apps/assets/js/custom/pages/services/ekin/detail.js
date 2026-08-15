@@ -26,7 +26,6 @@ function initDetailTable() {
         processing: true,
         serverSide: true,
         order: [[0, 'asc']],
-        dom: 'Bfrtip',
         buttons: ['copy', 'excel', 'pdf', 'print'],
         ajax: {
             url: AppConfig.initGlobal + 'fetch/detail-ekin',

@@ -77,12 +77,22 @@ class ManageProjectModel extends Model
         return $builder;
     }
 
-    public function updateProjectProgress($projectId, $actualPercentage)
+    public function updateProjectProgress($projectId)
     {
+        $latest = $this->db->table('data_project_progress_logs')
+            ->where('project_id', $projectId)
+            ->orderBy('log_date', 'DESC')
+            ->orderBy('created_at', 'DESC')
+            ->limit(1)
+            ->get()
+            ->getRow();
+
+        $percentage = $latest ? (float) $latest->actual_percentage : 0;
+
         $this->db->table('data_projects')
             ->where('id', $projectId)
             ->update([
-                'progress_percentage' => $actualPercentage,
+                'progress_percentage' => $percentage,
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
     }

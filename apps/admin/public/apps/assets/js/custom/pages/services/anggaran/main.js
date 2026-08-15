@@ -762,13 +762,15 @@ function renderYearTable() {
                 <td>${formatPercent(row.target_persen || 0)}</td>
                 <td>${badge}</td>
                 <td>${row.created_at || '-'}</td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-primary me-1 btn-edit-tahun" data-id="${row.id}">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                    <button type="button" class="btn btn-sm btn-danger btn-del-tahun" data-id="${row.id}">
-                        <i class="bi bi-trash"></i>
-                    </button>
+                <td class="text-center text-nowrap">
+                    <div class="d-flex justify-content-center gap-1">
+                        <button type="button" class="btn btn-sm btn-primary btn-edit-tahun" data-id="${row.id}" title="Ubah">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger btn-del-tahun" data-id="${row.id}" title="Hapus">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>
         `);
@@ -929,16 +931,18 @@ function renderStrukturTable() {
                 <td class="text-end">${formatCurrency(row.pagu_revisi || 0)}</td>
                 <td class="text-end">${formatCurrency(row.lock_pagu || 0)}</td>
                 <td class="text-end">${formatCurrency(row.pagu_efektif || 0)}</td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-primary me-1 btn-edit-struktur" data-id="${row.id}">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-primary me-1 btn-append-struktur" data-id="${row.id}" ${appendDisabled}>
-                        <i class="bi bi-plus"></i>
-                    </button>
-                    <button type="button" class="btn btn-sm btn-danger btn-del-struktur" data-id="${row.id}">
-                        <i class="bi bi-trash"></i>
-                    </button>
+                <td class="text-center text-nowrap">
+                    <div class="d-flex justify-content-center gap-1">
+                        <button type="button" class="btn btn-sm btn-primary btn-edit-struktur" data-id="${row.id}" title="Ubah Struktur">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary btn-append-struktur" data-id="${row.id}" title="Tambah Sub Struktur" ${appendDisabled}>
+                            <i class="bi bi-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger btn-del-struktur" data-id="${row.id}" title="Hapus Struktur">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>
         `);
@@ -1057,15 +1061,15 @@ function updateActiveFiltersLabel() {
     }
 }
 
-function reloadAnggaranTable() {
+function reloadAnggaranTable(resetPaging = false) {
     if (window.dtAnggaran && $.fn.DataTable.isDataTable('#dataTableAnggaran')) {
         updateActiveFiltersLabel();
-        window.dtAnggaran.ajax.reload(null, false);
+        window.dtAnggaran.ajax.reload(null, resetPaging);
     }
 }
 
-function reloadAnggaranPageData() {
-    reloadAnggaranTable();
+function reloadAnggaranPageData(resetPaging = false) {
+    reloadAnggaranTable(resetPaging);
     loadAnggaranSettings().then(() => {
         const selectedYear = getYearValueById($('#anggaran_tahun_id').val());
         loadAnggaranOptions(selectedYear);
@@ -1230,10 +1234,6 @@ $(document).ready(function () {
         loadSummaryAnggaran();
     });
 
-    $('.btn-save-anggaran').on('click', function () {
-        $('#form-anggaran').trigger('submit');
-    });
-
     $('#openCreateAnggaran').on('click', function () {
         openCreateRealisasi();
     });
@@ -1277,29 +1277,41 @@ $(document).ready(function () {
 
     $('#form-anggaran').on('submit', function (e) {
         e.preventDefault();
+        
+        const $btn = $('.btn-save-anggaran');
+        const originalBtnText = $btn.html();
+        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Menyimpan...');
+        
         swlwaitProsessing();
         const $form = $(this);
         const currencySnapshot = sanitizeCurrencyInputs($form);
+
+        const isUpdate = String($('#anggaran_key').val() || '').trim() !== '';
+        const payload = $form.serializeArray().filter(item => item.name !== 'key' || String(item.value).trim() !== '');
 
         $.ajax({
             url: AppConfig.initGlobal + 'store/save-data-anggaran',
             type: 'POST',
             dataType: 'json',
-            data: $form.serialize(),
+            data: $.param(payload),
             success: function (response) {
                 if (response?.status === 'error') {
                     swlErrorHandler(response.message || 'Gagal menyimpan data realisasi.');
                     return;
                 }
+                
                 $('#AnggaranModal').modal('hide');
-                reloadAnggaranPageData();
-                swlSuccess(response?.message || 'Data berhasil disimpan.');
+                setTimeout(() => {
+                    reloadAnggaranPageData(!isUpdate);
+                    swlSuccess(response?.message || 'Data berhasil disimpan.');
+                }, 300);
             },
             error: function () {
                 swlErrorHandler('Terjadi kesalahan saat menyimpan data realisasi.');
             },
             complete: function () {
                 restoreCurrencySnapshot(currencySnapshot);
+                $btn.prop('disabled', false).html(originalBtnText);
             }
         });
     });
@@ -1323,10 +1335,6 @@ $(document).ready(function () {
         loadAnggaranSettings();
     });
 
-    $('#submitTahunForm').on('click', function () {
-        $('#form-tahun-anggaran').trigger('submit');
-    });
-
     $('#resetTahunForm').on('click', function () {
         resetTahunForm();
     });
@@ -1337,7 +1345,14 @@ $(document).ready(function () {
 
     $('#form-tahun-anggaran').on('submit', function (e) {
         e.preventDefault();
-        const payload = $(this).serializeArray().filter((item) => item.name !== 'is_active');
+        
+        const $btn = $('#submitTahunForm');
+        const originalBtnText = $btn.html();
+        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Menyimpan...');
+        
+        swlwaitProsessing();
+        let payload = $(this).serializeArray().filter((item) => item.name !== 'is_active');
+        payload = payload.filter((item) => item.name !== 'key' || String(item.value).trim() !== '');
         const checked = $('#tahun_is_active').is(':checked');
         payload.push({ name: 'is_active', value: checked ? 1 : 0 });
 
@@ -1353,12 +1368,17 @@ $(document).ready(function () {
                 }
 
                 $('#AnggaranYearEditorModal').modal('hide');
-                resetTahunForm();
-                reloadAnggaranPageData();
-                swlSuccess(response?.message || 'Master tahun berhasil disimpan.');
+                setTimeout(() => {
+                    resetTahunForm();
+                    reloadAnggaranPageData();
+                    swlSuccess(response?.message || 'Master tahun berhasil disimpan.');
+                }, 300);
             },
             error: function () {
                 swlErrorHandler('Terjadi kesalahan saat menyimpan master tahun.');
+            },
+            complete: function () {
+                $btn.prop('disabled', false).html(originalBtnText);
             }
         });
     });
@@ -1429,16 +1449,18 @@ $(document).ready(function () {
         resetStrukturForm();
     });
 
-    $('#submitStrukturForm').on('click', function () {
-        $('#form-struktur-anggaran').trigger('submit');
-    });
-
     $('#struktur_level').on('change', function () {
         toggleAkunBudgetFields($(this).val());
     });
 
     $('#form-struktur-anggaran').on('submit', function (e) {
         e.preventDefault();
+        
+        const $btn = $('#submitStrukturForm');
+        const originalBtnText = $btn.html();
+        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Menyimpan...');
+        
+        swlwaitProsessing();
         const $form = $(this);
         const currencySnapshot = sanitizeCurrencyInputs($form);
 
@@ -1454,15 +1476,18 @@ $(document).ready(function () {
                 }
 
                 $('#AnggaranStrukturEditorModal').modal('hide');
-                resetStrukturForm();
-                reloadAnggaranPageData();
-                swlSuccess(response?.message || 'Struktur anggaran berhasil disimpan.');
+                setTimeout(() => {
+                    resetStrukturForm();
+                    reloadAnggaranPageData();
+                    swlSuccess(response?.message || 'Struktur anggaran berhasil disimpan.');
+                }, 300);
             },
             error: function () {
                 swlErrorHandler('Terjadi kesalahan saat menyimpan struktur.');
             },
             complete: function () {
                 restoreCurrencySnapshot(currencySnapshot);
+                $btn.prop('disabled', false).html(originalBtnText);
             }
         });
     });

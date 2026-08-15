@@ -9,6 +9,7 @@ const processingStateAnggaran = (window.ServiceTableUI && ServiceTableUI.createP
     : '<div class="text-center text-muted py-4">Memuat data...</div>';
 
 window.dtAnggaran = $('#dataTableAnggaran').DataTable({
+    lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
     responsive: {
         details: { type: 'column', target: 'td.dtr-control' }
     },
@@ -18,6 +19,7 @@ window.dtAnggaran = $('#dataTableAnggaran').DataTable({
     ajax: {
         url: AppConfig.initGlobal + 'fetch/data-anggaran',
         type: 'POST',
+        cache: false,
         data: function (d) {
             const filters = typeof getAnggaranFilterPayload === 'function'
                 ? getAnggaranFilterPayload()
@@ -68,7 +70,11 @@ window.dtAnggaran = $('#dataTableAnggaran').DataTable({
     language: {
         emptyTable: (window.ServiceTableUI ? ServiceTableUI.createEmptyState() : 'Tidak ada data'),
         zeroRecords: (window.ServiceTableUI ? ServiceTableUI.createEmptyState() : 'Tidak ada data'),
-        processing: processingStateAnggaran
+        processing: processingStateAnggaran,
+        lengthMenu: "_MENU_",
+        info: "Menampilkan _START_ &mdash; _END_ dari _TOTAL_ data",
+        infoEmpty: "Menampilkan 0 &mdash; 0 dari 0 data",
+        infoFiltered: "(difilter dari _MAX_ data)"
     },
     createdRow: function (row, data) {
         if (data?.item_summary) {
@@ -83,7 +89,8 @@ window.dtAnggaran = $('#dataTableAnggaran').DataTable({
                 table: tableApi,
                 loadSummary: typeof loadSummaryAnggaran === 'function' ? loadSummaryAnggaran : null,
                 reloadSummaryOnClick: false,
-                processingText: 'Memuat data anggaran...'
+                processingText: 'Memuat data anggaran...',
+                disableRecap: true
             });
         }
     }

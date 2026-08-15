@@ -74,7 +74,6 @@ $(document).ready(function () {
                 }
             ],
             order: [[6, 'desc']],
-            dom: 'Bfrtip',
             buttons: ['copy', 'excel', 'pdf', 'print'],
             language: {
                 emptyTable: (window.ServiceTableUI ? ServiceTableUI.createEmptyState() : 'Tidak ada data'),

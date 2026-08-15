@@ -9,6 +9,7 @@
     <link rel="shortcut icon" href="<?= base_url('apps/');?>assets/images/logo/favicon.png?v=99" type="image/png">
     <link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/app.css?v=' . time()) ?>">
     <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/auth.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('apps/'); ?>assets/extensions/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="<?= base_url('apps/');?>assets/extensions/toastify-js/src/toastify.css">
     <link rel="stylesheet" href="<?= base_url('apps/');?>assets/extensions/sweetalert2/sweetalert2.min.css">
     <script src="<?= base_url('apps/'); ?>assets/extensions/jquery/jquery.min.js"></script>

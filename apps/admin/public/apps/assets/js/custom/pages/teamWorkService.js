@@ -526,14 +526,10 @@ function renderServices(list = []) {
     });
 }
 
-async function loadData(keyword = '', options = {}) {
+async function loadData(options = {}) {
     const layananID = resolveLayananKey();
-    const normalizedKeyword = normalizeKeyword(keyword);
     const forceRequest = Boolean(options.force);
-    const cacheKey = `${layananID}::${normalizedKeyword}`;
-
-    state.keyword = keyword;
-    persistPrefs();
+    const cacheKey = `${layananID}::all`;
 
     if (!forceRequest) {
         const cached = responseCache.get(cacheKey);
@@ -561,7 +557,7 @@ async function loadData(keyword = '', options = {}) {
             },
             signal: activeFetchController.signal,
             body: JSON.stringify({
-                keyword: normalizedKeyword,
+                keyword: '',
                 layanan_id: layananID,
             }),
         });
@@ -636,7 +632,7 @@ function accessServiceCard($card) {
     const $btn = $card.find('.tws-access-btn');
     $btn
         .addClass('is-loading')
-        .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="tws-access-btn-text">Memuat...</span>');
+        .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
     $card.attr('aria-busy', 'true');
 
     setTimeout(() => {
@@ -706,7 +702,7 @@ $('#twsResetSearch, #twsClearSearch').on('click', function () {
 });
 
 $('#twsRetryLoad, #twsReload').on('click', function () {
-    loadData('', { force: true });
+    loadData({ force: true });
 });
 
 $('.tws-filter-chip').on('click', function () {
@@ -791,6 +787,6 @@ $('#twsBackToTop').on('click', function () {
 loadPersistedState();
 applyStateToControls();
 renderEmptyLottie();
-loadData(state.keyword, { force: true });
+loadData({ force: true });
 updateBackToTopVisibility();
 

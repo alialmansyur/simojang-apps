@@ -251,9 +251,9 @@
                       const $parent = $card.parent();
                       const $activeFilters = $parent.find('.active-filters-container').first();
                       if ($activeFilters.length) {
-                          $activeFilters.before(`<div id="${recapId}" class="service-ui-recap mb-4">${html}</div>`);
+                          $activeFilters.before(`<div id="${recapId}" class="service-ui-recap mb-3">${html}</div>`);
                       } else {
-                          $card.before(`<div id="${recapId}" class="service-ui-recap mb-4">${html}</div>`);
+                          $card.before(`<div id="${recapId}" class="service-ui-recap mb-3">${html}</div>`);
                       }
                       return recapId;
                   }

@@ -37,7 +37,7 @@
 
         <div class="mb-3 tw-animate-entry" style="--animation-order: 2;">
             <div class="position-relative tws-search-wrap">
-                <input type="search" id="searchdata" class="form-control pe-7" style="border-radius: 8px;"
+                <input type="text" id="searchdata" class="form-control pe-7" style="border-radius: 8px;"
                     placeholder="Cari layanan disini">
                 <button type="button" class="btn tws-search-indicator" disabled>
                     <span id="twsSearchLoading" class="spinner-border spinner-border-sm text-primary d-none" role="status" aria-hidden="true"></span>

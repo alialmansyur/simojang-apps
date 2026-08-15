@@ -37,6 +37,16 @@ $(document).ready(function () {
 
     });
 
+    $('#btnTambahPegawai').on('click', function() {
+        const form = $('#form-usulan');
+        form.find('[name="key"]').val('');
+        form[0].reset();
+        $('#DataModalLabel').text('Tambah Data Pegawai');
+        form.find('.select2-dynamic').each(function () {
+            $(this).val(null).trigger('change');
+        });
+    });
+
     $('#form-usulan').on('submit', function (e) {
         e.preventDefault();
         swlwaitProsessing();
@@ -50,10 +60,12 @@ $(document).ready(function () {
                     swlErrorHandler(response.message);
                 } else {
                     if (response) {
-                        $('#dataTable').DataTable().ajax.reload(null, false);
-                        if (typeof loadSummaryStatistikInternal === 'function') { loadSummaryStatistikInternal(); }
                         $('#DataModal').modal('hide');
-                        swlSuccess();
+                        setTimeout(() => {
+                            swlSuccess();
+                            $('#dataTable').DataTable().ajax.reload(null, false);
+                            if (typeof loadSummaryStatistikInternal === 'function') { loadSummaryStatistikInternal(); }
+                        }, 300);
                     }
                 }
             }

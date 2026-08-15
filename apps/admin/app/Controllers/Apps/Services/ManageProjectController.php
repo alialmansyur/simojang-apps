@@ -157,9 +157,8 @@ class ManageProjectController extends BaseController
             'budget_amount'       => (float) $budget,
         ];
 
-        // Ensure apps model has an updateData method, assuming it does based on standard CI models
-        // Using common pattern: updateData($data, $table, $where)
-        $this->apps->updateData($dataUpdate, 'data_projects', ['uid' => $uid]);
+        // Using updateDataByField($field, $value, $data, $table)
+        $this->apps->updateDataByField('uid', $uid, $dataUpdate, 'data_projects');
 
         return $this->response->setStatusCode(200)->setJSON([
             'status'  => 'success',
@@ -216,7 +215,7 @@ class ManageProjectController extends BaseController
         }
 
         // Update main project progress
-        $this->manageProject->updateProjectProgress($project['id'], (float) $actual);
+        $this->manageProject->updateProjectProgress($project['id']);
 
         return $this->response->setJSON([
             'status'  => 'success',
@@ -304,5 +303,44 @@ class ManageProjectController extends BaseController
         ]);
     }
 
+    public function removeProgress()
+    {
+        $id = $this->request->getPost('id');
+        $projectUid = $this->request->getPost('project_uid');
+
+        if (empty($id)) {
+            return $this->response->setJSON(['status' => false, 'message' => 'ID tidak valid']);
+        }
+
+        $project = $this->manageProject->getProjectByUid($projectUid);
+        if (!$project) {
+            return $this->response->setJSON(['status' => false, 'message' => 'Project not found']);
+        }
+
+        $this->apps->removeData($id, 'data_project_progress_logs');
+        $this->manageProject->updateProjectProgress($project['id']);
+
+        return $this->response->setJSON(['status' => true, 'message' => 'Progres berhasil dihapus']);
+    }
+
+    public function removeBudget()
+    {
+        $id = $this->request->getPost('id');
+        $projectUid = $this->request->getPost('project_uid');
+
+        if (empty($id)) {
+            return $this->response->setJSON(['status' => false, 'message' => 'ID tidak valid']);
+        }
+
+        $project = $this->manageProject->getProjectByUid($projectUid);
+        if (!$project) {
+            return $this->response->setJSON(['status' => false, 'message' => 'Project not found']);
+        }
+
+        $this->apps->removeData($id, 'data_project_budget_realizations');
+        $this->manageProject->updateProjectBudget($project['id']);
+
+        return $this->response->setJSON(['status' => true, 'message' => 'Realisasi anggaran berhasil dihapus']);
+    }
 
 }

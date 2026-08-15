@@ -71,7 +71,7 @@ class StatistikInternal extends BaseController
             'gol_id' => $this->request->getPost('golongan'),
             'pangkat_id' => $this->request->getPost('pangkat'),
             'tmt_gol' => $this->request->getPost('tmt_gol'),
-            'unit_kerja_id' => $this->request->getPost('unit_kerja'),
+            'unit_kerja_id' => is_array($this->request->getPost('unit_kerja')) ? implode(',', $this->request->getPost('unit_kerja')) : $this->request->getPost('unit_kerja'),
             'unit_sk_id' => $this->request->getPost('unit_sk'),
             'jenis_jabatan_id' => $this->request->getPost('jenis_jabatan'),
             'phone' => $this->request->getPost('phone'),
@@ -160,20 +160,6 @@ class StatistikInternal extends BaseController
         $result = $this->dataTables->render($builder, $columns);
         return $this->response->setJSON($result);
     }
-
-    // public function getDataAccum()
-    // {
-    //     $unitRaw = $this->request->getPost('unit');
-    //     $unit    = json_decode($unitRaw, true);
-
-    //     if (!is_array($unit)) {
-    //         $unit = [];
-    //     }
-
-    //     $data = $this->simodel->getAccumulation('accum', $unit);
-
-    //     return $this->response->setJSON($data);
-    // }
 
     public function getDataAccum()
     {
@@ -278,7 +264,7 @@ class StatistikInternal extends BaseController
 
         $table = $map[$type];
 
-        // Build data array — always include nama
+        // Build data array â€” always include nama
         $data = ['nama' => $nama];
 
         // Handle extra columns for data_pegawai_jabatan

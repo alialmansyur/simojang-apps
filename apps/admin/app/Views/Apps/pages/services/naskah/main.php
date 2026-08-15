@@ -155,7 +155,7 @@
                                 <div class="col-12 mt-2">
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Jumlah</label>
-                                        <input type="number" class="form-control rounded" name="sumamry"
+                                        <input type="number" class="form-control rounded" name="summary"
                                             placeholder="Contoh : 10" required>
                                     </div>
                                 </div>                          

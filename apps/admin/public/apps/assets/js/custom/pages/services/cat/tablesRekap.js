@@ -116,7 +116,6 @@ const table = $('#dataTable').DataTable({
     processing: true,
     serverSide: true,
     order: [],
-    dom: 'Bfrtip',
     buttons: ['copy', 'excel', 'pdf', 'print'],
     ajax: {
         url: AppConfig.initGlobal + 'fetch/data-tilok-detail',

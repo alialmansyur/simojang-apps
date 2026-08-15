@@ -50,7 +50,7 @@ class STKInternalModel extends Model
                 fn($v) => $this->db->escape($v),
                 $unit
             );
-            $whereUnit = " AND uk.nama IN (" . implode(',', $escaped) . ")";
+            $whereUnit = " AND EXISTS (SELECT 1 FROM data_pegawai_unit_kerja uk WHERE FIND_IN_SET(uk.id, p.unit_kerja_id) > 0 AND uk.nama IN (" . implode(',', $escaped) . "))";
         }
 
         $rawSql = "
@@ -65,7 +65,6 @@ class STKInternalModel extends Model
             LEFT JOIN (
                 SELECT p.jabatan_id, COUNT(p.id) AS k
                 FROM data_pegawai p
-                LEFT JOIN data_pegawai_unit_kerja uk ON uk.id = p.unit_kerja_id
                 WHERE 1=1 AND p.is_status = 1 
                 $whereUnit
                 GROUP BY p.jabatan_id
@@ -90,7 +89,7 @@ class STKInternalModel extends Model
                 $unit
             );
 
-            $whereSql = " WHERE b.nama IN (" . implode(',', $escaped) . ")";
+            $whereSql = " WHERE EXISTS (SELECT 1 FROM data_pegawai_unit_kerja b WHERE FIND_IN_SET(b.id, a.unit_kerja_id) > 0 AND b.nama IN (" . implode(',', $escaped) . "))";
         }
 
         $rawSql = "
@@ -115,7 +114,7 @@ class STKInternalModel extends Model
                 a.phone,
                 a.email,
                 a.updated_at,
-                b.nama AS unit_kerja,
+                (SELECT GROUP_CONCAT(b.nama SEPARATOR ', ') FROM data_pegawai_unit_kerja b WHERE FIND_IN_SET(b.id, a.unit_kerja_id) > 0) AS unit_kerja,
                 c.nama AS unit_sk,
                 d.nama AS jenis_jabatan,
                 e.nama AS pendidikan,
@@ -139,7 +138,6 @@ class STKInternalModel extends Model
                     ELSE 'Aktif'
                 END AS status_bup
             FROM data_pegawai a
-            LEFT JOIN data_pegawai_unit_kerja b ON b.id = a.unit_kerja_id
             LEFT JOIN data_pegawai_unit_sk c ON c.id = a.unit_sk_id
             LEFT JOIN data_pegawai_jenis_jabatan d ON d.id = a.jenis_jabatan_id
             LEFT JOIN data_pegawai_pendidikan e ON e.id = a.pendidikan_id
@@ -220,6 +218,7 @@ class STKInternalModel extends Model
             LEFT JOIN data_pegawai_unit_sk c ON c.id = a.unit_sk_id
             LEFT JOIN data_pegawai_jenis_jabatan d ON d.id = a.jenis_jabatan_id
             WHERE 1=1
+            AND TIMESTAMPDIFF(YEAR, STR_TO_DATE(SUBSTRING(a.nip, 1, 8), '%Y%m%d'), CURDATE()) < 58
             $whereUnit
         ";
 

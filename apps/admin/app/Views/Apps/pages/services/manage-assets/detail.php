@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
 <style>
     .service-ui-recap {
-        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-columns: repeat(3, 1fr) !important;
     }
 </style>
 <?= $this->endSection(); ?>
@@ -36,9 +36,9 @@
                                 <!-- Placeholders for filters if needed -->
                             </div>
                             <div class="d-flex align-items-center justify-content-end">
-                                <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DataModal">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DataModal" id="btnTambahData">
                                     <i class="bi bi-plus me-2"></i>Tambah Data
-                                </button> -->
+                                </button>
                             </div>
                         </div>
 
@@ -63,6 +63,7 @@
                                         <th><strong>Satuan</strong></th>
                                         <th><strong>Qty</strong></th>
                                         <th><strong>Created Date</strong></th>
+                                        <th><strong>Aksi</strong></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,6 +75,50 @@
             </div>
         </section>
 
+    </div>
+</div>
+
+<div class="modal fade" id="DataModal" tabindex="-1" role="dialog" aria-labelledby="DataModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DataModalLabel">Tambah Data Asset</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formAssetDetail" action="#">
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="assetId">
+                    <input type="hidden" name="category_uid" value="<?= esc($category['uid']) ?>">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Kode <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="kode" id="kode" required placeholder="Masukkan Kode">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Subcode</label>
+                            <input type="text" class="form-control" name="subcode" id="subcode" placeholder="Masukkan Subcode">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Uraian <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="uraian" id="uraian" required placeholder="Masukkan Uraian Asset">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Satuan <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="satuan" id="satuan" required placeholder="Contoh: Unit, M2">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Qty <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" name="qty" id="qty" step="any" required placeholder="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmitForm">Simpan Data</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <?= $this->endSection(); ?>

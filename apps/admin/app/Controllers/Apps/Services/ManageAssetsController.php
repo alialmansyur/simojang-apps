@@ -61,4 +61,76 @@ class ManageAssetsController extends BaseController
         ]);
     }
 
+    public function storeDetail()
+    {
+        $categoryUid = $this->request->getPost('category_uid');
+        $category = $this->manageAssets->getCategoryByUid($categoryUid);
+        if (!$category) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Kategori tidak valid.']);
+        }
+
+        $data = [
+            'category_id' => $category['id'],
+            'kode'        => $this->request->getPost('kode'),
+            'subcode'     => $this->request->getPost('subcode'),
+            'uraian'      => $this->request->getPost('uraian'),
+            'satuan'      => $this->request->getPost('satuan'),
+            'qty'         => str_replace(',', '.', $this->request->getPost('qty')),
+        ];
+
+        if ($this->manageAssets->insertDetail($data)) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil disimpan.']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menyimpan data.']);
+    }
+
+    public function updateDetail()
+    {
+        $id = $this->request->getPost('id');
+        if (!$id) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'ID tidak ditemukan.']);
+        }
+
+        $data = [
+            'kode'    => $this->request->getPost('kode'),
+            'subcode' => $this->request->getPost('subcode'),
+            'uraian'  => $this->request->getPost('uraian'),
+            'satuan'  => $this->request->getPost('satuan'),
+            'qty'     => str_replace(',', '.', $this->request->getPost('qty')),
+        ];
+
+        if ($this->manageAssets->updateDetail($id, $data)) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil diperbarui.']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal memperbarui data.']);
+    }
+
+    public function deleteDetail()
+    {
+        $id = $this->request->getPost('id');
+        if (!$id) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'ID tidak valid.']);
+        }
+
+        if ($this->manageAssets->deleteDetail($id)) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil dihapus.']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menghapus data.']);
+    }
+
+    public function getDetail()
+    {
+        $id = $this->request->getPost('id');
+        $data = $this->manageAssets->getDetailById($id);
+
+        if ($data) {
+            return $this->response->setJSON(['status' => 'success', 'data' => $data]);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Data tidak ditemukan.']);
+    }
+
 }

@@ -6,29 +6,48 @@ $(document).ready(function () {
 
     $('#form-usulan').on('submit', function (e) {
         e.preventDefault(); 
+        $('#DataModal').modal('hide');
         swlwaitProsessing();
+        const $btn = $('.btn-submit-form');
+        $btn.prop('disabled', true);
+        
         $.ajax({
             url: AppConfig.initGlobal + 'store/save-data-konsultasi', 
             type: 'POST',
             data: $(this).serialize(),
             success: function (response) {
-                if (response.status == 'error') {
-                    swlErrorHandler(response.message);
+                $btn.prop('disabled', false);
+                if (response?.status === 'error' || response?.status === false) {
+                    swlErrorHandler(response?.message || 'Terjadi kesalahan.');
                 } else {
-                    if (response) {
+                    setTimeout(() => {
+                        swlSuccess(response?.message || 'Data berhasil disimpan.');
                         $('#dataTable').DataTable().ajax.reload(null, false);
                         if (typeof loadSummaryKonsul === 'function') { loadSummaryKonsul(); }
-                        $('#DataModal').modal('hide');
-                        swlSuccess();
-                    }
+                    }, 300);
                 }
+            },
+            error: function () {
+                $btn.prop('disabled', false);
+                swlErrorHandler('Terjadi kesalahan pada server.');
             }
         });
+    });
+
+    // Reset form properly when opening modal for Tambah Data
+    $('[data-bs-target="#DataModal"]').on('click', function () {
+        const form = $('#form-usulan');
+        form[0].reset();
+        form.find('[name="key"]').val(''); 
+        form.find('[name="media"]').val('').trigger('change');
+        $('#DataModalLabel').text('Tambah Data');
     });
 
     $('#DataModal').on('hidden.bs.modal', function () {
         const form = $('#form-usulan');
         form[0].reset();
+        form.find('[name="key"]').val('');
+        $('#DataModalLabel').text('Tambah Data');
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open').css('overflow', '');
     });

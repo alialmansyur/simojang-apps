@@ -53,8 +53,7 @@ const table = $('#dataTable').DataTable({
     responsive: { details: { type: 'column', target: 'td.dtr-control' } },
     processing: true,
     serverSide: true,
-    order: [[1, 'asc']],
-    dom: 'Bfrtip',
+    order: [[12, 'desc']],
     buttons: ['copy', 'excel', 'pdf', 'print'],
     ajax: {
         url: AppConfig.initGlobal + 'fetch/data-ikpa',
@@ -112,7 +111,7 @@ const table = $('#dataTable').DataTable({
             ServiceTableUI.setup({
                 key: 'ikpa',
                 table,
-                recapMountSelector: '.page-heading',
+
                 loadSummary: loadSummaryIKPA,
                 cards: [
                     { id: 'total-data', label: 'Total Upload', value: '0' },

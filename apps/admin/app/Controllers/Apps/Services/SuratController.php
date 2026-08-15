@@ -40,12 +40,12 @@ class SuratController extends BaseController
         $syncdate2  = $this->request->getPost('syncdate2');
         $jenis      = $this->request->getPost('jenis');     
         $klasifikasi  = $this->request->getPost('klasifikasi');
-        $sumamry      = $this->request->getPost('sumamry');
+        $summary      = $this->request->getPost('summary');
 
         $rules = [
             'jenis'         => 'required',
             'klasifikasi'   => 'required',
-            'sumamry'       => 'required',
+            'summary'       => 'required',
             'period'        => 'required',
             'syncdate1'     => 'required',
             'syncdate2'     => 'required',
@@ -67,7 +67,7 @@ class SuratController extends BaseController
             'period_end_date'   => $syncdate2,
             'jenis_id'          => $jenis,
             'klasifikasi_id'    => $klasifikasi,
-            'total'             => $sumamry,
+            'total'             => $summary,
             'created_by'        => $sess['username']
         ];
 

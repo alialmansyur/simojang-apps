@@ -287,9 +287,21 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/kill/data-tilok-cat', 'Apps\Services\FasilitasiCAT::removeDataTilok');    
     $routes->post('/kill/data-tilok-rekap', 'Apps\Services\FasilitasiCAT::removeDataRekap');    
     // ----------------------------------------------------------------
+    // Layanan Barang Hilang & Ditemukan
+    $routes->get('/apps-lost-and-found', 'Apps\Services\LostAndFoundController::index');    
+    $routes->post('/store/save-data-lost-and-found', 'Apps\Services\LostAndFoundController::storeData');    
+    $routes->post('/fetch/data-lost-and-found', 'Apps\Services\LostAndFoundController::getData');        
+    $routes->post('/fetch/summary-lost-and-found', 'Apps\Services\LostAndFoundController::getSummary');
+    $routes->post('/kill/data-lost-and-found', 'Apps\Services\LostAndFoundController::removeData');
+    // ----------------------------------------------------------------
     // Layanan Manajemen Asset
     $routes->get('/apps-manage-assets', 'Apps\Services\ManageAssetsController::index');
     $routes->get('/apps-manage-assets-detail/(:segment)', 'Apps\Services\ManageAssetsController::detail/$1');
+    $routes->post('/apps-manage-assets-detail/store', 'Apps\Services\ManageAssetsController::storeDetail');
+    $routes->post('/apps-manage-assets-detail/update', 'Apps\Services\ManageAssetsController::updateDetail');
+    $routes->post('/apps-manage-assets-detail/delete', 'Apps\Services\ManageAssetsController::deleteDetail');
+    $routes->post('/apps-manage-assets-detail/get-data', 'Apps\Services\ManageAssetsController::getDetail');
+    
     $routes->post('/fetch/data-manage-assets', 'Apps\Services\ManageAssetsController::getData');
     $routes->post('/fetch/summary-manage-assets', 'Apps\Services\ManageAssetsController::getSummary');
     // ----------------------------------------------------------------
@@ -303,6 +315,8 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/store/save-project-progress', 'Apps\Services\ManageProjectController::storeProgress');
     $routes->post('/store/save-project-budget', 'Apps\Services\ManageProjectController::storeBudget');
     $routes->post('/kill/data-project', 'Apps\Services\ManageProjectController::removeProject');
+    $routes->post('/kill/project-progress', 'Apps\Services\ManageProjectController::removeProgress');
+    $routes->post('/kill/project-budget', 'Apps\Services\ManageProjectController::removeBudget');
     // ----------------------------------------------------------------
     // Layanan Sistem Kehumasan
     $routes->get('/apps-humas', 'Apps\Services\HumasController::index');    

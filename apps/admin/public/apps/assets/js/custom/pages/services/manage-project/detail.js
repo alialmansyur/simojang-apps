@@ -14,7 +14,6 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         responsive: true,
-        dom: 'Bfrtip',
         lengthMenu: [
             [10, 25, 50, -1],
             ['10', '25', '50', 'All']
@@ -72,22 +71,28 @@ $(document).ready(function() {
                     return date.toLocaleDateString('id-ID', {day: '2-digit', month: 'short', year: 'numeric'});
                 }
             },
-            { data: 'target_percentage', className: 'text-end inline-editable', name: 'target_percentage' },
+            { data: 'target_percentage', className: 'text-end', name: 'target_percentage' },
             { 
                 data: 'actual_percentage', 
-                className: 'text-end fw-bold text-primary inline-editable',
+                className: 'text-end fw-bold text-primary',
                 name: 'actual_percentage',
                 render: function(data) {
                     return data + '%';
                 }
             },
-            { data: 'notes', className: 'inline-editable', name: 'notes' },
-            { data: 'created_at' },
+            { data: 'notes', name: 'notes' },
+            { data: 'created_at', className: 'text-center' },
             {
                 data: null,
-                defaultContent: '',
                 orderable: false,
-                searchable: false
+                searchable: false,
+                className: 'text-center',
+                render: function (_, __, row) {
+                    return `
+                        <button class="btn btn-sm btn-primary btn-update" data-id="${row.id}"><i class='bi bi-pencil'></i></button>
+                        <button class="btn btn-sm btn-danger btn-remove" data-id="${row.id}"><i class='bi bi-trash'></i></button>
+                    `;
+                }
             }
         ],
         createdRow: function(row, data, dataIndex) {
@@ -101,7 +106,6 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         responsive: true,
-        dom: 'Bfrtip',
         lengthMenu: [
             [10, 25, 50, -1],
             ['10', '25', '50', 'All']
@@ -161,19 +165,25 @@ $(document).ready(function() {
             },
             { 
                 data: 'amount', 
-                className: 'text-end fw-bold text-success inline-editable',
+                className: 'text-end fw-bold text-success',
                 name: 'amount',
                 render: function(data) {
                     return 'Rp ' + Number(data).toLocaleString('id-ID');
                 }
             },
-            { data: 'description', className: 'inline-editable', name: 'description' },
-            { data: 'created_at' },
+            { data: 'description', name: 'description' },
+            { data: 'created_at', className: 'text-center' },
             {
                 data: null,
-                defaultContent: '',
                 orderable: false,
-                searchable: false
+                searchable: false,
+                className: 'text-center',
+                render: function (_, __, row) {
+                    return `
+                        <button class="btn btn-sm btn-primary btn-update" data-id="${row.id}"><i class='bi bi-pencil'></i></button>
+                        <button class="btn btn-sm btn-danger btn-remove" data-id="${row.id}"><i class='bi bi-trash'></i></button>
+                    `;
+                }
             }
         ],
         createdRow: function(row, data, dataIndex) {
@@ -291,9 +301,8 @@ $(document).ready(function() {
                         $('#ProgressModal').modal('hide');
                         $('#formProgress')[0].reset();
                         btn.prop('disabled', false).html('Simpan Progres');
-                        progressTable.ajax.reload();
-                        showLoading();
-                        window.location.reload();
+                        progressTable.ajax.reload(null, false);
+                        loadProjectOverview();
                     });
                 } else {
                     Swal.fire('Gagal!', response.message, 'error');
@@ -330,9 +339,8 @@ $(document).ready(function() {
                         $('#BudgetModal').modal('hide');
                         $('#formBudget')[0].reset();
                         btn.prop('disabled', false).html('Simpan Realisasi');
-                        budgetTable.ajax.reload();
-                        showLoading();
-                        window.location.reload();
+                        budgetTable.ajax.reload(null, false);
+                        loadProjectOverview();
                     });
                 } else {
                     Swal.fire('Gagal!', response.message, 'error');
@@ -367,8 +375,8 @@ $(document).ready(function() {
                         showConfirmButton: false
                     }).then(() => {
                         $('#EditProjectModal').modal('hide');
-                        showLoading();
-                        window.location.reload();
+                        btn.prop('disabled', false).html('Simpan Perubahan');
+                        loadProjectOverview();
                     });
                 } else {
                     Swal.fire('Gagal!', response.message, 'error');
@@ -383,7 +391,7 @@ $(document).ready(function() {
     });
 
     // Edit Modals Logic
-    $('#progressTable').on('click', 'tbody td.inline-editable', function() {
+    $('#progressTable').on('click', 'tbody .btn-update', function() {
         var tr = $(this).closest('tr');
         var rowData = progressTable.row(tr).data();
         if (!rowData) return;
@@ -401,7 +409,36 @@ $(document).ready(function() {
         $('#ProgressModal').modal('show');
     });
 
-    $('#budgetTable').on('click', 'tbody td.inline-editable', function() {
+    $('#progressTable').on('click', 'tbody .btn-remove', function() {
+        const id = $(this).data('id');
+        Swal.fire({
+            text: 'Apa anda yakin akan menghapus data ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d63031',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (!result.isConfirmed) return;
+            $.ajax({
+                type: 'POST',
+                url: AppConfig.initGlobal + 'kill/project-progress',
+                data: { id: id, project_uid: projectUid },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status) {
+                        Swal.fire('Terhapus!', response.message, 'success');
+                        progressTable.ajax.reload(null, false);
+                        loadProjectOverview();
+                    } else {
+                        Swal.fire('Gagal!', response.message, 'error');
+                    }
+                }
+            });
+        });
+    });
+
+    $('#budgetTable').on('click', 'tbody .btn-update', function() {
         var tr = $(this).closest('tr');
         var rowData = budgetTable.row(tr).data();
         if (!rowData) return;
@@ -416,6 +453,35 @@ $(document).ready(function() {
         $('#BudgetModalLabel').text('Edit Realisasi Anggaran');
         $('#btnSaveBudget').text('Update Realisasi');
         $('#BudgetModal').modal('show');
+    });
+
+    $('#budgetTable').on('click', 'tbody .btn-remove', function() {
+        const id = $(this).data('id');
+        Swal.fire({
+            text: 'Apa anda yakin akan menghapus data ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d63031',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (!result.isConfirmed) return;
+            $.ajax({
+                type: 'POST',
+                url: AppConfig.initGlobal + 'kill/project-budget',
+                data: { id: id, project_uid: projectUid },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status) {
+                        Swal.fire('Terhapus!', response.message, 'success');
+                        budgetTable.ajax.reload(null, false);
+                        loadProjectOverview();
+                    } else {
+                        Swal.fire('Gagal!', response.message, 'error');
+                    }
+                }
+            });
+        });
     });
 
     // Reset modals on 'Tambah' click

@@ -114,7 +114,6 @@ const table = $('#dataTable').DataTable({
     processing: true,
     serverSide: true,
     order: [[1, 'desc']],
-    dom: 'Bfrtip',
     buttons: ['copy', 'excel', 'pdf', 'print'],
     ajax: {
         url: AppConfig.initGlobal + 'fetch/data-ekin',
@@ -152,7 +151,7 @@ const table = $('#dataTable').DataTable({
             ServiceTableUI.setup({
                 key: 'ekin',
                 table,
-                recapMountSelector: '.page-heading',
+
                 loadSummary: loadSummaryEKIN,
                 cards: [
                     { id: 'total-data', label: 'Total Upload', value: '0' },

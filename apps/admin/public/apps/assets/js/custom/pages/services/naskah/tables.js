@@ -54,7 +54,6 @@ const table = $('#dataTable').DataTable({
     processing: true,
     serverSide: true,
     order: [[1, 'asc']],
-    dom: 'Bfrtip',
     buttons: ['copy', 'excel', 'pdf', 'print'],
     ajax: {
         url: AppConfig.initGlobal + 'fetch/data-surat',
@@ -105,7 +104,7 @@ const table = $('#dataTable').DataTable({
             ServiceTableUI.setup({
                 key: 'surat',
                 table,
-                recapMountSelector: '.page-heading',
+
                 loadSummary: loadSummarySurat,
                 cards: [
                     { id: 'total-data', label: 'Total Periode', value: '0' },
@@ -214,7 +213,7 @@ $('#dataTable tbody').on('click', '.btn-update', function () {
     form.find('[name="period"]').val((row.period || '').substring(0, 7));
     form.find('[name="syncdate1"]').val(row.period_start_date || row.period_date || '');
     form.find('[name="syncdate2"]').val(row.period_end_date || '');
-    form.find('[name="sumamry"]').val(row.total || '');
+    form.find('[name="summary"]').val(row.total || '');
 
     $('#DataModal').modal('show');
 

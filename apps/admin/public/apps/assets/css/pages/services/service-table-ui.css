@@ -112,9 +112,9 @@
 .service-ui-recap {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: .45rem;
-    margin-top: .45rem;
-    margin-bottom: 1.25rem;
+    gap: 1rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
 }
 
 .service-ui-topbar .dropdown-menu {
@@ -474,4 +474,45 @@
     width: 100% !important;
     max-width: 1160px !important;
     margin: 0 auto !important;
+}
+
+/* ==========================================================================
+   GLOBAL DATATABLES FOOTER STANDARDIZATION
+   ========================================================================== */
+.dataTables_wrapper .dataTables_info {
+    font-size: .95rem !important;
+    font-weight: 500;
+    color: #4b5563;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+}
+
+.dataTables_wrapper .dataTables_length {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    line-height: 1 !important;
+}
+
+.dataTables_wrapper .dataTables_length label {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    line-height: 1 !important;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    min-width: 65px;
+    padding: .35rem .5rem !important;
+    font-size: .9rem !important;
+    border-radius: .45rem !important;
+    border: 1px solid #d1d5db !important;
+    outline: none !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    height: auto !important;
+    margin: 0 !important;
+    line-height: 1 !important;
 }

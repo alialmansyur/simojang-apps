@@ -351,3 +351,19 @@ $(window).on('load', function () {
     window.__appLoadingMounted = true; // Tandai bahwa overlay HTML sudah ada (dari header.php)
     hideLoading();
 });
+
+// --- Global DataTables Configuration ---
+if (typeof jQuery !== 'undefined' && jQuery.fn.dataTable) {
+    jQuery.extend(true, jQuery.fn.dataTable.defaults, {
+        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+        dom: "<'d-flex flex-wrap justify-content-between mb-3'<'d-flex align-items-center gap-2'B><'d-flex'f>>" +
+             "<'table-responsive'tr>" +
+             "<'d-flex flex-wrap justify-content-between align-items-center mt-3'<'d-flex align-items-center gap-3'li><'d-flex align-items-center'p>>",
+        language: {
+            lengthMenu: "_MENU_",
+            info: "Menampilkan <b>_START_</b> - <b>_END_</b> dari <b>_TOTAL_</b> data",
+            infoEmpty: "Menampilkan <b>0</b> - <b>0</b> dari <b>0</b> data",
+            infoFiltered: "(difilter dari <b>_MAX_</b> data)"
+        }
+    });
+}

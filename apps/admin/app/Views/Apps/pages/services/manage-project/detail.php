@@ -129,7 +129,7 @@
                 </div>
             </div>
 
-            <section class="row mb-1">
+            <section class="row mb-0">
                 <div class="col-md-12">
                     <div class="card shadow-sm" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
                         <div class="card-body p-3">
@@ -182,7 +182,6 @@
                     </div>
                 </div>
             </section>
-        </div>
 
         <style>
             /* Nav interactions */
@@ -266,7 +265,7 @@
         </style>
         
         <!-- Sidebar and Content Layout -->
-        <div class="row mb-5">
+        <div class="row mb-5" style="margin-top: -1rem;">
             <div class="col-md-12">
                 <div class="card shadow-sm w-100" style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #ffffff;">
                     <div class="row g-0" style="min-height: 500px;">
@@ -292,7 +291,7 @@
                     
                     <!-- Tab Progres -->
                     <div class="tab-pane fade show active" id="progress" role="tabpanel" aria-labelledby="progress-tab">
-                        <div class="service-ui-topbar service-ui-static-topbar">
+                        <div class="service-ui-topbar service-ui-static-topbar mb-3">
                             <div class="d-flex align-items-center flex-nowrap gap-2">
                                 <h5 class="fw-bold mb-0" style="color: #1a202c;">Log Perkembangan Proyek</h5>
                             </div>
@@ -337,7 +336,7 @@
 
                     <!-- Tab Anggaran -->
                     <div class="tab-pane fade" id="budget" role="tabpanel" aria-labelledby="budget-tab">
-                        <div class="service-ui-topbar service-ui-static-topbar">
+                        <div class="service-ui-topbar service-ui-static-topbar mb-3">
                             <div class="d-flex align-items-center flex-nowrap gap-2">
                                 <h5 class="fw-bold mb-0" style="color: #1a202c;">Riwayat Realisasi Anggaran</h5>
                             </div>
@@ -383,6 +382,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </div>

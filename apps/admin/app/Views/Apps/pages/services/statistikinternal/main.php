@@ -51,7 +51,7 @@
                         </ul>
                     </div>
                     <div class="d-flex align-items-center justify-content-end">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DataModal">
+                        <button type="button" id="btnTambahPegawai" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DataModal">
                             <i class="bi bi-plus me-2"></i>Tambah Data
                         </button>
                     </div>
@@ -71,7 +71,7 @@
             <div id="bup-alert" class="mb-0"></div>
 
             <!-- NAV TAB FILTER -->
-            <div class="col-md-8 mt-0">
+            <div class="col-md-9 mt-0">
                 <div class="card border shadow-sm">
                     <div class="card-body py-2 mt-2">
                         <ul class="nav nav-pills gap-2 mt-3 mb-1" id="pegawaiTab" role="tablist">
@@ -246,7 +246,7 @@
             </div>
 
             <!-- STATISTIK PEGAWAI -->
-            <div class="col-md-4 mt-0">
+            <div class="col-md-3 mt-0">
                 <div class="card border shadow-sm">
                     <div class="card-body">
                         <h6 class="fw-bold mb-1">
@@ -415,10 +415,9 @@
 
                                 <div class="col-lg-4 col-md-6">
                                     <label class="form-label">Unit Kerja</label>
-                                    <select name="unit_kerja"
+                                    <select name="unit_kerja[]"
                                             class="form-select rounded select2-dynamic"
-                                            data-source="data_pegawai_unit_kerja">
-                                        <option value="">- Pilih -</option>
+                                            data-source="data_pegawai_unit_kerja" multiple="multiple">
                                     </select>
                                 </div>
 
