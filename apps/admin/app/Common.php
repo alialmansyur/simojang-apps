@@ -19,7 +19,11 @@ if (! function_exists('asset_url')) {
     {
         static $cache = [];
 
-        $normalizedPath = ltrim($path, '/');
+        // Hapus query string manual (seperti ?v=99) agar pengecekan file berhasil
+        $parsedUrl = parse_url($path);
+        $cleanPath = $parsedUrl['path'] ?? $path;
+        
+        $normalizedPath = ltrim($cleanPath, '/');
 
         if (isset($cache[$normalizedPath])) {
             return $cache[$normalizedPath];
@@ -29,8 +33,10 @@ if (! function_exists('asset_url')) {
             . DIRECTORY_SEPARATOR
             . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $normalizedPath);
 
+        // Jika file ada, gunakan waktu modifikasi terakhir sebagai versi
         $version = is_file($absolutePath) ? (string) filemtime($absolutePath) : '1';
 
+        // Kembalikan URL bersih ditambah auto-versioning
         return $cache[$normalizedPath] = base_url($normalizedPath) . '?v=' . rawurlencode($version);
     }
 }

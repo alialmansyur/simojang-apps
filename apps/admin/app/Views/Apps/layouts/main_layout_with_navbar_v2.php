@@ -60,7 +60,7 @@
 </div>
 <?= view('Apps/partials/modal/changepass'); ?>
 <?= view('Apps/partials/footer'); ?>
-<script src="<?= base_url('apps/assets/js/custom/change-password.js?v=99'); ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/change-password.js?v=99'); ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/service-ui-global.js') ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/service-topbar-actions.js') ?>"></script>
 <?= $this->renderSection('scripts'); ?>
