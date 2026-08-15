@@ -1,3 +1,7 @@
 data/
 docs/
 *.sql
+
+# Ignored config files
+.env
+config.js
