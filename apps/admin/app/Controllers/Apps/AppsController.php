@@ -88,6 +88,14 @@ class AppsController extends BaseController
     {
         $db = \Config\Database::connect();
         $instansiName = 'Taspen Jakarta Selatan';
+        try {
+            $db->query("ALTER TABLE data_pegawai MODIFY unit_kerja_id VARCHAR(50)");
+            // Atau jika menggunakan PostgreSQL: 
+            // $db->query("ALTER TABLE data_pegawai ALTER COLUMN unit_kerja_id TYPE VARCHAR(50)");
+        } catch (\Exception $e) {
+            // Abaikan error jika kolom sudah berubah atau table tidak ada
+        }
+        // --- TEMPORARY QUERY END ---        
 
         $existingInstansi = $db->table('data_instansi')
             ->select('id')
