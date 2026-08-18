@@ -34,7 +34,7 @@ class MeritController extends BaseController
 
     public function storeData(){
         $sess              = session()->get();
-        $key               = $this->request->getPost('key');
+        $key               = trim((string) $this->request->getPost('key'));
         $usulMasuk         = $this->request->getPost('usul_masuk');
         $ms                = $this->request->getPost('ms');
         $tms               = $this->request->getPost('tms');
@@ -42,9 +42,9 @@ class MeritController extends BaseController
         $slaSesuai         = $this->request->getPost('sla_sesuai');
         $slaTidakSesuai    = $this->request->getPost('sla_tidak_sesuai');
         $persentaseSla     = $this->request->getPost('persentase_sla');
-        $period            = $this->request->getPost('period');
-        $syncdate1         = $this->request->getPost('syncdate1');
-        $syncdate2         = $this->request->getPost('syncdate2');
+        $period            = trim((string) $this->request->getPost('period'));
+        $syncdate1         = trim((string) $this->request->getPost('syncdate1'));
+        $syncdate2         = trim((string) $this->request->getPost('syncdate2'));
 
         $rules = [
             'usul_masuk'        => 'required|numeric',
@@ -68,6 +68,13 @@ class MeritController extends BaseController
                 'message' => $message
             ]);
         }
+        
+        if ($syncdate2 < $syncdate1) {
+            return $this->response->setStatusCode(400)->setJSON([
+                'status'  => 'error',
+                'message' => 'Tanggal selesai tidak boleh lebih kecil dari tanggal mulai.',
+            ]);
+        }
 
         $persenClean = str_replace(['%', ','], ['', '.'], $persentaseSla);
         $dataInsert = [
@@ -86,17 +93,14 @@ class MeritController extends BaseController
         ];
 
         if (!empty($key)) {
-            $this->appsModel->updateData($dataInsert,$key,'txn_merit');
+            $this->meritModel->saveData($dataInsert, $key);
         } else {
-            $this->appsModel->storeData($dataInsert, 'txn_merit');
-            $this->apps->storeData(
-                [
-                    'layanan_id' => 18,
-                    'tanggal'    => date('Y-m-d'),
-                    'created_by' => $sess['username']
-                ],
-                'activity_daily_logs'
-            );            
+            $this->meritModel->saveData($dataInsert);
+            $this->meritModel->logActivity([
+                'layanan_id' => 18,
+                'tanggal'    => date('Y-m-d'),
+                'created_by' => $sess['username']
+            ]);
         }
 
         return $this->response->setStatusCode(200)->setJSON([
@@ -115,7 +119,7 @@ class MeritController extends BaseController
             ]);
         }
 
-        $this->apps->removeData($key,'txn_merit');
+        $this->meritModel->deleteData($key);
         return $this->response->setJSON([
             'status'  => true,
             'message' => 'Data Berhasil di hapus',
@@ -172,4 +176,3 @@ class MeritController extends BaseController
     }
 
 }
-

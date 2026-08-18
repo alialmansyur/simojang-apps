@@ -207,9 +207,8 @@ $(document).ready(function () {
 
     function initModalSelect2() {
         $(document).off('shown.bs.modal.pdbcinstansi');
-        $(document).on('shown.bs.modal.pdbcinstansi', function (e) {
+        $(document).on('shown.bs.modal', function (e) {
             const modal = $(e.target);
-            if (modal.attr('id') !== 'pdbcDataModal') return;
 
             modal.find('.select-instansi').each(function () {
                 if ($(this).hasClass('select2-hidden-accessible')) {
@@ -269,8 +268,7 @@ $(document).ready(function () {
             syncFormByKategori();
         });
 
-        $('#pdbcDataModal').off('hidden.bs.modal.pdbcinstansi');
-        $('#pdbcDataModal').on('hidden.bs.modal.pdbcinstansi', function () {
+        $('#pdbcDataModal').off('hidden.bs.modal.pdbcinstansi').on('hidden.bs.modal.pdbcinstansi', function () {
             const $form = $('#pdbcForm');
             $form[0].reset();
             $form.find('[name="key"]').val('');
@@ -280,14 +278,14 @@ $(document).ready(function () {
 
             const $instansi = $form.find('.select-instansi');
             if ($instansi.hasClass('select2-hidden-accessible')) {
-                $instansi.val(null).trigger('change');
                 $instansi.select2('destroy');
+                $instansi.val(null).trigger('change');
             }
 
             const $pegawai = $form.find('.select-pegawai');
             if ($pegawai.hasClass('select2-hidden-accessible')) {
-                $pegawai.val(null).trigger('change');
                 $pegawai.select2('destroy');
+                $pegawai.val(null).trigger('change');
             }
 
             $('.modal-backdrop').remove();

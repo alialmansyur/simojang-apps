@@ -35,6 +35,28 @@ class MeritModel extends Model
         return $query->getFieldNames();
     }    
 
+    public function saveData($data, $key = null)
+    {
+        if ($key) {
+            $this->db->table($this->table)->where('id', $key)->update($data);
+            return $key;
+        } else {
+            $this->db->table($this->table)->insert($data);
+            return $this->db->insertID();
+        }
+    }
+
+    public function deleteData($key)
+    {
+        return $this->db->table($this->table)->where('id', $key)->delete();
+    }
+
+    public function logActivity($data)
+    {
+        $this->db->table('activity_daily_logs')->insert($data);
+        return $this->db->insertID();
+    }
+
     public function getDataRecap($params = [])
     {
         $bulan = $params['bulan'] ?? [];

@@ -1,10 +1,9 @@
 $(document).ready(function () {
-    $(document).off('shown.bs.modal', '#DataModal');
-    $('#DataModal').on('shown.bs.modal', function (e) {
+    $(document).on('shown.bs.modal', function (e) {
         const modal = $(e.target);
 
         modal.find('.select-instansi').each(function () {
-            if ($(this).hasClass('select2-hidden-accessible')) {
+            if ($(this).hasClass("select2-hidden-accessible")) {
                 $(this).select2('destroy');
             }
 
@@ -18,12 +17,12 @@ $(document).ready(function () {
                     type: 'POST',
                     dataType: 'json',
                     delay: 300,
-                    data(params) {
+                    data: function (params) {
                         return {
                             search: params.term
                         };
                     },
-                    processResults(data) {
+                    processResults: function (data) {
                         return {
                             results: data
                         };
@@ -34,19 +33,14 @@ $(document).ready(function () {
         });
 
         modal.find('.select-step').each(function () {
-            if ($(this).hasClass('select2-hidden-accessible')) {
+            if ($(this).hasClass("select2-hidden-accessible")) {
                 $(this).select2('destroy');
             }
+
             $(this).select2({
                 theme: 'bootstrap-5',
                 width: '100%',
-                dropdownParent: modal,
-                data: [
-                    { id: '', text: 'Pilih Salah Satu' },
-                    { id: 'A', text: 'A (Sangat Baik)' },
-                    { id: 'B', text: 'B (Baik)' },
-                    { id: 'C', text: 'C (Cukup)' }
-                ]
+                dropdownParent: modal
             });
         });
     });
@@ -95,6 +89,7 @@ $(document).ready(function () {
     $('#DataModal').on('hidden.bs.modal', function () {
         const form = $('#form-usulan');
         form[0].reset();
+        form.find('input[type="hidden"]').val('');
         $('#DataModalLabel').text('Tambah Data');
 
         form.find('.select-instansi, .select-step').each(function () {

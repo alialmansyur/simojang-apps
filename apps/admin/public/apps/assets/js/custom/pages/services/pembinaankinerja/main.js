@@ -181,9 +181,8 @@ $(document).ready(function () {
 
     function initModalSelect2() {
         $(document).off('shown.bs.modal.pkinstansi');
-        $(document).on('shown.bs.modal.pkinstansi', function (e) {
+        $(document).on('shown.bs.modal', function (e) {
             const modal = $(e.target);
-            if (modal.attr('id') !== 'pkDataModal') return;
 
             modal.find('.select-instansi').each(function () {
                 if ($(this).hasClass('select2-hidden-accessible')) {
@@ -216,8 +215,7 @@ $(document).ready(function () {
             });
         });
 
-        $('#pkDataModal').off('hidden.bs.modal.pkinstansi');
-        $('#pkDataModal').on('hidden.bs.modal.pkinstansi', function () {
+        $('#pkDataModal').off('hidden.bs.modal.pkinstansi').on('hidden.bs.modal.pkinstansi', function () {
             const $form = $('#pkForm');
             $form[0].reset();
             $form.find('[name="key"]').val('');
@@ -227,8 +225,8 @@ $(document).ready(function () {
 
             const $instansi = $form.find('.select-instansi');
             if ($instansi.hasClass('select2-hidden-accessible')) {
-                $instansi.val(null).trigger('change');
                 $instansi.select2('destroy');
+                $instansi.val(null).trigger('change');
             }
             
             $('.modal-backdrop').remove();

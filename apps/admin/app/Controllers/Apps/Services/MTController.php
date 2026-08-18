@@ -43,6 +43,8 @@ class MTController extends BaseController
         $startdate     = $this->request->getPost('startdate');
         $step_progress = $this->request->getPost('stepProgress');
 
+        $key           = $this->request->getPost('key');
+        
         $rules = [
             'instansi'      => 'required',
             'period'        => 'required',
@@ -60,22 +62,31 @@ class MTController extends BaseController
             ]);
         }
 
-        $dataInsert = [
+        $dataPayload = [
             'instansi_id'   => $instansi,
             'period'        => $period,
             'period_date'   => $startdate,
             'rw_mt_id'      => $step_progress,
-            'created_by'    => $sess['username'],
-            'created_at'    => date('Y-m-d H:i:s')
         ];
 
-        $insertID  = $this->appsModel->storeData($dataInsert,'txn_mt');
+        if (!empty($key) && is_numeric($key)) {
+            $dataPayload['updated_by'] = $sess['username'] ?? null;
+            $dataPayload['updated_at'] = date('Y-m-d H:i:s');
+            $this->appsModel->updateData($dataPayload, $key, 'txn_mt');
+            $insertID = $key;
+            $activityDesc = 'Mengupdate data MT pada instansi ID '.$instansi;
+        } else {
+            $dataPayload['created_by'] = $sess['username'] ?? null;
+            $dataPayload['created_at'] = date('Y-m-d H:i:s');
+            $insertID  = $this->appsModel->storeData($dataPayload, 'txn_mt');
+            $activityDesc = 'Menambahkan data MT pada instansi ID '.$instansi;
+        }
 
         $datalog = [
             'activity_type' => 'create',
             'mt_id'         => $insertID,
             'rw_mt_id'      => $step_progress,
-            'description'   => 'Menambahkan data MT pada instansi ID '.$instansi,
+            'description'   => $activityDesc,
             'created_by'    => $sess['username'],
             'created_at'    => date('Y-m-d H:i:s')
         ];

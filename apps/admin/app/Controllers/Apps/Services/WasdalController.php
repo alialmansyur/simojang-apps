@@ -69,29 +69,26 @@ class WasdalController extends BaseController
         }
 
         $dataInsert = [
-            'action'    => 'create',
+            'action'            => 'create',
             'period'            => $period,
             'period_date'       => $syncdate1,
             'period_start_date' => $syncdate1,
             'period_end_date'   => $syncdate2,
-            'instansi_id'  => $instansi,
-            'permasalahan' => $permasalahan,
-            'total'        => $total,
-            'created_by'   => $sess['username']
+            'instansi_id'       => $instansi,
+            'permasalahan'      => $permasalahan,
+            'total'             => $total,
+            'created_by'        => $sess['username']
         ];
 
         if (!empty($key)) {
-            $this->apps->updateData($dataInsert,$key,'txn_wasdal');
+            $this->wasdalModel->saveData($dataInsert, $key);
         } else {
-            $this->apps->storeData($dataInsert, 'txn_wasdal');
-            $this->apps->storeData(
-                [
-                    'layanan_id' => 20,
-                    'tanggal'    => date('Y-m-d'),
-                    'created_by' => $sess['username']
-                ],
-                'activity_daily_logs'
-            );
+            $this->wasdalModel->saveData($dataInsert);
+            $this->wasdalModel->logActivity([
+                'layanan_id' => 20,
+                'tanggal'    => date('Y-m-d'),
+                'created_by' => $sess['username']
+            ]);
         }
         
         return $this->response->setStatusCode(200)->setJSON([
@@ -109,7 +106,7 @@ class WasdalController extends BaseController
             ]);
         }
 
-        $this->appsModel->removeData($key,'txn_wasdal');
+        $this->wasdalModel->deleteData($key);
         return $this->response->setJSON([
             'status'  => true,
             'message' => 'Data Berhasil di hapus',
@@ -167,4 +164,3 @@ class WasdalController extends BaseController
     }
 
 }
-

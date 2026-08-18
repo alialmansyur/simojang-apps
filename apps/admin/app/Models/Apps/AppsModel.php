@@ -669,4 +669,30 @@ public function getLayananTimkerja($param, $keyword = '')
     }    
 
 
+    public function checkAndInitInstansi(string $instansiName)
+    {
+        $existingInstansi = $this->db->table('data_instansi')
+            ->select('id')
+            ->where('nama', $instansiName)
+            ->get()
+            ->getRowArray();
+
+        if (!$existingInstansi) {
+            $maxKodeins = $this->db->table('data_instansi')
+                ->selectMax('kodeins', 'max_kodeins')
+                ->get()
+                ->getRowArray();
+
+            $this->db->table('data_instansi')->insert([
+                'kodeins' => ((int) ($maxKodeins['max_kodeins'] ?? 0)) + 1,
+                'nama' => $instansiName,
+                'kanreg' => 0,
+                'wilayah' => null,
+                'is_status' => 1,
+                'logo' => null,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+        }
+    }
 }

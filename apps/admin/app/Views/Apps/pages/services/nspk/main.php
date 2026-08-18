@@ -198,7 +198,12 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label class="form-label mb-1">Level / Peringkat / Nilai</label>
-                                        <select name="level" class="form-select select-step rounded" required></select>
+                                        <select name="level" class="form-select select-step rounded" required>
+                                            <option value="">Pilih Salah Satu</option>
+                                            <option value="A">A (Sangat Baik)</option>
+                                            <option value="B">B (Baik)</option>
+                                            <option value="C">C (Cukup)</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>

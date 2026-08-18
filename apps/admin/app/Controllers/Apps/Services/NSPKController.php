@@ -35,12 +35,12 @@ class NSPKController extends BaseController
 
     public function storeData(){
         $sess       = session()->get();
-        $key        = $this->request->getPost('key');
-        $instansi   = $this->request->getPost('instansi');
-        $period     = $this->request->getPost('period');
-        $syncdate1  = $this->request->getPost('syncdate1');
-        $syncdate2  = $this->request->getPost('syncdate2');
-        $level      = $this->request->getPost('level');
+        $key        = trim((string) $this->request->getPost('key'));
+        $instansi   = trim((string) $this->request->getPost('instansi'));
+        $period     = trim((string) $this->request->getPost('period'));
+        $syncdate1  = trim((string) $this->request->getPost('syncdate1'));
+        $syncdate2  = trim((string) $this->request->getPost('syncdate2'));
+        $level      = trim((string) $this->request->getPost('level'));
 
         $rules = [
             'instansi'      => 'required',
@@ -60,39 +60,42 @@ class NSPKController extends BaseController
             ]);
         }
 
+        if ($syncdate2 < $syncdate1) {
+            return $this->response->setStatusCode(400)->setJSON([
+                'status'  => 'error',
+                'message' => 'Tanggal selesai tidak boleh lebih kecil dari tanggal mulai.',
+            ]);
+        }
+
         $dataInsert = [
-            'action'    => 'create',
+            'action'            => 'create',
             'period'            => $period,
             'period_date'       => $syncdate1,
             'period_start_date' => $syncdate1,
             'period_end_date'   => $syncdate2,
-            'instansi_id'   => $instansi,
-            'level'         => $level,
-            'created_by'    => $sess['username'],
-            'created_at'    => date('Y-m-d H:i:s')
+            'instansi_id'       => $instansi,
+            'level'             => $level,
+            'created_by'        => $sess['username'],
+            'created_at'        => date('Y-m-d H:i:s')
         ];
 
         if (!empty($key)) {
-            $this->apps->updateData($dataInsert,$key,'txn_nspk');
+            $this->nspkModel->saveData($dataInsert, $key);
         } else {
-
             $cek = $this->nspkModel->isDuplicateNSPK($instansi, $period);
-            if ($cek > 0) {
+            if ($cek) {
                 return $this->response->setJSON([
                     'status'  => 'error',
                     'message' => 'Data untuk instansi dan tahun ini sudah ada.'
                 ]);
             }
 
-            $this->apps->storeData($dataInsert, 'txn_nspk');
-            $this->apps->storeData(
-                [
-                    'layanan_id' => 19,
-                    'tanggal'    => date('Y-m-d'),
-                    'created_by' => $sess['username']
-                ],
-                'activity_daily_logs'
-            );
+            $this->nspkModel->saveData($dataInsert);
+            $this->nspkModel->logActivity([
+                'layanan_id' => 19,
+                'tanggal'    => date('Y-m-d'),
+                'created_by' => $sess['username']
+            ]);
         }
 
         return $this->response->setStatusCode(200)->setJSON([
@@ -110,7 +113,7 @@ class NSPKController extends BaseController
             ]);
         }
 
-        $this->apps->removeData($key,'txn_nspk');
+        $this->nspkModel->deleteData($key);
         return $this->response->setJSON([
             'status'  => true,
             'message' => 'Data Berhasil di hapus',
@@ -167,4 +170,3 @@ class NSPKController extends BaseController
     }
 
 }
-

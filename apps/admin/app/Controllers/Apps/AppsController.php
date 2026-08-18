@@ -86,40 +86,7 @@ class AppsController extends BaseController
 
     public function timkerja()
     {
-        $db = \Config\Database::connect();
-        $instansiName = 'Taspen Jakarta Selatan';
-        try {
-            $db->query("ALTER TABLE data_pegawai MODIFY unit_kerja_id VARCHAR(50)");
-            // Atau jika menggunakan PostgreSQL: 
-            // $db->query("ALTER TABLE data_pegawai ALTER COLUMN unit_kerja_id TYPE VARCHAR(50)");
-        } catch (\Exception $e) {
-            // Abaikan error jika kolom sudah berubah atau table tidak ada
-        }
-        // --- TEMPORARY QUERY END ---        
-
-        $existingInstansi = $db->table('data_instansi')
-            ->select('id')
-            ->where('nama', $instansiName)
-            ->get()
-            ->getRowArray();
-
-        if (!$existingInstansi) {
-            $maxKodeins = $db->table('data_instansi')
-                ->selectMax('kodeins', 'max_kodeins')
-                ->get()
-                ->getRowArray();
-
-            $db->table('data_instansi')->insert([
-                'kodeins' => ((int) ($maxKodeins['max_kodeins'] ?? 0)) + 1,
-                'nama' => $instansiName,
-                'kanreg' => 0,
-                'wilayah' => null,
-                'is_status' => 1,
-                'logo' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]);
-        }
+        $this->apps->checkAndInitInstansi('Taspen Jakarta Selatan');
 
         $data = array(
             'title'     => 'Tim Kerja',

@@ -1,7 +1,6 @@
 $(document).ready(function () {
-    $(document).off('shown.bs.modal', '#DataModal');
-    $('#DataModal').on('shown.bs.modal', function () {
-        const modal = $(this);
+    $(document).on('shown.bs.modal', function (e) {
+        const modal = $(e.target);
 
         modal.find('.select-instansi').each(function () {
             if ($(this).hasClass("select2-hidden-accessible")) {
@@ -31,7 +30,6 @@ $(document).ready(function () {
                     cache: true
                 }
             });
-            
         });
     });
 
@@ -78,9 +76,12 @@ $(document).ready(function () {
     $('#DataModal').on('hidden.bs.modal', function () {
         const form = $('#form-usulan');
         form[0].reset();
-        form.find('.select-instansi, .select-step').each(function () {
+        form.find('input[type="hidden"]').val('');
+        $('#DataModalLabel').text('Tambah Data');
+
+        form.find('.select-instansi').each(function () {
             $(this).val(null).trigger('change');
-            if ($(this).hasClass("select2-hidden-accessible")) {
+            if ($(this).hasClass('select2-hidden-accessible')) {
                 $(this).select2('destroy');
             }
         });

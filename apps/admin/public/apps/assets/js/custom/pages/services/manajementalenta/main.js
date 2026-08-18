@@ -53,11 +53,11 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '.btn-submit-form', function () {
+    $(document).off('click', '.btn-submit-form').on('click', '.btn-submit-form', function () {
         $('#form-usulan').submit();
     });
 
-    $('#form-usulan').on('submit', function (e) {
+    $('#form-usulan').off('submit').on('submit', function (e) {
         e.preventDefault();
         
         // Hide modal first to avoid overlapping with sweetalert loader
@@ -87,14 +87,14 @@ $(document).ready(function () {
         });
     });
 
-    $('#DataModal').on('hidden.bs.modal', function () {
+    $('#DataModal').off('hidden.bs.modal').on('hidden.bs.modal', function () {
         const form = $('#form-usulan');
         form[0].reset();
         form.find('.select-instansi, .select-step').each(function () {
-            $(this).val(null).trigger('change');
             if ($(this).hasClass("select2-hidden-accessible")) {
                 $(this).select2('destroy');
             }
+            $(this).val(null).trigger('change');
         });
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open').css('overflow', '');

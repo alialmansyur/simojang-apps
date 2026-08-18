@@ -43,6 +43,7 @@ $(document).ready(function () {
     $('#DataModal').on('hidden.bs.modal', function () {
         const form = $('#form-usulan');
         form[0].reset();
+        form.find('input[type="hidden"]').val('');
         $('#DataModalLabel').text('Tambah Data');
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open').css('overflow', '');
