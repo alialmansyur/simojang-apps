@@ -19,9 +19,10 @@ if (! function_exists('asset_url')) {
     {
         static $cache = [];
 
-        // Hapus query string manual (seperti ?v=99) agar pengecekan file berhasil
+        // Ambil clean path dan manual query jika ada
         $parsedUrl = parse_url($path);
         $cleanPath = $parsedUrl['path'] ?? $path;
+        $manualQuery = $parsedUrl['query'] ?? null;
         
         $normalizedPath = ltrim($cleanPath, '/');
 
@@ -33,10 +34,28 @@ if (! function_exists('asset_url')) {
             . DIRECTORY_SEPARATOR
             . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $normalizedPath);
 
-        // Jika file ada, gunakan waktu modifikasi terakhir sebagai versi
-        $version = is_file($absolutePath) ? (string) filemtime($absolutePath) : '1';
+        // Jika file ada di disk, gunakan waktu modifikasi terakhir (filemtime) untuk cache busting otomatis
+        $fileMtime = is_file($absolutePath) ? filemtime($absolutePath) : null;
+        
+        if ($fileMtime !== null) {
+            $version = (string) $fileMtime;
+            if (!empty($manualQuery)) {
+                parse_str($manualQuery, $queryParams);
+                if (!empty($queryParams['v'])) {
+                    $version .= '.' . rawurlencode((string) $queryParams['v']);
+                }
+            }
+        } else {
+            $version = (string) time();
+            if (!empty($manualQuery)) {
+                parse_str($manualQuery, $queryParams);
+                if (!empty($queryParams['v'])) {
+                    $version = rawurlencode((string) $queryParams['v']);
+                }
+            }
+        }
 
         // Kembalikan URL bersih ditambah auto-versioning
-        return $cache[$normalizedPath] = base_url($normalizedPath) . '?v=' . rawurlencode($version);
+        return $cache[$normalizedPath] = base_url($normalizedPath) . '?v=' . $version;
     }
 }

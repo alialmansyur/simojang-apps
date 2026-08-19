@@ -6,7 +6,7 @@
 .service-ui-topbar { margin-bottom: 1rem; }
 .kpi-card { border-radius: 8px; padding: 1.5rem; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 .kpi-title { font-size: 0.85rem; color: #6c757d; font-weight: 600; text-transform: uppercase; }
-.kpi-value { font-size: 1.8rem; font-weight: 700; color: #435ebe; margin-top: 0.5rem; }
+.kpi-value { font-size: 1.8rem; font-weight: 700; color: #1040c1; margin-top: 0.5rem; }
 </style>
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>

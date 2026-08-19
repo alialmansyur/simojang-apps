@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
             staffContainer.innerHTML = '';
             if (props.staff && Array.isArray(props.staff) && props.staff.length > 0) {
                 if (props.staff.length > 3) {
-                     staffContainer.innerHTML = `<span class="badge rounded-pill px-3 py-2" style="background-color: #eff6ff; color: #2563eb; font-weight: 600; border: 1px solid #bfdbfe;">Semua Pegawai</span>`;
+                     staffContainer.innerHTML = `<span class="badge rounded-pill px-3 py-2" style="background-color: #eff6ff; color: #1040c1; font-weight: 600; border: 1px solid #bfdbfe;">Semua Pegawai</span>`;
                 } else {
                      staffContainer.innerHTML = props.staff.map(s => s.nama || s).join(', ');
                 }

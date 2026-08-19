@@ -256,7 +256,7 @@ $(document).ready(function () {
 
         function unhighlight(e) {
             dropzoneArea.style.backgroundColor = 'transparent';
-            dropzoneArea.style.borderColor = '#0d6efd';
+            dropzoneArea.style.borderColor = '#1040c1';
         }
 
         dropzoneArea.addEventListener('drop', handleDrop, false);

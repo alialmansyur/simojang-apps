@@ -64,6 +64,12 @@ if ($avatarName !== '' && strtolower($avatarName) !== 'user.jpg') {
 				<li class="sidebar-title">Main Menu</li>
 
 				<?php foreach ($menus as $menu): ?>
+				<?php 
+				$parentUrl = $menu['url'];
+				if (strtolower(trim((string) $parentUrl)) === 'home' || strtolower(trim((string) $menu['name'])) === 'home') {
+					$parentUrl = 'dashboard';
+				}
+				?>
 				<?php if (count($menu['submenus']) > 0): ?>
 				<li class="sidebar-item has-sub" id="menu<?= $menu['id'] ?>">
 					<a href="#" class="sidebar-link">
@@ -72,8 +78,14 @@ if ($avatarName !== '' && strtolower($avatarName) !== 'user.jpg') {
 					</a>
 					<ul class="submenu" id="submenu-parent<?= $menu['id'] ?>">
 						<?php foreach ($menu['submenus'] as $subMenu): ?>
+						<?php 
+						$childUrl = $subMenu['url'];
+						if (strtolower(trim((string) $childUrl)) === 'home' || strtolower(trim((string) $subMenu['name'])) === 'home') {
+							$childUrl = 'dashboard';
+						}
+						?>
 						<li class="submenu-item" id="submenu<?= $subMenu['id'] ?>">
-							<a href="<?= base_url($subMenu['url']); ?>" class="menu-link"
+							<a href="<?= base_url($childUrl); ?>" class="menu-link"
 								onclick="updateActiveMenu('<?= $subMenu['id'] ?>', '<?= $menu['id'] ?>')">
 								<?= $subMenu['name'] ?>
 							</a>
@@ -83,7 +95,7 @@ if ($avatarName !== '' && strtolower($avatarName) !== 'user.jpg') {
 				</li>
 				<?php else: ?>
 				<li class="sidebar-item" id="menu<?= $menu['id'] ?>">
-					<a href="<?= base_url($menu['url']) ?>" class="sidebar-link menu-link"
+					<a href="<?= base_url($parentUrl) ?>" class="sidebar-link menu-link"
 						onclick="updateActiveMenu('<?= $menu['id'] ?>', null)">
 						<i class="<?= $menu['icon'] ?>"></i>
 						<span><?= $menu['name'] ?></span>

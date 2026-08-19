@@ -184,7 +184,7 @@
             <?php else: ?>
                 <div class="col-12" id="noDataInfo">
                     <div class="d-flex flex-column align-items-center justify-content-center text-center mt-5 mb-5 pb-4">
-                        <img src="<?= base_url('apps/assets/images/empty-content-profile.png') ?>" alt="Belum Ada Seleksi" style="max-width: 320px; margin-bottom: 2rem;">
+                        <img src="<?= asset_url('apps/assets/images/empty-content-profile.png') ?>" alt="Belum Ada Seleksi" style="max-width: 320px; margin-bottom: 2rem;">
                         <h5 class="fw-bold" style="color: #1a202c; font-size: 1.35rem;">Belum Ada Nama Seleksi</h5>
                         <p class="text-muted mb-0" style="font-size: 1.05rem; max-width: 450px; margin: 0 auto; line-height: 1.6;">
                             Anda belum memiliki data Seleksi CAT. Silakan tambah data baru.

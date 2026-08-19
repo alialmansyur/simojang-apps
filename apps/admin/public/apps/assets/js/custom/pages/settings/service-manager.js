@@ -9,29 +9,43 @@
     const pegawaiSelect = document.getElementById('smPegawaiSelect');
     const addAssignBtn = document.getElementById('smAddAssignBtn');
     const assignedListEl = document.getElementById('smAssignedList');
+    const searchInput = document.getElementById('searchService');
+    const refreshBtn = document.getElementById('btnRefreshServices');
 
     if (!serviceBody || !modalEl || !currentServiceIdInput || !detailNameEl || !detailUrlEl || !accessModeEl || !saveModeBtn || !pegawaiSelect || !addAssignBtn || !assignedListEl) {
         return;
     }
 
+    let allServices = [];
     const modal = typeof bootstrap !== 'undefined' ? new bootstrap.Modal(modalEl) : null;
-    
 
     function showToast(message, type) {
         if (!message) return;
         if (type === 'success') {
-            notifySuccess(message);
+            if (typeof notifySuccess === 'function') {
+                notifySuccess(message);
+            } else if (typeof notify === 'function') {
+                notify(message, 'success');
+            }
             return;
         }
-        if (type === 'danger') {
-            notifyError(message);
+        if (type === 'danger' || type === 'error') {
+            if (typeof notifyError === 'function') {
+                notifyError(message);
+            } else if (typeof notify === 'function') {
+                notify(message, 'error');
+            }
             return;
         }
-        notifyInfo(message);
+        if (typeof notifyInfo === 'function') {
+            notifyInfo(message);
+        } else if (typeof notify === 'function') {
+            notify(message, 'info');
+        }
     }
 
     function escapeHtml(s) {
-        return String(s)
+        return String(s || '')
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
@@ -49,14 +63,36 @@
         return base + cleanPath;
     }
 
+    function updateBannerStats(rows) {
+        const totalEl = document.getElementById('statTotalServices');
+        const publicEl = document.getElementById('statPublicServices');
+        const assignedEl = document.getElementById('statAssignedServices');
+
+        if (!Array.isArray(rows)) return;
+
+        let total = rows.length;
+        let publicCount = 0;
+        let assignedCount = 0;
+
+        rows.forEach(function (r) {
+            if (r.access_mode === 'assigned') {
+                assignedCount++;
+            } else {
+                publicCount++;
+            }
+        });
+
+        if (totalEl) totalEl.textContent = String(total);
+        if (publicEl) publicEl.textContent = String(publicCount);
+        if (assignedEl) assignedEl.textContent = String(assignedCount);
+    }
+
     function renderAssignments(assignments) {
         if (!Array.isArray(assignments) || !assignments.length) {
             assignedListEl.innerHTML = (
-                '<li class="list-group-item text-center py-4">' +
-                    '<div class="d-flex flex-column justify-content-center align-items-center">' +
-                        '<img src="' + (window.AppConfig ? AppConfig.initGlobal : '/') + 'apps/assets/media/illustrations/empty-content-profile.png" alt="Empty" class="img-fluid mb-3" style="max-width: 180px; opacity: 0.85;">' +
-                        '<h5 class="fw-bolder text-dark mb-1">Pencarian Tidak Ditemukan</h5><p class="text-muted mb-0 mx-auto" style="max-width: 400px; font-size: .95rem;">Maaf, kami tidak dapat menemukan data yang Anda cari. Silakan periksa kembali kata kunci atau filter pencarian Anda.</p>' +
-                    '</div>' +
+                '<li class="list-group-item text-center py-4 text-muted">' +
+                    '<i class="bi bi-people fs-2 d-block mb-1 text-secondary opacity-50"></i>' +
+                    '<span class="fw-semibold">Belum ada pegawai yang ditugaskan khusus</span>' +
                 '</li>'
             );
             return;
@@ -68,13 +104,13 @@
             const nipEscaped = escapeHtml(nip);
 
             return (
-                '<li class="list-group-item d-flex justify-content-between align-items-center" data-nip="' + nipEscaped + '">' +
+                '<li class="list-group-item d-flex justify-content-between align-items-center py-2 px-3" data-nip="' + nipEscaped + '">' +
                     '<div>' +
-                        '<div class="fw-semibold">' + nipEscaped + '</div>' +
-                        '<small class="text-muted">' + escapeHtml(nama) + '</small>' +
+                        '<div class="fw-bold text-dark font-monospace" style="font-size: 0.95rem;">' + nipEscaped + '</div>' +
+                        '<div class="text-secondary small">' + escapeHtml(nama) + '</div>' +
                     '</div>' +
-                    '<button type="button" class="btn btn-sm btn-outline-danger js-sm-remove-assign" data-nip="' + nipEscaped + '">' +
-                        '<i class="bi bi-trash"></i>' +
+                    '<button type="button" class="btn btn-sm btn-outline-danger js-sm-remove-assign d-inline-flex align-items-center gap-1" data-nip="' + nipEscaped + '" title="Hapus Penugasan NIP">' +
+                        '<i class="bi bi-trash3"></i> <span class="d-none d-sm-inline">Hapus</span>' +
                     '</button>' +
                 '</li>'
             );
@@ -85,11 +121,10 @@
         if (!Array.isArray(rows) || rows.length === 0) {
             serviceBody.innerHTML = (
                 '<tr>' +
-                    '<td colspan="6" class="text-center py-4">' +
-                        '<div class="d-flex flex-column justify-content-center align-items-center">' +
-                            '<img src="' + (window.AppConfig ? AppConfig.initGlobal : '/') + 'apps/assets/media/illustrations/empty-content-profile.png" alt="Empty" class="img-fluid mb-3" style="max-width: 180px; opacity: 0.85;">' +
-                            '<h5 class="fw-bolder text-dark mb-1">Pencarian Tidak Ditemukan</h5><p class="text-muted mb-0 mx-auto" style="max-width: 400px; font-size: .95rem;">Maaf, kami tidak dapat menemukan data yang Anda cari. Silakan periksa kembali kata kunci atau filter pencarian Anda.</p>' +
-                        '</div>' +
+                    '<td colspan="6" class="text-center py-5 text-muted">' +
+                        '<i class="bi bi-inbox fs-1 d-block mb-2 text-secondary opacity-50"></i>' +
+                        '<h6 class="fw-bold text-dark mb-1">Tidak ada data layanan yang ditemukan</h6>' +
+                        '<small>Silakan periksa kembali kata kunci pencarian Anda.</small>' +
                     '</td>' +
                 '</tr>'
             );
@@ -100,19 +135,53 @@
             const id = row.id || '';
             const mode = row.access_mode || 'everyone';
             const totalAssigned = Number(row.total_assigned || 0);
+
+            let modeBadge = '';
+            if (mode === 'assigned') {
+                modeBadge = '<span class="mode-badge-assigned"><i class="bi bi-person-lock"></i> Pegawai Tertentu</span>';
+            } else {
+                modeBadge = '<span class="mode-badge-everyone"><i class="bi bi-globe2"></i> Semua Pegawai</span>';
+            }
+
+            let assignedText = '';
+            if (mode === 'assigned') {
+                assignedText = '<span class="badge bg-primary rounded-pill px-2 py-1">' + totalAssigned + ' Pegawai</span>';
+            } else {
+                assignedText = '<span class="text-muted small">Semua</span>';
+            }
+
             return (
                 '<tr data-service-id="' + escapeHtml(id) + '">' +
-                    '<td>' + escapeHtml(id) + '</td>' +
-                    '<td>' + escapeHtml(row.nama_layanan || '-') + '</td>' +
-                    '<td><code>' + escapeHtml(row.url || '-') + '</code></td>' +
-                    '<td class="js-sm-mode">' + escapeHtml(mode) + '</td>' +
-                    '<td class="text-center js-sm-assigned">' + escapeHtml(totalAssigned) + '</td>' +
+                    '<td class="text-center fw-bold text-muted">' + escapeHtml(id) + '</td>' +
+                    '<td><span class="fw-bold text-dark">' + escapeHtml(row.nama_layanan || '-') + '</span></td>' +
+                    '<td><code class="px-2 py-1 bg-light border rounded text-primary font-monospace">' + escapeHtml(row.url || '-') + '</code></td>' +
+                    '<td class="text-center js-sm-mode">' + modeBadge + '</td>' +
+                    '<td class="text-center js-sm-assigned">' + assignedText + '</td>' +
                     '<td class="text-center">' +
-                        '<button type="button" class="btn btn-sm btn-outline-primary js-sm-select" data-service-id="' + escapeHtml(id) + '">Pilih</button>' +
+                        '<button type="button" class="btn btn-sm btn-outline-primary js-sm-select fw-bold px-3 d-inline-flex align-items-center gap-1" data-service-id="' + escapeHtml(id) + '" style="border-radius: 6px;">' +
+                            '<i class="bi bi-sliders"></i> Atur Akses' +
+                        '</button>' +
                     '</td>' +
                 '</tr>'
             );
         }).join('');
+    }
+
+    function filterServices() {
+        const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+        if (!query) {
+            renderServiceRows(allServices);
+            return;
+        }
+
+        const filtered = allServices.filter(function (s) {
+            const name = String(s.nama_layanan || '').toLowerCase();
+            const url = String(s.url || '').toLowerCase();
+            const mode = String(s.access_mode || '').toLowerCase();
+            return name.includes(query) || url.includes(query) || mode.includes(query);
+        });
+
+        renderServiceRows(filtered);
     }
 
     async function fetchServiceList() {
@@ -121,12 +190,21 @@
         if (!res.ok || !json.status) {
             throw new Error(json.message || 'Gagal memuat daftar layanan');
         }
-        return Array.isArray(json.data) ? json.data : [];
+        allServices = Array.isArray(json.data) ? json.data : [];
+        updateBannerStats(allServices);
+        return allServices;
     }
 
     function updateServiceRow(service) {
         if (!service || !service.id) {
             return;
+        }
+
+        // Update in cache array
+        const idx = allServices.findIndex(function (s) { return String(s.id) === String(service.id); });
+        if (idx !== -1) {
+            allServices[idx] = Object.assign({}, allServices[idx], service);
+            updateBannerStats(allServices);
         }
 
         const row = serviceBody.querySelector('tr[data-service-id="' + service.id + '"]');
@@ -137,11 +215,23 @@
         const modeCell = row.querySelector('.js-sm-mode');
         const assignedCell = row.querySelector('.js-sm-assigned');
 
+        const mode = service.access_mode || 'everyone';
+        const totalAssigned = Number(service.total_assigned || 0);
+
         if (modeCell) {
-            modeCell.textContent = service.access_mode || 'everyone';
+            if (mode === 'assigned') {
+                modeCell.innerHTML = '<span class="mode-badge-assigned"><i class="bi bi-person-lock"></i> Pegawai Tertentu</span>';
+            } else {
+                modeCell.innerHTML = '<span class="mode-badge-everyone"><i class="bi bi-globe2"></i> Semua Pegawai</span>';
+            }
         }
+
         if (assignedCell) {
-            assignedCell.textContent = String(service.total_assigned || 0);
+            if (mode === 'assigned') {
+                assignedCell.innerHTML = '<span class="badge bg-primary rounded-pill px-2 py-1">' + totalAssigned + ' Pegawai</span>';
+            } else {
+                assignedCell.innerHTML = '<span class="text-muted small">Semua</span>';
+            }
         }
     }
 
@@ -172,7 +262,7 @@
     async function openServiceModal(serviceId) {
         detailNameEl.textContent = 'Memuat...';
         detailUrlEl.textContent = '-';
-        assignedListEl.innerHTML = '<li class="list-group-item text-center text-muted">Memuat data...</li>';
+        assignedListEl.innerHTML = '<li class="list-group-item text-center text-muted py-3"><span class="spinner-border spinner-border-sm me-1"></span> Memuat data...</li>';
 
         if (modal) {
             modal.show();
@@ -194,22 +284,29 @@
         body.set('access_mode', mode);
 
         saveModeBtn.disabled = true;
-        const res = await fetch(buildAppUrl('api/manage-layanan/mode'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-            body: body.toString(),
-            credentials: 'same-origin',
-        });
-        const json = await res.json();
-        saveModeBtn.disabled = false;
+        const originalText = saveModeBtn.innerHTML;
+        saveModeBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...';
 
-        if (!res.ok || !json.status) {
-            throw new Error(json.message || 'Gagal menyimpan mode akses');
+        try {
+            const res = await fetch(buildAppUrl('api/manage-layanan/mode'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                body: body.toString(),
+                credentials: 'same-origin',
+            });
+            const json = await res.json();
+
+            if (!res.ok || !json.status) {
+                throw new Error(json.message || 'Gagal menyimpan mode akses');
+            }
+
+            const detailData = await fetchServiceDetail(serviceId);
+            renderServiceDetail(detailData);
+            showToast(json.message || 'Mode akses layanan diperbarui.', 'success');
+        } finally {
+            saveModeBtn.disabled = false;
+            saveModeBtn.innerHTML = originalText;
         }
-
-        const detailData = await fetchServiceDetail(serviceId);
-        renderServiceDetail(detailData);
-        showToast(json.message || 'Mode akses layanan diperbarui.', 'success');
     }
 
     async function addAssignee() {
@@ -227,28 +324,35 @@
         body.set('nip', selectedNip);
 
         addAssignBtn.disabled = true;
-        const res = await fetch(buildAppUrl('api/manage-layanan/assign/add'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-            body: body.toString(),
-            credentials: 'same-origin',
-        });
-        const json = await res.json();
-        addAssignBtn.disabled = false;
+        const originalText = addAssignBtn.innerHTML;
+        addAssignBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>';
 
-        if (!res.ok || !json.status) {
-            throw new Error(json.message || 'Gagal menambahkan NIP assign');
+        try {
+            const res = await fetch(buildAppUrl('api/manage-layanan/assign/add'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                body: body.toString(),
+                credentials: 'same-origin',
+            });
+            const json = await res.json();
+
+            if (!res.ok || !json.status) {
+                throw new Error(json.message || 'Gagal menambahkan NIP assign');
+            }
+
+            if (typeof jQuery !== 'undefined' && typeof jQuery.fn.select2 === 'function') {
+                jQuery(pegawaiSelect).val(null).trigger('change');
+            } else {
+                pegawaiSelect.value = '';
+            }
+
+            const detailData = await fetchServiceDetail(serviceId);
+            renderServiceDetail(detailData);
+            showToast(json.message || 'NIP berhasil ditambahkan.', 'success');
+        } finally {
+            addAssignBtn.disabled = false;
+            addAssignBtn.innerHTML = originalText;
         }
-
-        if (typeof jQuery !== 'undefined' && typeof jQuery.fn.select2 === 'function') {
-            jQuery(pegawaiSelect).val(null).trigger('change');
-        } else {
-            pegawaiSelect.value = '';
-        }
-
-        const detailData = await fetchServiceDetail(serviceId);
-        renderServiceDetail(detailData);
-        showToast(json.message || 'NIP berhasil ditambahkan.', 'success');
     }
 
     async function removeAssignee(nip) {
@@ -285,7 +389,6 @@
         const $select = jQuery(pegawaiSelect);
         const hasSelect2 = !!$select.data('select2');
 
-        // Jika select2 sudah terpasang, cukup bersihkan elemen duplikat yang sempat tertinggal.
         if (hasSelect2) {
             const $rendered = $select.siblings('.select2');
             if ($rendered.length > 1) {
@@ -294,7 +397,6 @@
             return;
         }
 
-        // Bersihkan jejak inisialisasi lama agar tidak memunculkan 2 select visual.
         $select.siblings('.select2').remove();
 
         $select.select2({
@@ -345,14 +447,10 @@
 
     serviceBody.addEventListener('click', async function (e) {
         const btn = e.target.closest('.js-sm-select');
-        if (!btn) {
-            return;
-        }
+        if (!btn) return;
 
         const serviceId = btn.getAttribute('data-service-id');
-        if (!serviceId) {
-            return;
-        }
+        if (!serviceId) return;
 
         try {
             await openServiceModal(serviceId);
@@ -379,14 +477,10 @@
 
     assignedListEl.addEventListener('click', async function (e) {
         const btn = e.target.closest('.js-sm-remove-assign');
-        if (!btn) {
-            return;
-        }
+        if (!btn) return;
 
         const nip = btn.getAttribute('data-nip');
-        if (!nip) {
-            return;
-        }
+        if (!nip) return;
 
         try {
             await removeAssignee(nip);
@@ -395,9 +489,27 @@
         }
     });
 
+    if (searchInput) {
+        searchInput.addEventListener('input', filterServices);
+    }
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', async function () {
+            try {
+                serviceBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted"><span class="spinner-border spinner-border-sm me-1"></span> Memuat ulang data...</td></tr>';
+                const rows = await fetchServiceList();
+                filterServices();
+                showToast('Daftar layanan berhasil dimuat ulang', 'success');
+            } catch (err) {
+                renderServiceRows([]);
+                showToast(err.message || 'Gagal memuat daftar layanan', 'danger');
+            }
+        });
+    }
+
     (async function init() {
         try {
-            serviceBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Memuat data...</td></tr>';
+            serviceBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted"><span class="spinner-border spinner-border-sm me-1"></span> Memuat data layanan...</td></tr>';
             const rows = await fetchServiceList();
             renderServiceRows(rows);
         } catch (err) {
@@ -406,6 +518,3 @@
         }
     })();
 })();
-
-
-

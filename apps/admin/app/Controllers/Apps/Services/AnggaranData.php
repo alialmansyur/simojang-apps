@@ -13,8 +13,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class AnggaranData extends BaseController
 {
-    protected AnggaranModel $anggaranModel;
-    protected AppsModel $apps;
+    protected $anggaranModel;
+    protected $apps;
 
     public function __construct()
     {

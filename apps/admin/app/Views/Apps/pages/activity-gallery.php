@@ -75,7 +75,7 @@
             <!-- Empty State -->
             <div class="col-12 d-none" id="galleryEmptyState">
                 <div class="d-flex flex-column align-items-center justify-content-center text-center mt-5 mb-5 pb-4 tw-animate-entry">
-                    <img src="<?= base_url('apps/assets/images/empty-content-profile.png') ?>" alt="Belum Ada Kegiatan" class="empty-state-img" style="max-width: 320px; margin-bottom: 2rem; transition: transform 0.3s ease;">
+                    <img src="<?= asset_url('apps/assets/images/empty-content-profile.png') ?>" alt="Belum Ada Kegiatan" class="empty-state-img" style="max-width: 320px; margin-bottom: 2rem; transition: transform 0.3s ease;">
                     <h5 class="fw-bold" style="color: #1a202c; font-size: 1.35rem;">Belum Ada Galeri Kegiatan</h5>
                     <p class="text-muted mb-4" style="font-size: 1.05rem; max-width: 450px; margin: 0 auto; line-height: 1.6;">
                         Anda belum memiliki data dokumentasi kegiatan. Silakan tambah data baru.

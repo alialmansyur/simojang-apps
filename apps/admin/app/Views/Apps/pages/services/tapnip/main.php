@@ -23,7 +23,7 @@ $sampleFile = 'apps/samples/sample-tapnip.xlsx';
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
-<link rel="stylesheet" href="<?= base_url('apps/assets/extensions/filepond/filepond.css'); ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/filepond/filepond.css'); ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/tapnip/main.css') ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
@@ -358,7 +358,7 @@ $sampleFile = 'apps/samples/sample-tapnip.xlsx';
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/service-table-ui.js') ?>"></script>
-<script src="<?= base_url('apps/assets/extensions/filepond/filepond.js'); ?>"></script>
+<script src="<?= asset_url('apps/assets/extensions/filepond/filepond.js'); ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/modules/fetchData.js') ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/tapnip-events.js') ?>"></script>
 <?= $this->endSection(); ?>

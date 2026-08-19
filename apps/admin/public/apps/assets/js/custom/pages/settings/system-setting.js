@@ -6,7 +6,7 @@
     }
 
     const defaults = {
-        app__name: 'Simojang',
+        app__name: 'SIMOJANG',
         app__timezone: 'Asia/Jakarta',
         env__flag: 'production',
         app__maintenance_mode: '0',
@@ -24,14 +24,26 @@
     function showToast(message, type) {
         if (!message) return;
         if (type === 'success') {
-            notifySuccess(message);
+            if (typeof notifySuccess === 'function') {
+                notifySuccess(message);
+            } else if (typeof notify === 'function') {
+                notify(message, 'success');
+            }
             return;
         }
         if (type === 'warning') {
-            notifyInfo(message);
+            if (typeof notifyInfo === 'function') {
+                notifyInfo(message);
+            } else if (typeof notify === 'function') {
+                notify(message, 'warning');
+            }
             return;
         }
-        notifyError(message);
+        if (typeof notifyError === 'function') {
+            notifyError(message);
+        } else if (typeof notify === 'function') {
+            notify(message, 'error');
+        }
     }
 
     function buildAppUrl(path) {
@@ -49,6 +61,14 @@
         if (!el) return;
         el.classList.add('is-invalid');
         el.setAttribute('title', errorText || '');
+
+        let feedback = el.closest('div').querySelector('.invalid-feedback');
+        if (!feedback) {
+            feedback = document.createElement('div');
+            feedback.className = 'invalid-feedback d-block';
+            el.closest('div').appendChild(feedback);
+        }
+        feedback.textContent = errorText || 'Bidang ini tidak valid';
     }
 
     function clearFieldErrors() {
@@ -56,6 +76,63 @@
             el.classList.remove('is-invalid');
             el.removeAttribute('title');
         });
+        form.querySelectorAll('.invalid-feedback').forEach(function (el) {
+            el.remove();
+        });
+    }
+
+    function updateBannerStats(map) {
+        const nameEl = document.getElementById('cardAppName');
+        const envBadge = document.getElementById('cardEnvBadge');
+        const tzEl = document.getElementById('statTimezone');
+        const sessEl = document.getElementById('statSessionTimeout');
+
+        const appName = map['app.name'] || defaults.app__name;
+        const env = (map['env.flag'] || defaults.env__flag).toLowerCase();
+        const tz = map['app.timezone'] || defaults.app__timezone;
+        const sess = map['session.timeout_minutes'] || defaults.session__timeout_minutes;
+
+        if (nameEl) nameEl.textContent = appName + ' System Configuration';
+        if (tzEl) tzEl.textContent = tz;
+        if (sessEl) sessEl.textContent = sess;
+
+        if (envBadge) {
+            envBadge.textContent = env.charAt(0).toUpperCase() + env.slice(1);
+            if (env === 'production') {
+                envBadge.className = 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1';
+            } else if (env === 'staging') {
+                envBadge.className = 'badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1';
+            } else {
+                envBadge.className = 'badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-1';
+            }
+        }
+    }
+
+    function updateBrandPreviews() {
+        const logoInput = document.getElementById('appLogo');
+        const faviconInput = document.getElementById('appFavicon');
+        const logoBox = document.getElementById('logoPreviewBox');
+        const faviconBox = document.getElementById('faviconPreviewBox');
+
+        if (logoInput && logoBox) {
+            const val = logoInput.value.trim();
+            if (val) {
+                const src = /^https?:\/\//i.test(val) ? val : buildAppUrl(val);
+                logoBox.innerHTML = '<img src="' + src + '" alt="Logo" onerror="this.parentElement.innerHTML=\'<i class=\\\'bi bi-image text-muted fs-4\\\'></i>\'">';
+            } else {
+                logoBox.innerHTML = '<i class="bi bi-image text-muted fs-4"></i>';
+            }
+        }
+
+        if (faviconInput && faviconBox) {
+            const val = faviconInput.value.trim();
+            if (val) {
+                const src = /^https?:\/\//i.test(val) ? val : buildAppUrl(val);
+                faviconBox.innerHTML = '<img src="' + src + '" alt="Favicon" onerror="this.parentElement.innerHTML=\'<i class=\\\'bi bi-browser-chrome text-muted fs-4\\\'></i>\'">';
+            } else {
+                faviconBox.innerHTML = '<i class="bi bi-browser-chrome text-muted fs-4"></i>';
+            }
+        }
     }
 
     function applyValues(map) {
@@ -64,25 +141,47 @@
             if (!input) return;
             const sourceKey = name.replace('__', '.');
             const val = map[sourceKey];
-            input.value = (val === undefined || val === null || val === '') ? defaults[name] : String(val);
+            const finalVal = (val === undefined || val === null || val === '') ? defaults[name] : String(val);
+
+            if (input.type === 'checkbox') {
+                input.checked = (finalVal === '1' || finalVal === 'true' || finalVal === 'on');
+            } else {
+                input.value = finalVal;
+            }
         });
+
+        updateBannerStats(map);
+        updateBrandPreviews();
     }
 
     async function loadData() {
-        const res = await fetch(buildAppUrl('api/manage-setting/data'), { credentials: 'same-origin' });
-        const json = await res.json();
-        if (!res.ok || !json.status) {
-            throw new Error(json.message || 'Gagal memuat system setting');
+        try {
+            const res = await fetch(buildAppUrl('api/manage-setting/data'), { credentials: 'same-origin' });
+            const json = await res.json();
+            if (!res.ok || !json.status) {
+                throw new Error(json.message || 'Gagal memuat system setting');
+            }
+            applyValues(json.data || {});
+        } catch (err) {
+            applyValues({});
+            showToast(err.message, 'danger');
         }
-        applyValues(json.data || {});
     }
 
     function getPayload() {
-        const fd = new FormData(form);
         const payload = {};
-        fd.forEach(function (value, key) {
-            payload[key] = String(value || '').trim();
+        
+        // Loop all recognized default fields to guarantee checkboxes & selects are included
+        Object.keys(defaults).forEach(function (key) {
+            const el = form.querySelector('[name="' + key + '"]');
+            if (!el) return;
+            if (el.type === 'checkbox') {
+                payload[key] = el.checked ? '1' : '0';
+            } else {
+                payload[key] = String(el.value || '').trim();
+            }
         });
+
         return payload;
     }
 
@@ -90,6 +189,9 @@
         const payload = getPayload();
         clearFieldErrors();
         saveBtn.disabled = true;
+        const originalBtnText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Menyimpan...';
+        
         try {
             const res = await fetch(buildAppUrl('api/manage-setting/save'), {
                 method: 'POST',
@@ -109,7 +211,17 @@
             showToast(json.message || 'System setting berhasil disimpan', 'success');
         } finally {
             saveBtn.disabled = false;
+            saveBtn.innerHTML = originalBtnText;
         }
+    }
+
+    const appLogoInput = document.getElementById('appLogo');
+    if (appLogoInput) {
+        appLogoInput.addEventListener('input', updateBrandPreviews);
+    }
+    const appFaviconInput = document.getElementById('appFavicon');
+    if (appFaviconInput) {
+        appFaviconInput.addEventListener('input', updateBrandPreviews);
     }
 
     form.addEventListener('submit', function (e) {
@@ -119,8 +231,5 @@
         });
     });
 
-    loadData().catch(function (err) {
-        applyValues({});
-        showToast(err.message, 'danger');
-    });
+    loadData();
 })();

@@ -78,20 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
-    // Submenu Toggle Logic
-    const sidebarItems = document.querySelectorAll('.sidebar-item.has-sub');
-    sidebarItems.forEach(item => {
-        const link = item.querySelector('.sidebar-link');
-        const submenu = item.querySelector('.submenu');
-        if (link && submenu) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                submenu.classList.toggle('active');
-                item.classList.toggle('active'); // Optional: keep parent active highlight
-            });
-        }
-    });
 });
 
 // Real-time Clock for Topbar

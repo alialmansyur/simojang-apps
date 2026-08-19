@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitfd711a00924a9dbd57436ae670e866b6
+class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
 {
     public static $files = array (
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
@@ -12,15 +12,15 @@ class ComposerStaticInitfd711a00924a9dbd57436ae670e866b6
     );
 
     public static $prefixLengthsPsr4 = array (
-        's' => 
+        's' =>
         array (
             'setasign\\Fpdi\\' => 14,
         ),
-        'Z' => 
+        'Z' =>
         array (
             'ZipStream\\' => 10,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
@@ -28,141 +28,216 @@ class ComposerStaticInitfd711a00924a9dbd57436ae670e866b6
             'Psr\\Http\\Client\\' => 16,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
         ),
-        'M' => 
+        'M' =>
         array (
             'Mpdf\\PsrLogAwareTrait\\' => 22,
             'Mpdf\\PsrHttpMessageShim\\' => 24,
             'Mpdf\\' => 5,
             'Matrix\\' => 7,
         ),
-        'L' => 
+        'L' =>
         array (
             'Laminas\\Escaper\\' => 16,
         ),
-        'F' => 
+        'F' =>
         array (
             'Firebase\\JWT\\' => 13,
         ),
-        'D' => 
+        'D' =>
         array (
             'DeepCopy\\' => 9,
         ),
-        'C' => 
+        'C' =>
         array (
             'Config\\' => 7,
             'Composer\\Pcre\\' => 14,
             'Complex\\' => 8,
             'CodeIgniter\\' => 12,
         ),
-        'A' => 
+        'A' =>
         array (
             'App\\' => 4,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'setasign\\Fpdi\\' => 
+        'setasign\\Fpdi\\' =>
         array (
             0 => __DIR__ . '/..' . '/setasign/fpdi/src',
         ),
-        'ZipStream\\' => 
+        'ZipStream\\' =>
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
         ),
-        'Psr\\SimpleCache\\' => 
+        'Psr\\SimpleCache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-factory/src',
             1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Http\\Client\\' => 
+        'Psr\\Http\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
-        'PhpOffice\\PhpSpreadsheet\\' => 
+        'PhpOffice\\PhpSpreadsheet\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
-        'Mpdf\\PsrLogAwareTrait\\' => 
+        'Mpdf\\PsrLogAwareTrait\\' =>
         array (
             0 => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src',
         ),
-        'Mpdf\\PsrHttpMessageShim\\' => 
+        'Mpdf\\PsrHttpMessageShim\\' =>
         array (
             0 => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src',
         ),
-        'Mpdf\\' => 
+        'Mpdf\\' =>
         array (
             0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
         ),
-        'Matrix\\' => 
+        'Matrix\\' =>
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
         ),
-        'Laminas\\Escaper\\' => 
+        'Laminas\\Escaper\\' =>
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-escaper/src',
         ),
-        'Firebase\\JWT\\' => 
+        'Firebase\\JWT\\' =>
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
-        'DeepCopy\\' => 
+        'DeepCopy\\' =>
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Config\\' => 
+        'Config\\' =>
         array (
             0 => __DIR__ . '/../..' . '/app/Config',
         ),
-        'Composer\\Pcre\\' => 
+        'Composer\\Pcre\\' =>
         array (
             0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
-        'Complex\\' => 
+        'Complex\\' =>
         array (
             0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
-        'CodeIgniter\\' => 
+        'CodeIgniter\\' =>
         array (
             0 => __DIR__ . '/..' . '/codeigniter4/framework/system',
         ),
-        'App\\' => 
+        'App\\' =>
         array (
             0 => __DIR__ . '/../..' . '/app',
         ),
     );
 
     public static $classMap = array (
+        'App\\Controllers\\Apps\\AccessManagerApiController' => __DIR__ . '/../..' . '/app/Controllers/Apps/AccessManagerApiController.php',
+        'App\\Controllers\\Apps\\ActivityGalleryController' => __DIR__ . '/../..' . '/app/Controllers/Apps/ActivityGalleryController.php',
+        'App\\Controllers\\Apps\\Agenda\\AgendaController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Agenda/AgendaController.php',
         'App\\Controllers\\Apps\\AjxController' => __DIR__ . '/../..' . '/app/Controllers/Apps/AjxController.php',
         'App\\Controllers\\Apps\\AppsController' => __DIR__ . '/../..' . '/app/Controllers/Apps/AppsController.php',
+        'App\\Controllers\\Apps\\CalendarEventController' => __DIR__ . '/../..' . '/app/Controllers/Apps/CalendarEventController.php',
+        'App\\Controllers\\Apps\\DataMasterController' => __DIR__ . '/../..' . '/app/Controllers/Apps/DataMasterController.php',
+        'App\\Controllers\\Apps\\DatabaseBackupController' => __DIR__ . '/../..' . '/app/Controllers/Apps/DatabaseBackupController.php',
         'App\\Controllers\\Apps\\FetchData' => __DIR__ . '/../..' . '/app/Controllers/Apps/FetchData.php',
-        'App\\Controllers\\Apps\\Pages\\AlihMedia' => __DIR__ . '/../..' . '/app/Controllers/Apps/Pages/AlihMedia.php',
-        'App\\Controllers\\Apps\\Pages\\IntegrasiData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Pages/IntegrasiData.php',
-        'App\\Controllers\\Apps\\Pages\\KenaikanPangkat' => __DIR__ . '/../..' . '/app/Controllers/Apps/Pages/KenaikanPangkat.php',
-        'App\\Controllers\\Apps\\Pages\\PencantumanGelar' => __DIR__ . '/../..' . '/app/Controllers/Apps/Pages/PencantumanGelar.php',
-        'App\\Controllers\\Apps\\Pages\\PeremajaanData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Pages/PeremajaanData.php',
-        'App\\Controllers\\Apps\\Pages\\PindahInstansi' => __DIR__ . '/../..' . '/app/Controllers/Apps/Pages/PindahInstansi.php',
-        'App\\Controllers\\Apps\\Pages\\StatistikData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Pages/StatistikData.php',
-        'App\\Controllers\\Apps\\Pages\\TakahDigital' => __DIR__ . '/../..' . '/app/Controllers/Apps/Pages/TakahDigital.php',
+        'App\\Controllers\\Apps\\Modules\\DTController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Modules/DTController.php',
+        'App\\Controllers\\Apps\\Modules\\ImpExlsController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Modules/ImpExlsController.php',
+        'App\\Controllers\\Apps\\Modules\\MainController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Modules/MainController.php',
+        'App\\Controllers\\Apps\\Modules\\TapnipEventController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Modules/TapnipEventController.php',
+        'App\\Controllers\\Apps\\RefApiController' => __DIR__ . '/../..' . '/app/Controllers/Apps/RefApiController.php',
+        'App\\Controllers\\Apps\\RefController' => __DIR__ . '/../..' . '/app/Controllers/Apps/RefController.php',
+        'App\\Controllers\\Apps\\Services\\AnggaranData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/AnggaranData.php',
+        'App\\Controllers\\Apps\\Services\\DMSData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/DMSData.php',
+        'App\\Controllers\\Apps\\Services\\DisparitasData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/DisparitasData.php',
+        'App\\Controllers\\Apps\\Services\\EKINData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/EKINData.php',
+        'App\\Controllers\\Apps\\Services\\FasilitasiCAT' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/FasilitasiCAT.php',
+        'App\\Controllers\\Apps\\Services\\HumasController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/HumasController.php',
+        'App\\Controllers\\Apps\\Services\\IKMController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/IKMController.php',
+        'App\\Controllers\\Apps\\Services\\IKPAData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/IKPAData.php',
+        'App\\Controllers\\Apps\\Services\\IntegrasiData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/IntegrasiData.php',
+        'App\\Controllers\\Apps\\Services\\Karier' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/Karier.php',
+        'App\\Controllers\\Apps\\Services\\Kompetensi' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/Kompetensi.php',
+        'App\\Controllers\\Apps\\Services\\KonsulController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/KonsulController.php',
+        'App\\Controllers\\Apps\\Services\\LostAndFoundController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/LostAndFoundController.php',
+        'App\\Controllers\\Apps\\Services\\MTController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/MTController.php',
+        'App\\Controllers\\Apps\\Services\\ManageAssetsController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/ManageAssetsController.php',
+        'App\\Controllers\\Apps\\Services\\ManageProjectController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/ManageProjectController.php',
+        'App\\Controllers\\Apps\\Services\\MeritController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/MeritController.php',
+        'App\\Controllers\\Apps\\Services\\NSPKController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/NSPKController.php',
+        'App\\Controllers\\Apps\\Services\\PembinaanASNController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/PembinaanASNController.php',
+        'App\\Controllers\\Apps\\Services\\PeremajaanData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/PeremajaanData.php',
+        'App\\Controllers\\Apps\\Services\\StatistikData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/StatistikData.php',
+        'App\\Controllers\\Apps\\Services\\StatistikInternal' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/StatistikInternal.php',
+        'App\\Controllers\\Apps\\Services\\SuratController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/SuratController.php',
+        'App\\Controllers\\Apps\\Services\\TakahData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/TakahData.php',
+        'App\\Controllers\\Apps\\Services\\WasdalController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/WasdalController.php',
+        'App\\Controllers\\Apps\\SettingManagerController' => __DIR__ . '/../..' . '/app/Controllers/Apps/SettingManagerController.php',
         'App\\Controllers\\Auth\\Auth' => __DIR__ . '/../..' . '/app/Controllers/Auth/Auth.php',
         'App\\Controllers\\BaseController' => __DIR__ . '/../..' . '/app/Controllers/BaseController.php',
         'App\\Filters\\Auth' => __DIR__ . '/../..' . '/app/Filters/Auth.php',
         'App\\Filters\\Cors' => __DIR__ . '/../..' . '/app/Filters/Cors.php',
         'App\\Filters\\JwtAuthFilter' => __DIR__ . '/../..' . '/app/Filters/JwtAuthFilter.php',
+        'App\\Filters\\RbacFilter' => __DIR__ . '/../..' . '/app/Filters/RbacFilter.php',
+        'App\\Filters\\ServiceAccessFilter' => __DIR__ . '/../..' . '/app/Filters/ServiceAccessFilter.php',
+        'App\\Libraries\\DataTablesLib' => __DIR__ . '/../..' . '/app/Libraries/DataTablesLib.php',
+        'App\\Libraries\\ExcelUploader' => __DIR__ . '/../..' . '/app/Libraries/ExcelUploader.php',
+        'App\\Models\\Apps\\ActivityGalleryModel' => __DIR__ . '/../..' . '/app/Models/Apps/ActivityGalleryModel.php',
+        'App\\Models\\Apps\\Agenda\\AgendaModel' => __DIR__ . '/../..' . '/app/Models/Apps/Agenda/AgendaModel.php',
         'App\\Models\\Apps\\AppsModel' => __DIR__ . '/../..' . '/app/Models/Apps/AppsModel.php',
         'App\\Models\\Apps\\MenuModel' => __DIR__ . '/../..' . '/app/Models/Apps/MenuModel.php',
+        'App\\Models\\Apps\\Modules\\FetchModel' => __DIR__ . '/../..' . '/app/Models/Apps/Modules/FetchModel.php',
+        'App\\Models\\Apps\\RefModel' => __DIR__ . '/../..' . '/app/Models/Apps/RefModel.php',
+        'App\\Models\\Apps\\Services\\AnggaranModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/AnggaranModel.php',
+        'App\\Models\\Apps\\Services\\CATModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/CATModel.php',
+        'App\\Models\\Apps\\Services\\DMSModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/DMSModel.php',
+        'App\\Models\\Apps\\Services\\DSPModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/DSPModel.php',
+        'App\\Models\\Apps\\Services\\EKINModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/EKINModel.php',
+        'App\\Models\\Apps\\Services\\HumasModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/HumasModel.php',
+        'App\\Models\\Apps\\Services\\IKMModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/IKMModel.php',
+        'App\\Models\\Apps\\Services\\IKPAModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/IKPAModel.php',
+        'App\\Models\\Apps\\Services\\ITGModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/ITGModel.php',
+        'App\\Models\\Apps\\Services\\KarierModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/KarierModel.php',
+        'App\\Models\\Apps\\Services\\KompetensiModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/KompetensiModel.php',
+        'App\\Models\\Apps\\Services\\KonsulModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/KonsulModel.php',
+        'App\\Models\\Apps\\Services\\LostAndFoundModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/LostAndFoundModel.php',
+        'App\\Models\\Apps\\Services\\MTModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/MTModel.php',
+        'App\\Models\\Apps\\Services\\ManageAssetsModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/ManageAssetsModel.php',
+        'App\\Models\\Apps\\Services\\ManageProjectModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/ManageProjectModel.php',
+        'App\\Models\\Apps\\Services\\MeritModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/MeritModel.php',
+        'App\\Models\\Apps\\Services\\NSPKModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/NSPKModel.php',
+        'App\\Models\\Apps\\Services\\PDMModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PDMModel.php',
+        'App\\Models\\Apps\\Services\\PembinaanDisiplinBudayaCitraModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PembinaanDisiplinBudayaCitraModel.php',
+        'App\\Models\\Apps\\Services\\PembinaanKinerjaModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PembinaanKinerjaModel.php',
+        'App\\Models\\Apps\\Services\\PembinaanKompetensiKarierModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PembinaanKompetensiKarierModel.php',
+        'App\\Models\\Apps\\Services\\STKInternalModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/STKInternalModel.php',
+        'App\\Models\\Apps\\Services\\STKModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/STKModel.php',
+        'App\\Models\\Apps\\Services\\SuratModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/SuratModel.php',
+        'App\\Models\\Apps\\Services\\TKHModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/TKHModel.php',
+        'App\\Models\\Apps\\Services\\WasdalModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/WasdalModel.php',
+        'App\\Models\\Apps\\SettingManagerModel' => __DIR__ . '/../..' . '/app/Models/Apps/SettingManagerModel.php',
+        'App\\Models\\Apps\\SystemSettingModel' => __DIR__ . '/../..' . '/app/Models/Apps/SystemSettingModel.php',
+        'App\\Models\\Auth\\AccessControlModel' => __DIR__ . '/../..' . '/app/Models/Auth/AccessControlModel.php',
         'App\\Models\\Auth\\AuthModel' => __DIR__ . '/../..' . '/app/Models/Auth/AuthModel.php',
         'App\\Models\\Auth\\UserAgent' => __DIR__ . '/../..' . '/app/Models/Auth/UserAgent.php',
         'App\\Models\\Auth\\UserModel' => __DIR__ . '/../..' . '/app/Models/Auth/UserModel.php',
+        'App\\Models\\Pages\\AMModel' => __DIR__ . '/../..' . '/app/Models/Pages/AMModel.php',
+        'App\\Models\\Pages\\DMSModel' => __DIR__ . '/../..' . '/app/Models/Pages/DMSModel.php',
+        'App\\Models\\Pages\\DSPModel' => __DIR__ . '/../..' . '/app/Models/Pages/DSPModel.php',
+        'App\\Models\\Pages\\ITGModel' => __DIR__ . '/../..' . '/app/Models/Pages/ITGModel.php',
         'App\\Models\\Pages\\KPModel' => __DIR__ . '/../..' . '/app/Models/Pages/KPModel.php',
+        'App\\Models\\Pages\\KTLGModel' => __DIR__ . '/../..' . '/app/Models/Pages/KTLGModel.php',
+        'App\\Models\\Pages\\PDMModel' => __DIR__ . '/../..' . '/app/Models/Pages/PDMModel.php',
+        'App\\Models\\Pages\\STKModel' => __DIR__ . '/../..' . '/app/Models/Pages/STKModel.php',
         'CodeIgniter\\API\\ResponseTrait' => __DIR__ . '/..' . '/codeigniter4/framework/system/API/ResponseTrait.php',
         'CodeIgniter\\Autoloader\\Autoloader' => __DIR__ . '/..' . '/codeigniter4/framework/system/Autoloader/Autoloader.php',
         'CodeIgniter\\Autoloader\\FileLocator' => __DIR__ . '/..' . '/codeigniter4/framework/system/Autoloader/FileLocator.php',
@@ -1538,9 +1613,9 @@ class ComposerStaticInitfd711a00924a9dbd57436ae670e866b6
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitfd711a00924a9dbd57436ae670e866b6::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitfd711a00924a9dbd57436ae670e866b6::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitfd711a00924a9dbd57436ae670e866b6::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -58,6 +58,13 @@ class Auth extends ResourceController
             ], 422);
         }
 
+        // Catat waktu last_login ke tabel auth_users
+        try {
+            $model->recordLastLogin((int) $userdata['id']);
+        } catch (Throwable $e) {
+            log_message('warning', 'Auth recordLastLogin failed: {message}', ['message' => $e->getMessage()]);
+        }
+
         $fingerprintJson = $this->request->getPost('fingerprint');
         if ($fingerprintJson) { 
             try {
@@ -87,7 +94,7 @@ class Auth extends ResourceController
             }
         }
 
-        $key = getenv('JWT_TOKEN_SECRET');
+        $key = getenv('JWT_TOKEN_SECRET') ?: (env('JWT_TOKEN_SECRET') ?: 'simojang_default_jwt_secret_key_2026');
         $loc = getenv('LOCATIONIQ_SECRET_KEY');
         $issuedAt = time();
         $tokenTtl = $rememberLogin ? (7 * 24 * 60 * 60) : 3600; // 7 hari atau 1 jam
@@ -100,11 +107,16 @@ class Auth extends ResourceController
             'user_id' => $userdata['id'],
             'user_name' => $userdata['username'],
             'user_fullname' => $userdata['fullname'],
+            'role' => $userdata['role'] ?? 'USR',
             'remember' => $rememberLogin ? 1 : 0,
         ];
 
         $tokenjwt = JWT::encode($payload, $key, 'HS256');
         session()->set('jwt_auth_token', $tokenjwt);
+        session()->set('userid', $userdata['id']);
+        session()->set('username', $userdata['username']);
+        session()->set('fullname', $userdata['fullname']);
+        session()->set('role', $userdata['role'] ?? 'USR');
         session()->set('login_remember', $rememberLogin ? 1 : 0);
         session()->set('jwt_expired_at', $expirationTime);
 
@@ -178,7 +190,18 @@ class Auth extends ResourceController
 
     public function logout()
     {
-        session()->remove('jwt_auth_token');
+        session()->remove([
+            'jwt_auth_token',
+            'userid',
+            'username',
+            'fullname',
+            'role',
+            'login_remember',
+            'jwt_expired_at',
+            'active_menus',
+            'active_submenu',
+        ]);
+        session()->destroy();
         return redirect()->to('/login')->with('success', 'You have logged out successfully');
     }
 }

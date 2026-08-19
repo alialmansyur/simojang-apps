@@ -64,6 +64,6 @@ genderChart = new ApexCharts(document.querySelector("#genderChart"), {
     dataLabels: {
         enabled: false
     },
-    colors: ['#0d6efd', '#d63384']
+    colors: ['#1040c1', '#d63384']
 });
 genderChart.render();

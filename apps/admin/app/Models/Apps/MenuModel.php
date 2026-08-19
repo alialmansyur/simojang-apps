@@ -16,6 +16,24 @@ class MenuModel extends Model
     public function getMenusPermissions($userId)
     {
         $userId = (int) $userId;
+        $roleId = $this->getRoleIdByUserId($userId);
+
+        if ($roleId > 0 && $this->tableExists('auth_role_permissions')) {
+            $sql = "SELECT b.*, a.is_create, a.is_read, a.is_update, a.is_delete
+                    FROM auth_role_permissions a
+                    INNER JOIN auth_permissions b ON b.id = a.permission_id
+                    WHERE a.role_id = ?
+                      AND b.parent_id IS NULL
+                      AND b.is_show <> 0
+                      AND COALESCE(a.is_read, 0) = 1
+                    ORDER BY b.is_order ASC";
+            $results = $this->db->query($sql, [$roleId])->getResultArray();
+            if (!empty($results)) {
+                return $results;
+            }
+        }
+
+        // Fallback ke auth_users_permissions
         $sql = "SELECT b.*, a.is_create, a.is_read, a.is_update, a.is_delete
                 FROM auth_users_permissions a
                 INNER JOIN auth_permissions b ON b.id = a.permission_id
@@ -30,6 +48,23 @@ class MenuModel extends Model
     public function getSubMenus($parentId, ?int $userId = null)
     {
         if ($userId !== null) {
+            $roleId = $this->getRoleIdByUserId((int) $userId);
+            if ($roleId > 0 && $this->tableExists('auth_role_permissions')) {
+                $sql = "SELECT p.*
+                        FROM auth_role_permissions rp
+                        INNER JOIN auth_permissions p ON p.id = rp.permission_id
+                        WHERE rp.role_id = ?
+                          AND p.parent_id = ?
+                          AND p.is_show <> 0
+                          AND COALESCE(rp.is_read, 0) = 1
+                        ORDER BY p.is_order ASC";
+                $results = $this->db->query($sql, [$roleId, (int) $parentId])->getResultArray();
+                if (!empty($results)) {
+                    return $results;
+                }
+            }
+
+            // Fallback ke auth_users_permissions
             $sql = "SELECT p.*
                     FROM auth_users_permissions up
                     INNER JOIN auth_permissions p ON p.id = up.permission_id
@@ -54,6 +89,26 @@ class MenuModel extends Model
             return [];
         }
 
+        $roleId = $this->getRoleIdByUserId($userId);
+        if ($roleId > 0 && $this->tableExists('auth_role_permissions')) {
+            $sql = "SELECT permission_id, is_create, is_read, is_update, is_delete 
+                    FROM auth_role_permissions WHERE role_id = ? AND permission_id = ?";
+            $permissions = $this->db->query($sql, [$roleId, $menuId])->getResultArray();
+            if (!empty($permissions)) {
+                $formatted = [];
+                foreach ($permissions as $perm) {
+                    $formatted = [
+                        'create' => $perm['is_create'],
+                        'update' => $perm['is_update'],
+                        'delete' => $perm['is_delete'],
+                        'view'   => $perm['is_read'],
+                    ];
+                }
+                return $formatted;
+            }
+        }
+
+        // Fallback
         $sql = "SELECT permission_id, is_create, is_read, is_update, is_delete 
                 FROM auth_users_permissions WHERE user_id = ? AND permission_id = ?";
         $permissions = $this->db->query($sql, [$userId, $menuId])->getResultArray();
@@ -83,6 +138,53 @@ class MenuModel extends Model
             ->get()
             ->getRowArray();
 
+        if (empty($row) && ($normalizedUrl === 'dashboard' || $normalizedUrl === 'home')) {
+            $fallbackUrl = ($normalizedUrl === 'dashboard') ? 'home' : 'dashboard';
+            $row = $this->db->table('auth_permissions')
+                ->select('id')
+                ->where('url', $fallbackUrl)
+                ->limit(1)
+                ->get()
+                ->getRowArray();
+        }
+
         return isset($row['id']) ? (int) $row['id'] : null;
+    }
+
+    private function getRoleIdByUserId(int $userId): int
+    {
+        if ($userId <= 0) {
+            return 0;
+        }
+
+        $user = $this->db->table('auth_users')
+            ->select('role')
+            ->where('id', $userId)
+            ->limit(1)
+            ->get()
+            ->getRowArray();
+
+        if (!$user || empty($user['role'])) {
+            return 0;
+        }
+
+        if (!$this->tableExists('auth_roles')) {
+            return 0;
+        }
+
+        $role = $this->db->table('auth_roles')
+            ->select('id')
+            ->where('role_code', strtoupper(trim((string) $user['role'])))
+            ->where('is_active', 1)
+            ->limit(1)
+            ->get()
+            ->getRowArray();
+
+        return isset($role['id']) ? (int) $role['id'] : 0;
+    }
+
+    private function tableExists(string $tableName): bool
+    {
+        return in_array($tableName, $this->db->listTables(), true);
     }
 }

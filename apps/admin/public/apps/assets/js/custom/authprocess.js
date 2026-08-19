@@ -120,7 +120,8 @@ $(document).ready(function () {
 
                 if (data.status === 'success') {
                     localStorage.setItem('theme', 'theme-light');
-                    localStorage.setItem('active_menu', 57);
+                    localStorage.removeItem('active_menu');
+                    localStorage.removeItem('active_submenu');
 
                     if (shouldRemember) {
                         localStorage.setItem('jwt_token', data.token);
@@ -132,7 +133,7 @@ $(document).ready(function () {
                         localStorage.removeItem('remembered_user_login');
                     }
 
-                    window.location.href = AppConfig.initGlobal + "timkerja";
+                    window.location.href = AppConfig.initGlobal + "dashboard";
                     return;
                 }
 

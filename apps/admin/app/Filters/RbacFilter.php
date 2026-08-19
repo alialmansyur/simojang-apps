@@ -33,6 +33,37 @@ class RbacFilter implements FilterInterface
             return;
         }
 
+        // 1. Cek User dan Role
+        $user = $db->table('auth_users')
+            ->select('role')
+            ->where('id', $userId)
+            ->limit(1)
+            ->get()
+            ->getRowArray();
+
+        $roleCode = strtoupper(trim((string) ($user['role'] ?? 'USR')));
+        if ($roleCode === 'ADM') {
+            return;
+        }
+
+        // 2. Cek izin via auth_role_permissions
+        if (in_array('auth_role_permissions', $db->listTables(), true) && in_array('auth_roles', $db->listTables(), true)) {
+            $rolePermit = $db->table('auth_role_permissions rp')
+                ->select('rp.is_read')
+                ->join('auth_roles r', 'r.id = rp.role_id', 'inner')
+                ->where('r.role_code', $roleCode)
+                ->where('r.is_active', 1)
+                ->where('rp.permission_id', (int) $permission['id'])
+                ->limit(1)
+                ->get()
+                ->getRowArray();
+
+            if (!empty($rolePermit) && (int) ($rolePermit['is_read'] ?? 0) === 1) {
+                return;
+            }
+        }
+
+        // 3. Fallback ke auth_users_permissions
         $permit = $db->table('auth_users_permissions')
             ->select('is_read')
             ->where('user_id', $userId)

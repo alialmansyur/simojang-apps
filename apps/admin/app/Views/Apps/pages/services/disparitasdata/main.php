@@ -1,7 +1,7 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
-<link rel="stylesheet" href="<?= base_url('apps/assets/extensions/filepond/filepond.css'); ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/filepond/filepond.css'); ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/disparitasdata/main.css') ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
@@ -267,7 +267,7 @@
 
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
-<script src="<?= base_url('apps/assets/extensions/filepond/filepond.js'); ?>"></script>
+<script src="<?= asset_url('apps/assets/extensions/filepond/filepond.js'); ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/service-table-ui.js') ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/disparitasdata/main.js') ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/disparitasdata/tables.js') ?>?v=<?= time() ?>"></script>

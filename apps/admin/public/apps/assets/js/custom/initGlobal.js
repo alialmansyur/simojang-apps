@@ -7,9 +7,10 @@ function notify(message, type) {
     if (!text || typeof Toastify !== 'function') return;
 
     const colors = {
+        primary: '#1040c1',
         success: '#198754',
         error: '#dc3545',
-        info: '#0d6efd',
+        info: '#0dcaf0',
         warning: '#f59e0b',
     };
 
@@ -22,7 +23,7 @@ function notify(message, type) {
         close: true,
         stopOnFocus: true,
         style: {
-            background: colors[type] || colors.info,
+            background: colors[type] || colors.primary,
         },
     }).showToast();
 }

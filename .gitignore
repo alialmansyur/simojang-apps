@@ -1,7 +1,16 @@
-data/
-docs/
+/data/
+/docs/
 *.sql
 
-# Ignored config files
+# Ignored config and environment files
 .env
+.env.*
+*.env
+**/.env
+**/.env.*
 config.js
+**/config.js
+
+# Temporary test scripts
+test_auth_suite.php
+**/test_auth_suite.php

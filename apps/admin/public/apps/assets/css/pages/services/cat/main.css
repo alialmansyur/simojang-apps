@@ -43,7 +43,7 @@
 
 /* --- Centralized Styles to Replace Inline CSS --- */
 /* Tone variables */
-.twx-tone-1 { --twx-bg: rgba(16, 63, 121, 0.08); --twx-text: #103f79; --twx-border: rgba(16, 63, 121, 0.2); }
+.twx-tone-1 { --twx-bg: rgba(16, 64, 193, 0.08); --twx-text: #1040c1; --twx-border: rgba(16, 64, 193, 0.2); }
 .twx-tone-2 { --twx-bg: rgba(25, 135, 84, 0.08); --twx-text: #198754; --twx-border: rgba(25, 135, 84, 0.2); }
 .twx-tone-3 { --twx-bg: rgba(111, 66, 193, 0.08); --twx-text: #6f42c1; --twx-border: rgba(111, 66, 193, 0.2); }
 .twx-tone-4 { --twx-bg: rgba(253, 126, 20, 0.08); --twx-text: #fd7e14; --twx-border: rgba(253, 126, 20, 0.2); }

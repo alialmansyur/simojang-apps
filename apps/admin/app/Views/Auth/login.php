@@ -5,17 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simojang | Kanreg Tilu</title>
-    <link rel="shortcut icon" href="<?= base_url('apps/');?>assets/images/logo/favicon.png?v=99" type="image/x-icon">
-    <link rel="shortcut icon" href="<?= base_url('apps/');?>assets/images/logo/favicon.png?v=99" type="image/png">
-    <link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/app.css?v=' . time()) ?>">
+    <link rel="shortcut icon" href="<?= asset_url('apps/assets/images/logo/favicon.png') ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= asset_url('apps/assets/images/logo/favicon.png') ?>" type="image/png">
+    <link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/app.css') ?>">
+    <link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/custom.css') ?>">
     <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/auth.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('apps/'); ?>assets/extensions/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?= base_url('apps/');?>assets/extensions/toastify-js/src/toastify.css">
-    <link rel="stylesheet" href="<?= base_url('apps/');?>assets/extensions/sweetalert2/sweetalert2.min.css">
-    <script src="<?= base_url('apps/'); ?>assets/extensions/jquery/jquery.min.js"></script>
-    <script src="<?= base_url('apps/'); ?>assets/extensions/toastify-js/src/toastify.js"></script>
-    <script src="<?= base_url('apps/'); ?>assets/extensions/sweetalert2/sweetalert2.all.min.js"></script>
-    <script src="<?= base_url('apps/'); ?>assets/js/custom/config.js"></script>
+    <link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/bootstrap-icons/font/bootstrap-icons.css') ?>">
+    <link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/toastify-js/src/toastify.css') ?>">
+    <link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/sweetalert2/sweetalert2.min.css') ?>">
+    <script src="<?= asset_url('apps/assets/extensions/jquery/jquery.min.js') ?>"></script>
+    <script src="<?= asset_url('apps/assets/extensions/toastify-js/src/toastify.js') ?>"></script>
+    <script src="<?= asset_url('apps/assets/extensions/sweetalert2/sweetalert2.all.min.js') ?>"></script>
+    <script src="<?= asset_url('apps/assets/js/custom/config.js') ?>"></script>
     <script src="<?= asset_url('apps/assets/js/custom/authprocess.js') ?>"></script>
 </head>
 

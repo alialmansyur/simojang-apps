@@ -460,7 +460,7 @@
     border: none;
     background: transparent;
     border-radius: .3rem;
-    color: #2563eb;
+    color: #1040c1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -493,7 +493,7 @@
 }
 
 #strukturTable tr[data-depth="0"] .tree-node {
-    color: #1d4ed8;
+    color: #0d34a0;
 }
 
 #strukturTable .tree-level-badge {

@@ -155,7 +155,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="upload-card mt-3">
-                                <div class="upload-card-body text-center dropzone-area" id="dropzoneArea" style="border: 2px dashed #0d6efd; border-radius: 8px; padding: 30px; cursor: pointer; transition: all 0.3s ease;">
+                                <div class="upload-card-body text-center dropzone-area" id="dropzoneArea" style="border: 2px dashed #1040c1; border-radius: 8px; padding: 30px; cursor: pointer; transition: all 0.3s ease;">
                                     <h5 class="mt-2">Drag & Drop file Anda di sini</h5>
                                     <p class="text-muted mb-2">atau</p>
                                     <button type="button" class="btn btn-outline-primary btn-sm mb-3" id="btnBrowse">Pilih File</button>

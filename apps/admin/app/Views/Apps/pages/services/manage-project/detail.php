@@ -18,7 +18,7 @@
     }
     .progress-bar-fill {
         height: 100%;
-        background-color: #3b82f6;
+        background-color: #1040c1;
         transition: width 0.5s ease;
     }
 </style>
@@ -171,7 +171,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="info-box interactive-box text-center p-2" style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px;">
-                                                <small class="d-block fw-bold mb-1" style="color: #3b82f6; font-size: 0.75rem;">TOTAL REALISASI</small>
+                                                <small class="d-block fw-bold mb-1" style="color: #1040c1; font-size: 0.75rem;">TOTAL REALISASI</small>
                                                 <span class="fw-bold text-primary" id="realizedBudgetLabel" style="font-size: 1rem;">Rp 0</span>
                                             </div>
                                         </div>
@@ -202,7 +202,7 @@
                 transform: translateY(-50%);
                 width: 4px;
                 height: 0%;
-                background-color: #3b82f6;
+                background-color: #1040c1;
                 border-radius: 0 4px 4px 0;
                 transition: height 0.3s ease;
             }
@@ -212,7 +212,7 @@
                 padding-left: 1.8rem !important;
             }
             .custom-sidebar-nav .nav-link.active {
-                color: #3b82f6 !important;
+                color: #1040c1 !important;
                 background: transparent !important;
                 font-weight: 800 !important;
             }

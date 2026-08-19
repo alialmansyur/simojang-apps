@@ -21,8 +21,8 @@ $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 $routes->setAutoRoute(false);
 
-$routes->get('/', 'Auth\Auth::index');
-$routes->get('/login', 'Auth\Auth::index');
+$routes->get('/', 'Auth\Auth::index', ['filter' => 'guest']);
+$routes->get('/login', 'Auth\Auth::index', ['filter' => 'guest']);
 $routes->post('/authprocess', 'Auth\Auth::authprocess');
 $routes->get('/logout', 'Auth\Auth::logout');
 
@@ -30,8 +30,9 @@ $routes->get('/logout', 'Auth\Auth::logout');
 
 $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function ($routes) {
     // ----------------------------------------------------------------
-    // Route untuk Main Services
-    $routes->get('/home', 'Apps\AppsController::dashboard');
+    // Route untuk Main Services / Dashboard
+    $routes->get('/dashboard', 'Apps\DashboardController::index');
+    $routes->get('/home', 'Apps\DashboardController::index');
     $routes->get('/explore-task', 'Apps\AppsController::explore');
     $routes->get('/resume-task', 'Apps\AppsController::resume');
     $routes->get('/history-task', 'Apps\AppsController::history');
@@ -61,6 +62,7 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->get('/manage-iku', 'Apps\DataMasterController::datalayanan');
     $routes->get('/manage-layanan', 'Apps\SettingManagerController::serviceManager');
     $routes->get('/manage-role', 'Apps\SettingManagerController::roleManager');
+    $routes->get('/manage-user', 'Apps\SettingManagerController::userManager');
     $routes->get('/manage-log', 'Apps\DataMasterController::datass'); 
     $routes->get('/manage-setting', 'Apps\SettingManagerController::systemSetting');
     $routes->get('/manage-smtp', 'Apps\SettingManagerController::smtpSetting');
@@ -78,9 +80,28 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/api/ref/(:segment)', 'Apps\RefApiController::create/$1');
     $routes->put('/api/ref/(:segment)/(:segment)', 'Apps\RefApiController::update/$1/$2');
     $routes->delete('/api/ref/(:segment)/(:segment)', 'Apps\RefApiController::delete/$1/$2');
+    
+    // Manage Role APIs
+    $routes->get('/api/manage-role/roles', 'Apps\SettingManagerController::getRoles');
+    $routes->post('/api/manage-role/create-role', 'Apps\SettingManagerController::createRole');
+    $routes->post('/api/manage-role/update-role', 'Apps\SettingManagerController::updateRole');
+    $routes->post('/api/manage-role/delete-role', 'Apps\SettingManagerController::deleteRole');
     $routes->get('/api/manage-role/users', 'Apps\SettingManagerController::getRoleUsers');
+    $routes->post('/api/manage-role/assign-user', 'Apps\SettingManagerController::assignUserRole');
     $routes->get('/api/manage-role/tree', 'Apps\SettingManagerController::getRoleTree');
     $routes->post('/api/manage-role/toggle', 'Apps\SettingManagerController::toggleRolePermission');
+
+    // Manage User APIs
+    $routes->match(['get', 'post'], '/api/manage-user/datatable', 'Apps\SettingManagerController::getUserDatatableApi');
+    $routes->get('/api/manage-user/list', 'Apps\SettingManagerController::getUserListApi');
+    $routes->get('/api/manage-user/detail', 'Apps\SettingManagerController::getUserDetailApi');
+    $routes->post('/api/manage-user/create', 'Apps\SettingManagerController::createUserApi');
+    $routes->post('/api/manage-user/update', 'Apps\SettingManagerController::updateUserApi');
+    $routes->post('/api/manage-user/reset-password', 'Apps\SettingManagerController::resetUserPasswordApi');
+    $routes->post('/api/manage-user/toggle-status', 'Apps\SettingManagerController::toggleUserStatusApi');
+    $routes->post('/api/manage-user/delete', 'Apps\SettingManagerController::deleteUserApi');
+    $routes->get('/api/manage-user/pegawai-lookup', 'Apps\SettingManagerController::pegawaiLookupApi');
+
     $routes->get('/api/menus', 'Apps\AccessManagerApiController::menus');
     $routes->post('/api/menus', 'Apps\AccessManagerApiController::createMenu');
     $routes->put('/api/menus/(:num)', 'Apps\AccessManagerApiController::updateMenu/$1');
@@ -104,6 +125,7 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/api/manage-setting/save', 'Apps\SettingManagerController::saveSystemSettingApi');
     $routes->get('/api/manage-smtp/data', 'Apps\SettingManagerController::getSmtpSettingData');
     $routes->post('/api/manage-smtp/save', 'Apps\SettingManagerController::saveSmtpSettingApi');
+    $routes->post('/api/manage-smtp/test', 'Apps\SettingManagerController::testSmtpConnectionApi');
     $routes->post('/store/pull-datalist-pegawai', 'Apps\DataMasterController::getPegawai');
     $routes->post('/store/pull-datalist-instansi', 'Apps\DataMasterController::getInstansi');    
     $routes->post('/store/system-setting', 'Apps\SettingManagerController::saveSystemSetting');

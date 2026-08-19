@@ -25,7 +25,7 @@ abstract class BaseController extends Controller
      *
      * @var list<string>
      */
-    protected $helpers = [];
+    protected $helpers = ['url', 'form'];
 
     /**
      * Instance of the MenuModel.
@@ -33,6 +33,7 @@ abstract class BaseController extends Controller
      * @var \App\Models\Apps\MenuModel
      */
     protected $MenuModel;
+    protected $apps;
     protected $AppsModel;
 
     /**

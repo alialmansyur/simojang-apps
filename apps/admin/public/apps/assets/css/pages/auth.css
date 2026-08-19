@@ -134,12 +134,12 @@ body {
 
 #auth-left .has-icon-left .form-control:focus {
     box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.15);
-    border-color: #2563eb;
+    border-color: #1040c1;
 }
 
 /* Custom Text Selection Highlight */
 ::selection {
-    background-color: #2563eb;
+    background-color: #1040c1;
     color: #ffffff;
 }
 
@@ -165,7 +165,7 @@ body {
 }
 
 .password-toggle:hover {
-    color: #2563eb;
+    color: #1040c1;
     transform: translateY(-50%) scale(1.1);
 }
 

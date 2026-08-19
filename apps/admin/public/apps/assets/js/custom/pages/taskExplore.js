@@ -83,7 +83,7 @@ function pageLoaded(data) {
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#dc3545",
-            cancelButtonColor: "#1040C1",
+            cancelButtonColor: '#1040c1',
             confirmButtonText: "Ya, Saya akan ambil",
             cancelButtonText: "Batalkan"
         }).then((result) => {

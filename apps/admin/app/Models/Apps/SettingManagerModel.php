@@ -13,6 +13,38 @@ class SettingManagerModel extends Model
             return false;
         }
 
+        // 1. Cek role user
+        $user = $this->db->table('auth_users')
+            ->select('role')
+            ->where('id', $userId)
+            ->limit(1)
+            ->get()
+            ->getRowArray();
+
+        $roleCode = strtoupper(trim((string) ($user['role'] ?? 'USR')));
+        if ($roleCode === 'ADM') {
+            return true;
+        }
+
+        // 2. Cek via auth_role_permissions
+        if (in_array('auth_role_permissions', $this->db->listTables(), true) && in_array('auth_roles', $this->db->listTables(), true)) {
+            $row = $this->db->table('auth_role_permissions rp')
+                ->select('rp.is_read')
+                ->join('auth_roles r', 'r.id = rp.role_id', 'inner')
+                ->join('auth_permissions p', 'p.id = rp.permission_id', 'inner')
+                ->where('r.role_code', $roleCode)
+                ->where('p.url', $path)
+                ->where('r.is_active', 1)
+                ->limit(1)
+                ->get()
+                ->getRowArray();
+
+            if (!empty($row) && (int) ($row['is_read'] ?? 0) === 1) {
+                return true;
+            }
+        }
+
+        // 3. Fallback via auth_users_permissions
         $row = $this->db->table('auth_users_permissions up')
             ->select('up.is_read')
             ->join('auth_permissions p', 'p.id = up.permission_id', 'inner')
@@ -23,6 +55,66 @@ class SettingManagerModel extends Model
             ->getRowArray();
 
         return !empty($row) && (int) ($row['is_read'] ?? 0) === 1;
+    }
+
+    public function getRoles(bool $onlyActive = false): array
+    {
+        $roleModel = new \App\Models\Auth\RoleModel();
+        return $roleModel->getRoles($onlyActive);
+    }
+
+    public function getRoleById(int $id): ?array
+    {
+        $roleModel = new \App\Models\Auth\RoleModel();
+        return $roleModel->getRoleById($id);
+    }
+
+    public function createRole(array $data, ?int $copyFromRoleId = null): int
+    {
+        $roleModel = new \App\Models\Auth\RoleModel();
+        return $roleModel->createRole($data, $copyFromRoleId);
+    }
+
+    public function updateRole(int $id, array $data): bool
+    {
+        $roleModel = new \App\Models\Auth\RoleModel();
+        return $roleModel->updateRole($id, $data);
+    }
+
+    public function deleteRole(int $id): array
+    {
+        $roleModel = new \App\Models\Auth\RoleModel();
+        return $roleModel->deleteRole($id);
+    }
+
+    public function getMenuTreeWithRolePermission(int $roleId): array
+    {
+        $roleModel = new \App\Models\Auth\RoleModel();
+        return $roleModel->getMenuTreeWithRolePermission($roleId);
+    }
+
+    public function toggleRolePermission(int $roleId, int $menuId, bool $allowed, bool $cascade = true): array
+    {
+        $roleModel = new \App\Models\Auth\RoleModel();
+        return $roleModel->toggleRolePermission($roleId, $menuId, $allowed, $cascade);
+    }
+
+    public function getRoleUsersList(int $roleId, string $search = '', int $limit = 50): array
+    {
+        $roleModel = new \App\Models\Auth\RoleModel();
+        return $roleModel->getRoleUsers($roleId, $search, $limit);
+    }
+
+    public function getAvailableUsersForRole(int $roleId, string $search = '', int $limit = 50): array
+    {
+        $roleModel = new \App\Models\Auth\RoleModel();
+        return $roleModel->getAvailableUsersForRole($roleId, $search, $limit);
+    }
+
+    public function assignUserRole(int $userId, int $roleId): bool
+    {
+        $roleModel = new \App\Models\Auth\RoleModel();
+        return $roleModel->assignUserRole($userId, $roleId);
     }
 
     public function getMenusTree(): array
@@ -179,7 +271,7 @@ class SettingManagerModel extends Model
             'password' => $payload['password_hash'],
             'role' => $payload['role'] ?? 'USR',
             'status' => $payload['status'] ?? '1',
-            'active' => $payload['active'] ?? 1,
+            'is_active' => $payload['is_active'] ?? ($payload['active'] ?? 1),
             'force_pass_reset' => $payload['force_pass_reset'] ?? 0,
             'created_at' => date('Y-m-d H:i:s'),
         ]);
@@ -194,7 +286,7 @@ class SettingManagerModel extends Model
     public function getUserById(int $id): ?array
     {
         $row = $this->db->table('auth_users')
-            ->select('id, username, fullname, email, role, status, active, created_at')
+            ->select('id, username, fullname, email, role, status, is_active AS active, created_at')
             ->where('id', $id)
             ->limit(1)
             ->get()
@@ -491,6 +583,7 @@ class SettingManagerModel extends Model
                 l.is_show,
                 CASE
                     WHEN SUM(CASE WHEN sa.is_active = 1 AND sa.nip = '' THEN 1 ELSE 0 END) > 0 THEN 'everyone'
+                    WHEN SUM(CASE WHEN sa.is_active = 0 AND sa.nip = '' THEN 1 ELSE 0 END) > 0 THEN 'assigned'
                     WHEN SUM(CASE WHEN sa.is_active = 1 AND sa.nip <> '' THEN 1 ELSE 0 END) > 0 THEN 'assigned'
                     ELSE 'everyone'
                 END AS access_mode,
@@ -513,6 +606,7 @@ class SettingManagerModel extends Model
                 l.is_show,
                 CASE
                     WHEN SUM(CASE WHEN sa.is_active = 1 AND sa.nip = '' THEN 1 ELSE 0 END) > 0 THEN 'everyone'
+                    WHEN SUM(CASE WHEN sa.is_active = 0 AND sa.nip = '' THEN 1 ELSE 0 END) > 0 THEN 'assigned'
                     WHEN SUM(CASE WHEN sa.is_active = 1 AND sa.nip <> '' THEN 1 ELSE 0 END) > 0 THEN 'assigned'
                     ELSE 'everyone'
                 END AS access_mode,

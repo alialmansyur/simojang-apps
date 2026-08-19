@@ -513,7 +513,7 @@
                         </div>
                         <div id="agendaEmptyState" class="d-none">
                             <div class="d-flex flex-column align-items-center justify-content-center text-center mt-4 mb-4 pb-4 tw-animate-entry">
-                                <img src="<?= base_url('apps/assets/images/empty-content-profile.png') ?>" alt="Tidak Ada Agenda" class="empty-state-img" style="max-width: 200px; margin-bottom: 1.5rem;">
+                                <img src="<?= asset_url('apps/assets/images/empty-content-profile.png') ?>" alt="Tidak Ada Agenda" class="empty-state-img" style="max-width: 200px; margin-bottom: 1.5rem;">
                                 <h5 class="fw-bold" style="color: #1a202c; font-size: 1.2rem;">Belum Ada Agenda Hari Ini</h5>
                                 <p class="text-muted mb-0" style="font-size: 0.95rem; max-width: 300px; margin: 0 auto; line-height: 1.6;">
                                     Anda tidak memiliki jadwal kegiatan yang aktif hari ini.
