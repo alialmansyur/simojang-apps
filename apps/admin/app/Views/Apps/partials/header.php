@@ -11,7 +11,9 @@
 	<link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/app.css') ?>">
 	<link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/app-dark.css') ?>">
 	<link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/custom.css') ?>">
+	<link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/bootstrap-icons/font/bootstrap-icons.css') ?>">
 	<link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/toastify-js/src/toastify.css') ?>">
+
 	<link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/sweetalert2/sweetalert2.min.css') ?>">
 
 	<link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/select2/select2.min.css') ?>" />

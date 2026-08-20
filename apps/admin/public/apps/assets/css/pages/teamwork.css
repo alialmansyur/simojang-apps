@@ -380,3 +380,84 @@
     opacity: 0.08;
     transform: scale(1.1) rotate(-10deg);
 }
+
+/* --- ACCESS & LOCKED STATE STYLES --- */
+.tw-card.tw-card-locked {
+    cursor: not-allowed !important;
+    background-color: #ffffff !important;
+}
+
+.tw-card.tw-card-locked .tw-team-name {
+    color: #64748b !important;
+}
+
+.tw-card.tw-card-locked .tw-code {
+    color: #94a3b8 !important;
+}
+
+.tw-card.tw-card-locked .tw-icon-box {
+    color: #94a3b8 !important;
+}
+
+.tw-card.tw-card-locked .tw-icon svg {
+    stroke: #94a3b8 !important;
+}
+
+.tw-card.tw-card-locked .tw-card-bg-decoration svg {
+    stroke: #cbd5e1 !important;
+    opacity: 0.03 !important;
+}
+
+.tw-card.tw-card-locked:hover {
+    transform: none !important;
+    border-color: var(--twx-card-border) !important;
+    background-color: #ffffff !important;
+    box-shadow: none !important;
+}
+
+.tw-card.tw-card-locked:hover .tw-icon svg {
+    transform: none !important;
+}
+
+.tw-card.tw-card-locked:hover .tw-card-bg-decoration {
+    transform: none !important;
+    opacity: 0.03 !important;
+}
+
+.tw-link.is-locked-link {
+    cursor: not-allowed !important;
+}
+
+.tw-access-corner {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    z-index: 2;
+}
+
+.tw-access-icon {
+    font-size: 0.95rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.tw-access-icon.icon-locked {
+    color: #94a3b8;
+    opacity: 0.9;
+}
+
+.tw-access-icon.icon-unlocked {
+    color: #10b981;
+}
+
+
+

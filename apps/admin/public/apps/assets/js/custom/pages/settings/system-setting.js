@@ -1,6 +1,7 @@
 (function () {
     const form = document.getElementById('systemSettingForm');
     const saveBtn = document.getElementById('systemSettingSaveBtn');
+    const resetBtn = document.getElementById('btnResetSystemForm');
     if (!form || !saveBtn) {
         return;
     }
@@ -20,6 +21,8 @@
         app__logo: '',
         app__favicon: '',
     };
+
+    let latestLoadedData = {};
 
     function showToast(message, type) {
         if (!message) return;
@@ -62,11 +65,12 @@
         el.classList.add('is-invalid');
         el.setAttribute('title', errorText || '');
 
-        let feedback = el.closest('div').querySelector('.invalid-feedback');
+        let container = el.closest('.input-group') || el.closest('div');
+        let feedback = container.querySelector('.invalid-feedback');
         if (!feedback) {
             feedback = document.createElement('div');
             feedback.className = 'invalid-feedback d-block';
-            el.closest('div').appendChild(feedback);
+            container.appendChild(feedback);
         }
         feedback.textContent = errorText || 'Bidang ini tidak valid';
     }
@@ -94,16 +98,16 @@
 
         if (nameEl) nameEl.textContent = appName + ' System Configuration';
         if (tzEl) tzEl.textContent = tz;
-        if (sessEl) sessEl.textContent = sess;
+        if (sessEl) sessEl.textContent = sess + ' Menit';
 
         if (envBadge) {
             envBadge.textContent = env.charAt(0).toUpperCase() + env.slice(1);
             if (env === 'production') {
-                envBadge.className = 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1';
+                envBadge.className = 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1';
             } else if (env === 'staging') {
-                envBadge.className = 'badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1';
+                envBadge.className = 'badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-1';
             } else {
-                envBadge.className = 'badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-1';
+                envBadge.className = 'badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2.5 py-1';
             }
         }
     }
@@ -118,9 +122,9 @@
             const val = logoInput.value.trim();
             if (val) {
                 const src = /^https?:\/\//i.test(val) ? val : buildAppUrl(val);
-                logoBox.innerHTML = '<img src="' + src + '" alt="Logo" onerror="this.parentElement.innerHTML=\'<i class=\\\'bi bi-image text-muted fs-4\\\'></i>\'">';
+                logoBox.innerHTML = '<img src="' + src + '" alt="Logo" onerror="this.parentElement.innerHTML=\'<i class=\\\'bi bi-image text-muted fs-5\\\'></i>\'">';
             } else {
-                logoBox.innerHTML = '<i class="bi bi-image text-muted fs-4"></i>';
+                logoBox.innerHTML = '<i class="bi bi-image text-muted fs-5"></i>';
             }
         }
 
@@ -128,14 +132,15 @@
             const val = faviconInput.value.trim();
             if (val) {
                 const src = /^https?:\/\//i.test(val) ? val : buildAppUrl(val);
-                faviconBox.innerHTML = '<img src="' + src + '" alt="Favicon" onerror="this.parentElement.innerHTML=\'<i class=\\\'bi bi-browser-chrome text-muted fs-4\\\'></i>\'">';
+                faviconBox.innerHTML = '<img src="' + src + '" alt="Favicon" onerror="this.parentElement.innerHTML=\'<i class=\\\'bi bi-browser-chrome text-muted fs-5\\\'></i>\'">';
             } else {
-                faviconBox.innerHTML = '<i class="bi bi-browser-chrome text-muted fs-4"></i>';
+                faviconBox.innerHTML = '<i class="bi bi-browser-chrome text-muted fs-5"></i>';
             }
         }
     }
 
     function applyValues(map) {
+        latestLoadedData = Object.assign({}, map);
         Object.keys(defaults).forEach(function (name) {
             const input = form.querySelector('[name="' + name + '"]');
             if (!input) return;
@@ -208,7 +213,7 @@
                 throw new Error(json.message || 'Gagal menyimpan system setting');
             }
             applyValues(json.data || {});
-            showToast(json.message || 'System setting berhasil disimpan', 'success');
+            showToast(json.message || 'Konfigurasi sistem berhasil disimpan', 'success');
         } finally {
             saveBtn.disabled = false;
             saveBtn.innerHTML = originalBtnText;
@@ -224,6 +229,16 @@
         appFaviconInput.addEventListener('input', updateBrandPreviews);
     }
 
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+            applyValues(latestLoadedData);
+            clearFieldErrors();
+            if (typeof notifyInfo === 'function') {
+                notifyInfo('Formulir telah dimuat ulang sesuai data tersimpan.');
+            }
+        });
+    }
+
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         saveData().catch(function (err) {
@@ -233,3 +248,4 @@
 
     loadData();
 })();
+

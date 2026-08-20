@@ -6,6 +6,8 @@ use CodeIgniter\Model;
 
 class SettingManagerModel extends Model
 {
+    protected $DBGroup = 'default';
+
     public function canUserReadMenuUrl(int $userId, string $url): bool
     {
         $path = trim($url, '/');
@@ -816,4 +818,46 @@ class SettingManagerModel extends Model
             'updated_by'  => $actor,
         ]);
     }
+
+    // ==========================================
+    // SERVICE PERMISSION TREE METHODS (NEW REFACTOR)
+    // ==========================================
+
+    public function getServicePegawaiList(string $search = '', int $limit = 0): array
+    {
+        $spm = new \App\Models\Auth\ServicePermissionModel();
+        return $spm->getPegawaiList($search, $limit);
+    }
+
+
+    public function getServicePegawaiDetail(string $nip): ?array
+    {
+        $spm = new \App\Models\Auth\ServicePermissionModel();
+        return $spm->getPegawaiDetail($nip);
+    }
+
+    public function getServiceTreeForPegawai(string $nip): array
+    {
+        $spm = new \App\Models\Auth\ServicePermissionModel();
+        return $spm->getServiceTreeWithPegawaiPermission($nip);
+    }
+
+    public function toggleServicePermissionForPegawai(string $nip, $nodeId, bool $allowed, string $nodeType = 'service', ?int $actorUserId = null): array
+    {
+        $spm = new \App\Models\Auth\ServicePermissionModel();
+        return $spm->toggleServicePermission($nip, $nodeId, $allowed, $nodeType, $actorUserId);
+    }
+
+    public function resetServicePermissionToDefault(string $nip, ?int $actorUserId = null): bool
+    {
+        $spm = new \App\Models\Auth\ServicePermissionModel();
+        return $spm->resetPegawaiPermissionToDefault($nip, $actorUserId);
+    }
+
+    public function copyServicePermission(string $sourceNip, string $targetNip, ?int $actorUserId = null): bool
+    {
+        $spm = new \App\Models\Auth\ServicePermissionModel();
+        return $spm->copyPegawaiPermission($sourceNip, $targetNip, $actorUserId);
+    }
 }
+

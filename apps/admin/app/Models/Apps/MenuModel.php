@@ -6,7 +6,9 @@ use CodeIgniter\Model;
 
 class MenuModel extends Model
 {
+    protected $DBGroup = 'default';
     protected $table = 'auth_users_permissions';
+
      
     public function __construct()
     {

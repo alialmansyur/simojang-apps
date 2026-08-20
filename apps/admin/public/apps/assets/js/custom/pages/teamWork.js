@@ -157,17 +157,30 @@ function pageLoaded(data) {
         const iconSvg = getTeamIcon(value.nama, index);
         const toneClass = `tw-tone-${(index % 4) + 1}`;
         const codeDisplay = value.code || 'CODE-' + (index + 1).toString().padStart(3, '0');
+        const hasAccess = Boolean(value.has_access);
+
+        const accessBadgeHtml = hasAccess
+            ? `<span class="tw-access-icon icon-unlocked" title="Layanan dapat diakses"><i class="bi bi-unlock-fill"></i></span>`
+            : `<span class="tw-access-icon icon-locked" title="Layanan tidak dapat diakses"><i class="bi bi-lock-fill"></i></span>`;
+
+
+        const cardLinkHref = hasAccess ? (AppConfig.initGlobal + "timkerja-layanan/" + value.uid) : "javascript:void(0)";
+        const tooltipAttr = hasAccess ? '' : `data-bs-toggle="tooltip" data-bs-placement="top" title="Layanan tidak dapat diakses. Anda belum memiliki hak akses pada modul di tim kerja ini."`;
+
         const card = `
             <div class="col-12 col-md-6 col-xl-3">
-                <a class="tw-link text-decoration-none" href="${AppConfig.initGlobal + "timkerja-layanan/" + value.uid}">
-                    <div class="card tw-card tw-animate-entry h-100 ${toneClass}" style="--animation-order: ${index};" data-key="${value.id}" data-code="${value.code}">
+                <a class="tw-link text-decoration-none ${hasAccess ? '' : 'is-locked-link'}" href="${cardLinkHref}" ${tooltipAttr} data-has-access="${hasAccess ? '1' : '0'}" data-name="${escapeHtml(value.nama)}">
+                    <div class="card tw-card tw-animate-entry h-100 ${toneClass} ${hasAccess ? '' : 'tw-card-locked'}" style="--animation-order: ${index};" data-key="${value.id}" data-code="${value.code}">
                         <div class="card-body position-relative overflow-hidden d-flex align-items-center p-3 gap-3">
                             <div class="tw-icon-box flex-shrink-0 d-flex align-items-center justify-content-center z-1">
                                 <span class="tw-icon">${iconSvg}</span>
                             </div>
-                            <div class="tw-text-box d-flex flex-column text-start overflow-hidden z-1">
+                            <div class="tw-text-box d-flex flex-column text-start overflow-hidden z-1 pe-3">
                                 <span class="tw-code text-uppercase fw-bold text-muted">${codeDisplay}</span>
-                                <h6 class="fw-bold tw-team-name mb-0 lh-sm" title="${value.nama}">${value.nama}</h6>
+                                <h6 class="fw-bold tw-team-name mb-0 lh-sm" title="${escapeHtml(value.nama)}">${escapeHtml(value.nama)}</h6>
+                            </div>
+                            <div class="tw-access-corner z-2">
+                                ${accessBadgeHtml}
                             </div>
                             <div class="tw-card-bg-decoration pe-none">
                                 ${iconSvg}
@@ -180,8 +193,51 @@ function pageLoaded(data) {
 
         $container.append(card);
     });
+
+    // Initialize Bootstrap tooltips
+    if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('#loaded [data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    }
 }
+
+function escapeHtml(string) {
+    if (!string) return '';
+    const entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;'
+    };
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+        return entityMap[s];
+    });
+}
+
+// Click handler on locked card
+$(document).on('click', '.tw-link.is-locked-link', function (e) {
+    e.preventDefault();
+    const teamName = $(this).data('name') || 'tim kerja ini';
+    if (typeof notifyWarning === 'function') {
+        notifyWarning(`Layanan pada ${teamName} tidak dapat diakses. Hubungi Administrator untuk mendapatkan izin akses.`);
+    } else if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Akses Layanan Terkunci',
+            text: `Anda belum memiliki izin akses untuk modul layanan pada ${teamName}. Hubungi Administrator untuk mengajukan hak akses.`,
+            confirmButtonColor: '#1040c1'
+        });
+    } else {
+        alert(`Layanan pada ${teamName} tidak dapat diakses. Hubungi Administrator untuk mendapatkan izin akses.`);
+    }
+});
 
 $('#twReload').on('click', function () {
     loadData();
 });
+
+

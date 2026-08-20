@@ -38,24 +38,27 @@ class FetchData extends BaseController
 
     public function fetchTimKerja(){
         $sess = session()->get();
+        $user = (string) ($sess['username'] ?? '');
         return $this->response->setStatusCode(200)->setJSON([
             'status' => 'success',
-            'list'  => $this->apps->getTimkerja()
+            'list'   => $this->apps->getTimkerja($user)
         ]);
     }
 
     public function fetchLayananTimKerja(){
         $sess       = session()->get();
+        $user       = (string) ($sess['username'] ?? '');
         $request    = $this->request->getJSON();
         $keyword    = $request->keyword ?? '';        
         $layananID  = $request->layanan_id ?? ''; 
         return $this->response->setStatusCode(200)->setJSON([
-            'key'   => $layananID, 
-            'status' => 'success',
-            'list'  => $this->apps->getLayananTimkerja($layananID, $keyword), 
+            'key'      => $layananID, 
+            'status'   => 'success',
+            'list'     => $this->apps->getLayananTimkerja($layananID, $keyword, $user), 
             'progress' => $this->apps->progressLayananDaily($layananID)
         ]);        
     }
+
 
     public function fetchNSPKData(){
         $sess       = session()->get();

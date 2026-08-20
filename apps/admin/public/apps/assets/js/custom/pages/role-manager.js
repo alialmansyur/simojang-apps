@@ -36,6 +36,11 @@ $(document).ready(function () {
         }, 150);
     });
 
+    $('#btnResetSearchRole').on('click', function () {
+        $('#searchMenu').val('').trigger('input');
+    });
+
+
     // 3. Event Expand/Collapse Submenu Arrow
     $(document).on('click', '.btn-tree-toggle, .tree-title.clickable-title', function (e) {
         e.stopPropagation();

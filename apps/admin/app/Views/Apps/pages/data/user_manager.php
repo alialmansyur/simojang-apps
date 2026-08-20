@@ -567,15 +567,18 @@
 
             <!-- Empty State -->
             <div id="userEmptyState" class="text-center py-5 d-none">
-                <div class="d-flex flex-column align-items-center justify-content-center text-center my-4" style="white-space: normal !important; width: 100%;">
-                    <img src="<?= asset_url('apps/assets/images/empty-content-profile.png'); ?>" alt="Tidak Ditemukan" style="max-width: 250px; margin-bottom: 1.5rem;">
-                    <h5 class="fw-bold" style="color: #1a202c; font-size: 1.25rem; margin-bottom: 0.5rem;">Pencarian Tidak Ditemukan</h5>
-                    <p class="text-muted mb-3" style="font-size: 0.95rem; max-width: 400px; white-space: normal !important; word-wrap: break-word;">Data tidak ditemukan. Silakan periksa kembali kata kunci atau filter pencarian.</p>
-                    <button type="button" class="btn btn-sm btn-outline-primary fw-semibold px-3" id="btnResetFilter" style="border-radius: 8px;">
-                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filter
-                    </button>
+                <div class="d-flex flex-column align-items-center justify-content-center text-center my-4 tw-animate-entry" style="white-space: normal !important; width: 100%;">
+                    <img src="<?= asset_url('apps/assets/images/empty-content-profile.png'); ?>" alt="Tidak Ditemukan" style="max-width: 280px; margin-bottom: 1.5rem;">
+                    <h5 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.35rem;">Pengguna Tidak Ditemukan</h5>
+                    <p class="small mb-3" style="max-width: 450px; margin: 0 auto; color: #475569; line-height: 1.6; font-size: 0.95rem;">Maaf, kami tidak dapat menemukan data pengguna yang cocok dengan kata kunci atau filter pencarian Anda.</p>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-outline-primary px-4 py-2 fw-semibold" id="btnResetFilter" style="border-radius: 8px;">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filter
+                        </button>
+                    </div>
                 </div>
             </div>
+
 
             <!-- Pagination & Entries Footer (Matching /apps-ikpa style) -->
             <div class="p-3 border-top bg-white d-flex flex-column flex-md-row align-items-center justify-content-between gap-3" id="userPaginationWrapper">

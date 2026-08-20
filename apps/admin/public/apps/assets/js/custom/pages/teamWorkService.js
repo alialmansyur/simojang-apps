@@ -8,8 +8,8 @@ const SERVICE_ICONS = [
 ];
 
 const SEARCH_DEBOUNCE_MS = 300;
-const CACHE_TTL_MS = 60000;
 const LOAD_UI_DELAY_MS = 120;
+
 const PREFS_KEY = 'tws:prefs:v2';
 const FAVORITES_KEY = 'tws:favorites:v1';
 const RECENTS_KEY = 'tws:recents:v1';
@@ -41,7 +41,7 @@ let activeFetchController = null;
 let activeRequestId = 0;
 let isNavigatingToService = false;
 let scrollTicking = false;
-const responseCache = new Map();
+
 
 function normalizeKeyword(keyword = '') {
     return String(keyword).trim().toLowerCase();
@@ -528,24 +528,11 @@ function renderServices(list = []) {
 
 async function loadData(options = {}) {
     const layananID = resolveLayananKey();
-    const forceRequest = Boolean(options.force);
-    const cacheKey = `${layananID}::all`;
-
-    if (!forceRequest) {
-        const cached = responseCache.get(cacheKey);
-        if (cached && Date.now() - cached.savedAt < CACHE_TTL_MS) {
-            if (activeFetchController) activeFetchController.abort();
-            activeRequestId += 1;
-            endLoadingUi();
-            pageLoaded(cached.data);
-            return;
-        }
-    }
-
     if (activeFetchController) activeFetchController.abort();
 
     activeFetchController = new AbortController();
     const requestId = ++activeRequestId;
+
 
     beginLoadingUi();
 
@@ -567,13 +554,8 @@ async function loadData(options = {}) {
         const data = await response.json();
         if (requestId !== activeRequestId) return;
 
-        responseCache.set(cacheKey, {
-            savedAt: Date.now(),
-            data
-        });
-
-        if (requestId !== activeRequestId) return;
         pageLoaded(data);
+
     } catch (error) {
         if (error.name === 'AbortError') return;
         if (requestId !== activeRequestId) return;
@@ -623,8 +605,21 @@ function accessServiceCard($card) {
     const canAccess = Number($card.data('can-access')) === 1;
     const url = $card.data('url');
     const serviceKey = String($card.data('service-key') ?? '');
+    const serviceName = $card.find('.tws-service-name').text().trim() || 'Layanan ini';
 
-    if (!canAccess || !url) return;
+    if (!canAccess || !url) {
+        if (typeof notifyWarning === 'function') {
+            notifyWarning(`Layanan "${serviceName}" tidak dapat diakses. Anda belum memiliki izin akses untuk modul ini.`);
+        } else if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Akses Layanan Terkunci',
+                text: `Anda belum memiliki izin akses untuk modul "${serviceName}". Silakan hubungi Administrator.`,
+                confirmButtonColor: '#1040c1'
+            });
+        }
+        return;
+    }
 
     if (serviceKey) markRecent(serviceKey);
 
@@ -639,6 +634,7 @@ function accessServiceCard($card) {
         window.location.href = url;
     }, 120);
 }
+
 
 function toggleFavorite($card) {
     const serviceKey = String($card.data('service-key') ?? '');

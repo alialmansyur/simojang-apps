@@ -6,7 +6,9 @@ use CodeIgniter\Model;
 
 class AppsModel extends Model
 {
+    protected $DBGroup = 'default';
     protected $table = 'data_pegawai';
+
 
     public function __construct(){
         parent::__construct();
@@ -103,44 +105,26 @@ class AppsModel extends Model
         return $builder->get()->getResultArray();
     }
 
-    public function getTimkerja(){ 
-        return $this->db->query("SELECT * FROM data_timkerja WHERE is_show <> 0 ORDER BY id desc")->getResultArray();  
+    public function getTimkerja(?string $nip = null)
+    {
+        if ($nip === null) {
+            $nip = (string) (session()->get('username') ?? '');
+        }
+
+        $spm = new \App\Models\Auth\ServicePermissionModel();
+        return $spm->getTimkerjaWithUserAccess($nip);
     }
 
-public function getLayananTimkerja($param, $keyword = '')
-{
-    $tw = $this->db->table('data_timkerja')
-                   ->where('uid', $param)
-                   ->get()
-                   ->getRow();
+    public function getLayananTimkerja($param, $keyword = '', ?string $nip = null)
+    {
+        if ($nip === null) {
+            $nip = (string) (session()->get('username') ?? '');
+        }
 
-    if (!$tw) { return []; }
-
-    $builder = $this->db->table('data_timkerja_layanan a')
-                ->select([
-                    'a.*',
-                    'd.nama timkerja',
-                    "SUM(CASE WHEN c.created_at >= CURDATE() AND c.created_at < CURDATE() + INTERVAL 1 DAY THEN 1 ELSE 0 END) AS uploads_today",
-                    "IF(SUM(CASE WHEN c.created_at >= CURDATE() AND c.created_at < CURDATE() + INTERVAL 1 DAY THEN 1 ELSE 0 END) > 0, 1, 0) AS has_today",
-                    "MAX(c.created_at) AS last_upload_at"
-                ])
-                ->join('activity_daily_logs c', 'c.layanan_id = a.id', 'left')
-                ->join('data_timkerja d', 'd.id = a.timkerja_id', 'left')
-                ->where('a.timkerja_id', $tw->id)
-                ->where('a.is_show', 1)
-                ->groupBy('a.id')
-                ->orderBy('a.id', 'DESC');
-
-    $keyword = is_string($keyword) ? trim($keyword) : null;
-    if (!empty($keyword)) {
-        $builder->groupStart()
-                ->like('a.nama_layanan', $keyword)
-                ->orLike('a.alias', $keyword)
-                ->groupEnd();
+        $spm = new \App\Models\Auth\ServicePermissionModel();
+        return $spm->getLayananTimkerjaWithUserAccess((string) $param, $nip, (string) $keyword);
     }
 
-    return $builder->get()->getResultArray();
-}
 
 
     public function validateEnrolled($param,$enroll){

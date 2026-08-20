@@ -61,6 +61,7 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->get('/manage-instansi', 'Apps\DataMasterController::datainstansi');
     $routes->get('/manage-iku', 'Apps\DataMasterController::datalayanan');
     $routes->get('/manage-layanan', 'Apps\SettingManagerController::serviceManager');
+    $routes->get('/manage-service', 'Apps\SettingManagerController::serviceManager');
     $routes->get('/manage-role', 'Apps\SettingManagerController::roleManager');
     $routes->get('/manage-user', 'Apps\SettingManagerController::userManager');
     $routes->get('/manage-log', 'Apps\DataMasterController::datass'); 
@@ -90,6 +91,17 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/api/manage-role/assign-user', 'Apps\SettingManagerController::assignUserRole');
     $routes->get('/api/manage-role/tree', 'Apps\SettingManagerController::getRoleTree');
     $routes->post('/api/manage-role/toggle', 'Apps\SettingManagerController::toggleRolePermission');
+
+    // Manage Service APIs (Tree Hierarchy & Pegawai Permission)
+    $routes->get('/api/manage-service/pegawai', 'Apps\SettingManagerController::getServicePegawaiListApi');
+    $routes->get('/api/manage-service/pegawai-list', 'Apps\SettingManagerController::getServicePegawaiListApi');
+    $routes->get('/api/manage-service/tree', 'Apps\SettingManagerController::getServiceTreeApi');
+    $routes->post('/api/manage-service/toggle', 'Apps\SettingManagerController::toggleServicePermissionApi');
+    $routes->post('/api/manage-service/reset', 'Apps\SettingManagerController::resetServicePermissionApi');
+    $routes->post('/api/manage-service/reset-default', 'Apps\SettingManagerController::resetServicePermissionApi');
+    $routes->post('/api/manage-service/copy', 'Apps\SettingManagerController::copyServicePermissionApi');
+    $routes->post('/api/manage-service/copy-permission', 'Apps\SettingManagerController::copyServicePermissionApi');
+
 
     // Manage User APIs
     $routes->match(['get', 'post'], '/api/manage-user/datatable', 'Apps\SettingManagerController::getUserDatatableApi');

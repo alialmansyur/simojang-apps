@@ -293,10 +293,134 @@ class SettingManagerController extends BaseController
 
     public function serviceManager()
     {
+        $pegawaiList = $this->manager->getServicePegawaiList('', 0);
+        $selectedNip = trim((string) ($this->request->getGet('nip') ?? ''));
+        $selectedPegawai = $selectedNip !== '' ? $this->manager->getServicePegawaiDetail($selectedNip) : null;
+
         return $this->renderView('Apps/pages/data/service_manager', [
-            'title' => 'Service Manager',
+            'title'           => 'Kelola Akses Layanan',
+            'pegawaiList'     => $pegawaiList,
+            'selectedNip'     => $selectedNip,
+            'selectedPegawai' => $selectedPegawai,
         ]);
     }
+
+    public function getServicePegawaiListApi()
+    {
+        $search = trim((string) ($this->request->getGet('search') ?? ($this->request->getGet('q') ?? '')));
+        $limit = (int) ($this->request->getGet('limit') ?? 0);
+        $rows = $this->manager->getServicePegawaiList($search, $limit);
+        return $this->jsonSuccess('OK', $rows);
+    }
+
+
+    public function getServiceTreeApi()
+    {
+        $nip = trim((string) ($this->request->getGet('nip') ?? ''));
+        if ($nip === '') {
+            return $this->jsonError('NIP pegawai wajib diisi', 422, ['nip' => 'NIP pegawai wajib diisi']);
+        }
+
+        $tree = $this->manager->getServiceTreeForPegawai($nip);
+        $detail = $this->manager->getServicePegawaiDetail($nip);
+
+        if (!$detail) {
+            return $this->jsonError('Data pegawai tidak ditemukan', 404);
+        }
+
+        return $this->jsonSuccess('OK', [
+            'nip'    => $nip,
+            'tree'   => $tree,
+            'detail' => $detail,
+        ]);
+    }
+
+    public function toggleServicePermissionApi()
+    {
+        $payload = $this->getPayload();
+        $nip = trim((string) ($payload['nip'] ?? ''));
+        $nodeId = $payload['node_id'] ?? null;
+        $nodeType = (string) ($payload['node_type'] ?? 'service');
+        $allowed = isset($payload['allowed']) ? in_array((string) $payload['allowed'], ['1', 'true', 'on', true], true) : false;
+
+        if ($nip === '' || $nodeId === null) {
+            return $this->jsonError('NIP dan node_id wajib valid', 422, [
+                'nip'     => 'NIP wajib diisi',
+                'node_id' => 'node_id wajib diisi',
+            ]);
+        }
+
+        $actorUserId = (int) (session()->get('userid') ?? 0);
+        $result = $this->manager->toggleServicePermissionForPegawai($nip, $nodeId, $allowed, $nodeType, $actorUserId);
+
+        if (!$result['status']) {
+            return $this->jsonError($result['message'] ?? 'Gagal memperbarui izin layanan', 500);
+        }
+
+        return $this->jsonSuccess('Hak akses layanan berhasil diperbarui', $result);
+    }
+
+    public function resetServicePermissionApi()
+    {
+        $payload = $this->getPayload();
+        $nip = trim((string) ($payload['nip'] ?? ''));
+
+        if ($nip === '') {
+            return $this->jsonError('NIP pegawai wajib diisi', 422, ['nip' => 'NIP wajib diisi']);
+        }
+
+        $actorUserId = (int) (session()->get('userid') ?? 0);
+        $ok = $this->manager->resetServicePermissionToDefault($nip, $actorUserId);
+
+        if (!$ok) {
+            return $this->jsonError('Gagal mereset permission layanan ke default unit kerja', 500);
+        }
+
+        $tree = $this->manager->getServiceTreeForPegawai($nip);
+        $detail = $this->manager->getServicePegawaiDetail($nip);
+
+        return $this->jsonSuccess('Hak akses layanan berhasil dikembalikan ke default unit kerja', [
+            'nip'    => $nip,
+            'tree'   => $tree,
+            'detail' => $detail,
+        ]);
+    }
+
+    public function copyServicePermissionApi()
+    {
+        $payload = $this->getPayload();
+        $sourceNip = trim((string) ($payload['source_nip'] ?? ''));
+        $targetNip = trim((string) ($payload['target_nip'] ?? ''));
+
+        if ($sourceNip === '' || $targetNip === '') {
+            return $this->jsonError('Pegawai asal (source) dan pegawai tujuan (target) wajib dipilih', 422, [
+                'source_nip' => 'Source NIP wajib diisi',
+                'target_nip' => 'Target NIP wajib diisi',
+            ]);
+        }
+
+        if ($sourceNip === $targetNip) {
+            return $this->jsonError('Pegawai asal dan tujuan tidak boleh sama', 422);
+        }
+
+        $actorUserId = (int) (session()->get('userid') ?? 0);
+        $ok = $this->manager->copyServicePermission($sourceNip, $targetNip, $actorUserId);
+
+        if (!$ok) {
+            return $this->jsonError('Gagal menyalin konfigurasi hak akses layanan', 500);
+        }
+
+        $tree = $this->manager->getServiceTreeForPegawai($targetNip);
+        $detail = $this->manager->getServicePegawaiDetail($targetNip);
+
+        return $this->jsonSuccess('Hak akses layanan berhasil disalin', [
+            'source_nip' => $sourceNip,
+            'target_nip' => $targetNip,
+            'tree'       => $tree,
+            'detail'     => $detail,
+        ]);
+    }
+
 
     public function getServiceList()
     {
@@ -496,7 +620,11 @@ class SettingManagerController extends BaseController
 
     public function getSmtpSettingData()
     {
-        return $this->jsonSuccess('OK', $this->settings->getGroup('smtp'));
+        $smtp = $this->settings->getGroup('smtp');
+        $hasPassword = !empty($smtp['smtp.password']);
+        $smtp['has_password'] = $hasPassword;
+        $smtp['smtp.password'] = '';
+        return $this->jsonSuccess('OK', $smtp);
     }
 
     public function saveSmtpSetting()
@@ -522,7 +650,7 @@ class SettingManagerController extends BaseController
                 $errors[$inputKey] = 'Wajib diisi';
             }
             if ($key === 'smtp.port' && $val !== '' && !ctype_digit($val)) {
-                $errors[$inputKey] = 'Port harus angka';
+                $errors[$inputKey] = 'Port harus berupa angka';
             }
             if ($key === 'smtp.from_email' && $val !== '' && !filter_var($val, FILTER_VALIDATE_EMAIL)) {
                 $errors[$inputKey] = 'Format email tidak valid';
@@ -531,7 +659,7 @@ class SettingManagerController extends BaseController
         }
 
         if (!empty($errors)) {
-            return $this->jsonError('Validasi gagal', 422, $errors);
+            return $this->jsonError('Validasi gagal. Silakan periksa isian formulir.', 422, $errors);
         }
 
         $ok = $this->settings->bulkUpsert($normalized, $userId);
@@ -539,8 +667,13 @@ class SettingManagerController extends BaseController
             return $this->jsonError('Gagal menyimpan SMTP setting', 500);
         }
 
-        return $this->jsonSuccess('SMTP setting berhasil disimpan', $this->settings->getGroup('smtp'));
+        $updatedSmtp = $this->settings->getGroup('smtp');
+        $updatedSmtp['has_password'] = !empty($updatedSmtp['smtp.password']);
+        $updatedSmtp['smtp.password'] = '';
+
+        return $this->jsonSuccess('Konfigurasi SMTP berhasil disimpan', $updatedSmtp);
     }
+
 
     public function testSmtpConnectionApi()
     {

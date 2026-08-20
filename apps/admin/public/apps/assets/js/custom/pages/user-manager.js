@@ -288,16 +288,21 @@ $(document).ready(function () {
         }
     }
 
-    // 10. Function: Render Empty Table (Matching /apps-statistik-internal)
-    function renderEmptyTable(title = 'Pencarian Tidak Ditemukan', desc = 'Data tidak ditemukan. Silakan periksa kembali kata kunci atau filter pencarian.') {
+    // 10. Function: Render Empty Table (Matching /timkerja-layanan)
+    function renderEmptyTable(title = 'Pengguna Tidak Ditemukan', desc = 'Maaf, kami tidak dapat menemukan data pengguna yang cocok dengan kata kunci atau filter pencarian Anda.') {
         const imgUrl = (typeof AppConfig !== 'undefined' && AppConfig.initGlobal ? AppConfig.initGlobal : '/') + 'apps/assets/images/empty-content-profile.png';
         $('#userTableBody').html(`
             <tr>
                 <td colspan="6" class="text-center border-0 p-0">
                     <div class="d-flex flex-column align-items-center justify-content-center text-center mt-5 mb-5 pb-4 tw-animate-entry" style="white-space: normal !important; width: 100%;">
-                        <img src="${imgUrl}" alt="Tidak Ditemukan" style="max-width: 250px; margin-bottom: 1.5rem;">
-                        <h5 class="fw-bold" style="color: #1a202c; font-size: 1.25rem; margin-bottom: 0.5rem;">${escapeHtml(title)}</h5>
-                        <p class="text-muted mb-0" style="font-size: 0.95rem; max-width: 400px; white-space: normal !important; word-wrap: break-word;">${escapeHtml(desc)}</p>
+                        <img src="${imgUrl}" alt="Tidak Ditemukan" style="max-width: 280px; margin-bottom: 1.5rem;">
+                        <h5 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.35rem;">${escapeHtml(title)}</h5>
+                        <p class="small mb-3" style="max-width: 450px; margin: 0 auto; color: #475569; line-height: 1.6; font-size: 0.95rem; white-space: normal !important; word-wrap: break-word;">${escapeHtml(desc)}</p>
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-outline-primary px-4 py-2 fw-semibold" onclick="$('#btnResetFilter').trigger('click')" style="border-radius: 8px;">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filter
+                            </button>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -305,6 +310,7 @@ $(document).ready(function () {
         $('#userPagination').empty();
         $('#userEntriesInfo').html('Menampilkan <strong>0 - 0</strong> dari <strong>0</strong> data');
     }
+
 
     // 11. Toggle User Status (AJAX)
     $(document).on('change', '.user-status-switch', function () {

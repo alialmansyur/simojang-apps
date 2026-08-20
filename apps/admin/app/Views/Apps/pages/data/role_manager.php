@@ -148,12 +148,20 @@
             </div>
 
             <!-- Empty Search State -->
-            <div class="p-5 text-center d-none" id="treeEmptyState">
-                <i class="bi bi-search text-muted mb-2 d-block" style="font-size: 2.5rem;"></i>
-                <h6 class="fw-bold text-dark">Tidak Ada Menu yang Cocok</h6>
-                <p class="text-muted small mb-0">Coba gunakan kata kunci pencarian yang lain.</p>
+            <div class="py-5 text-center d-none" id="treeEmptyState">
+                <div class="d-flex flex-column align-items-center justify-content-center text-center my-4 tw-animate-entry">
+                    <img src="<?= asset_url('apps/assets/images/empty-content-profile.png') ?>" alt="Tidak Ditemukan" style="max-width: 280px; margin-bottom: 1.5rem;">
+                    <h5 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.35rem;" id="treeEmptyTitle">Menu Tidak Ditemukan</h5>
+                    <p class="small mb-3" style="max-width: 450px; margin: 0 auto; color: #475569; line-height: 1.6; font-size: 0.95rem;" id="treeEmptyDesc">
+                        Maaf, kami tidak dapat menemukan data menu atau modul yang cocok dengan kata kunci pencarian Anda.
+                    </p>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-outline-primary px-4 py-2 fw-semibold" id="btnResetSearchRole" style="border-radius: 8px;">Reset Pencarian</button>
+                    </div>
+                </div>
             </div>
         </div>
+
 
     </div>
 </main>
