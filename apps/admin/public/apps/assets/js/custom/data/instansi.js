@@ -99,31 +99,93 @@ $(document).ready(function () {
         }
     });
 
-    // $('#dataTable tbody').on('click', 'tr td .btn-remove', function () {
-    //     var key = $(this).attr('data-id');
-    //     Swal.fire({
-    //         text: "Apa anda yakin akan mengahapus data ini ?",
-    //         icon: "warning",
-    //         showCancelButton: true,
-    //         confirmButtonColor: "#d63031",
-    //         confirmButtonText: "Ya",
-    //         cancelButtonText: "Tidak"
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             $.ajax({
-    //                 type: "POST",
-    //                 url:  AppConfig.initGlobal + "store/remove-data-alihmedia",
-    //                 data: {key: key},
-    //                 success: function (response) {
-    //                     if (response) {
-    //                         $('#dataTable').DataTable().ajax.reload();
-    //                         loadData();
-    //                     }
-    //                 }
-    //             });
-    //         }
-    //     });
-    // });
+    $('#dataTable tbody').on('click', 'tr td .btn-remove', function (e) {
+        e.stopPropagation();
+        var key = $(this).attr('data-id');
+        Swal.fire({
+            text: "Apa anda yakin akan mengahapus data ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d63031",
+            confirmButtonText: "Ya",
+            cancelButtonText: "Tidak"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: AppConfig.initGlobal + "api/ref/instansi/" + key,
+                    success: function (response) {
+                        if (response && response.status) {
+                            swlSuccess();
+                            $('#dataTable').DataTable().ajax.reload(null, false);
+                        } else {
+                            swlErrorHandler(response.message || 'Gagal menghapus data');
+                        }
+                    },
+                    error: function (xhr) {
+                        var res = xhr.responseJSON;
+                        swlErrorHandler(res && res.message ? res.message : 'Gagal menghapus data');
+                    }
+                });
+            }
+        });
+    });
+
+    $('#dataTable tbody').on('click', 'tr td .btn-update', function (e) {
+        e.stopPropagation();
+        var data = $('#dataTable').DataTable().row($(this).parents('tr')).data();
+        $('#instansi_id').val(data.id);
+        $('#kodeins').val(data.kodeins);
+        $('#nama').val(data.nama);
+        $('#DataModalTitle').text('Edit Data Instansi');
+        $('#DataModal').modal('show');
+    });
+
+    $('#btnSaveData').on('click', function () {
+        var id = $('#instansi_id').val();
+        var kodeins = $('#kodeins').val();
+        var nama = $('#nama').val();
+
+        if (!kodeins || !nama) {
+            swlErrorHandler('Kode dan Nama Instansi wajib diisi');
+            return;
+        }
+
+        var payload = { kodeins: kodeins, nama: nama, kanreg: 3 }; 
+        
+        var url = AppConfig.initGlobal + "api/ref/instansi";
+        var method = "POST";
+        if (id) {
+            url += "/" + id;
+            method = "PUT";
+        }
+
+        $.ajax({
+            type: method,
+            url: url,
+            data: JSON.stringify(payload),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.status) {
+                    $('#DataModal').modal('hide');
+                    swlSuccess();
+                    $('#dataTable').DataTable().ajax.reload(null, false);
+                } else {
+                    swlErrorHandler(response.message || 'Gagal menyimpan data');
+                }
+            },
+            error: function (xhr) {
+                var res = xhr.responseJSON;
+                swlErrorHandler(res && res.message ? res.message : 'Gagal menyimpan data');
+            }
+        });
+    });
+
+    $('#DataModal').on('hidden.bs.modal', function () {
+        $('#DataForm')[0].reset();
+        $('#instansi_id').val('');
+        $('#DataModalTitle').text('Tambah Data Instansi');
+    });
 
     function statusData(key, sts) {
         swlwaitProsessing

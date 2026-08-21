@@ -479,3 +479,5 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     // $routes->post('/store/remove-data-integrasi', 'Apps\Services\IntegrasiData::removeData');         
     // ----------------------------------------------------------------
 });
+\ - > g e t ( ' t e s t - v i e w ' ,   ' T e s t C o n t r o l l e r : : t e s t ' ) ; 
+ 

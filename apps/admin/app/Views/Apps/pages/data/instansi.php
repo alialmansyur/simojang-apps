@@ -46,6 +46,34 @@
         </section>
     </div>
 </div>
+
+<div class="modal fade" id="DataModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 p-2">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DataModalTitle">Tambah Data Instansi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="DataForm" class="row g-3">
+                    <input type="hidden" name="id" id="instansi_id">
+                    <div class="col-md-4">
+                        <label class="form-label">Kode Instansi</label>
+                        <input type="text" class="form-control" name="kodeins" id="kodeins" required>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label">Nama Instansi</label>
+                        <input type="text" class="form-control" name="nama" id="nama" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btnSaveData">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
 <script src="<?= asset_url('apps/assets/js/custom/data/instansi.js?v=99.1') ?>"></script>
