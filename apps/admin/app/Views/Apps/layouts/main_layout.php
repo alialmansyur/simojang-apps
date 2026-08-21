@@ -49,6 +49,8 @@
                     <li><a class="dropdown-item" href="#" onclick="logout()"><i class="icon-mid bi bi-box-arrow-left me-2 text-danger"></i>Logout</a></li>
                 </ul>
             </div>
+        </div>
+    </header>
     <div id="main-content-inner">
         <?= $this->renderSection('content'); ?>
     </div>
