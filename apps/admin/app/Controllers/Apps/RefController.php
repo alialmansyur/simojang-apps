@@ -30,6 +30,13 @@ class RefController extends BaseController
             return redirect()->to('/ref')->with('error', 'Akses tabel referensi ditolak.');
         }
 
+        $viewPath = 'Apps/pages/data/' . $slug;
+        if (is_file(APPPATH . 'Views/' . $viewPath . '.php')) {
+            return $this->renderView($viewPath, [
+                'title' => 'Referensi ' . ucfirst($slug),
+            ]);
+        }
+
         return $this->renderView('Apps/pages/data/ref_detail', [
             'title' => 'Referensi',
         ]);
