@@ -291,9 +291,16 @@ $(document).ready(function () {
 
     // Card Click Handler
     $(document).on('click', '.tws-service-card', function(e) {
-        if ($(e.target).closest('button, a, .tws-card-actions').length) return;
+        if ($(e.target).closest('button:not(.tws-access-btn), a, .btn-update, .btn-remove').length) return;
         const url = $(this).data('url');
-        if (url) window.location.href = url;
+        if (url) {
+            const btn = $(this).find('.tws-access-btn');
+            if (btn.length) {
+                btn.prop('disabled', true);
+                btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            }
+            window.location.href = url;
+        }
     });
 
     // Modal Events
@@ -536,37 +543,37 @@ function renderTilokCards(data) {
         const ringClass = isUpdated ? 'tws-ring-high' : 'tws-ring-low';
 
         html += `
-        <div class="col-12 tws-col-list tw-animate-entry" style="--animation-order: ${index};">
-            <div class="card h-100 p-3 py-2 rounded-4 border tws-service-card tws-card-soft tws-anim-card overflow-hidden position-relative tws-tone-${(index % 4) + 1}" style="cursor: pointer;" data-url="${AppConfig.initGlobal}apps-cat-detail/${row.uid}">
-                <div class="position-absolute tws-bg-icon-wrapper">
+        <div class="col-12 tws-col-list tw-animate-entry mb-2" style="--animation-order: ${index};">
+            <div class="card h-100 p-2 rounded-3 border tws-service-card tws-card-soft tws-anim-card overflow-hidden position-relative tws-tone-${(index % 4) + 1}" style="cursor: pointer;" data-url="${AppConfig.initGlobal}apps-cat-detail/${row.uid}">
+                <div class="position-absolute tws-bg-icon-wrapper" style="opacity: 0.05;">
                     <div class="tws-bg-icon-svg">
                         <svg viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                     </div>
                 </div>
-                <div class="card-body p-0" style="min-height: 48px !important; position: relative; z-index: 1;">
-                    <div class="tws-content-wrap">
-                        <span class="tws-service-icon ${ringClass}">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        </span>
-                        <h5 class="fw-bold tws-service-title mb-0">${nama}</h5>
-                        <div class="tws-service-desc mt-1 d-flex flex-wrap gap-1">
-                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fw-semibold">Total Rekap: ${row.total_rekap || 0}</span>
-                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 fw-semibold">Kapasitas: ${cap} PC</span>
-                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 fw-semibold">${escapeHtml(row.jenis_tes || '-')}</span>
-                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 fw-semibold">${escapeHtml(row.period || (start + ' s/d ' + end))}</span>
+                <div class="card-body p-0 d-flex flex-column flex-md-row align-items-md-center justify-content-between" style="position: relative; z-index: 1;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="flex-shrink-0 d-flex align-items-center justify-content-center bg-primary-subtle text-primary" style="width: 48px; height: 48px; border-radius: 12px; transform: none !important;">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1" style="font-size: 1.05rem; color: #1e293b;">${nama}</h6>
+                            <div class="d-flex flex-wrap gap-2 align-items-center mt-1">
+                                <span class="text-primary fw-semibold" style="font-size: 0.8rem;">Total Rekap: ${row.total_rekap || 0}</span>
+                                <span class="text-success fw-semibold" style="font-size: 0.8rem;">Kapasitas: ${cap} PC</span>
+                                <span class="text-danger fw-semibold" style="font-size: 0.8rem;">${escapeHtml(row.jenis_tes || '-')}</span>
+                                <span class="text-secondary fw-semibold" style="font-size: 0.8rem;">${escapeHtml(row.period || (start + ' s/d ' + end))}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="tws-card-actions">
-                        <div class="tws-card-icons-row gap-3">
-                            <button type="button" class="btn p-0 border-0 btn-update" data-id="${row.id}" title="Edit Data" style="color: #475569;">
-                                <i class="bi bi-pencil-square fs-6"></i>
-                            </button>
-                            <button type="button" class="btn p-0 border-0 btn-remove" data-id="${row.id}" title="Hapus Data" style="color: #ef4444;">
-                                <i class="bi bi-trash fs-6"></i>
-                            </button>
-                        </div>
-                        <button type="button" class="tws-access-btn" title="Detail">
-                            <i class="bi bi-arrow-right"></i>
+                    <div class="d-flex align-items-center gap-3 mt-3 mt-md-0 px-2 px-md-0 h-100">
+                        <button type="button" class="btn p-1 border-0 btn-update" data-id="${row.id}" title="Edit Data" style="color: #64748b;">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </button>
+                        <button type="button" class="btn p-1 border-0 btn-remove" data-id="${row.id}" title="Hapus Data" style="color: #ef4444;">
+                            <i class="bi bi-trash fs-5"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary p-0 ms-2 d-flex align-items-center justify-content-center text-white shadow-sm tws-access-btn" title="Detail" style="width: 32px; height: 32px; border-radius: 50% !important; min-width: 32px;">
+                            <i class="bi bi-arrow-right d-flex align-items-center justify-content-center" style="font-size: 1.15rem; line-height: 0;"></i>
                         </button>
                     </div>
                 </div>

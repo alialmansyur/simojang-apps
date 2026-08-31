@@ -82,19 +82,29 @@ $(document).ready(function () {
     });
 
     function addRow() {
+
         const lastRow = tbody.find('tr:last');
+
+        let refInstansiId = '';
+        let refInstansiText = '';
         let refTanggal = '';
 
         if (lastRow.length) {
+            const instansiSelect = lastRow.find('.select-instansi');
+
+            refInstansiId = instansiSelect.val();
+            refInstansiText = instansiSelect.find('option:selected').text();
             refTanggal = lastRow.find('input[name="tanggal[]"]').val();
         }
-        
-        let activeInstansiId = $('#filterInstansi').val() || '';
 
         const newRow = $(`
             <tr>
                 <td>
-                    <input type="hidden" name="instansi[]" value="${activeInstansiId}">
+                    <select name="instansi[]" class="form-control select-instansi" required>
+                        <option value="">Pilih Instansi</option>
+                    </select>
+                </td>
+                <td>
                     <input type="date" name="tanggal[]" class="form-control" value="${refTanggal}" required>
                 </td>
                 <td>
@@ -130,6 +140,14 @@ $(document).ready(function () {
         `);
 
         tbody.append(newRow);
+
+        const selectInstansi = newRow.find('.select-instansi');
+        initInstansiSelect(selectInstansi, rekapModal);
+
+        if (refInstansiId) {
+            const option = new Option(refInstansiText, refInstansiId, true, true);
+            selectInstansi.append(option).trigger('change');
+        }
     }
 
 

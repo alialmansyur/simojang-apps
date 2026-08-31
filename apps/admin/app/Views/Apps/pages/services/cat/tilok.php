@@ -6,7 +6,7 @@
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
 <main class="page-content" aria-labelledby="twsHeading">
-    <div class="text-start tws-wrap">
+    <div class="text-start tws-wrap container-fluid">
         <div class="row align-items-center mt-3 mb-2 tw-animate-entry" style="--animation-order: 1;">
             <div class="col-12 col-md-8">
                 <h1 class="tw-title lh-1" id="twsHeading" style="color: #1a202c; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem;">
@@ -20,6 +20,38 @@
                 <a href="<?= base_url('apps-cat') ?>" class="btn btn-primary">
                     <i class="bi bi-chevron-left fs-6"></i> Kembali
                 </a>
+            </div>
+        </div>
+
+        <div class="row mb-3 mt-4">
+            <div class="col-12">
+                <div class="alert shadow-sm border-0 rounded-3 p-3 position-relative" style="background-color: #fffbe4; border-left: 6px solid #f59e0b !important;" role="alert">
+                    <div class="row align-items-center g-0 pe-5">
+                        <div class="col-auto pe-3">
+                            <i class="bi bi-exclamation-triangle-fill" style="color: #d97706; font-size: 2.2rem; line-height: 1;"></i>
+                        </div>
+                        <div class="col">
+                            <h6 class="fw-bold mb-1" style="color: #92400e; font-size: 1rem; line-height: 1.2;">Himbauan: Gunakan Titik Lokasi yang Sudah Ada</h6>
+                            <div style="font-size: 0.85rem; color: #b45309; line-height: 1.2;">Untuk mencegah duplikasi data, mohon periksa dan gunakan Titik Lokasi yang sudah terdaftar terlebih dahulu.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <button class="btn btn-sm text-nowrap fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#tataCaraCollapse" aria-expanded="false" aria-controls="tataCaraCollapse" style="background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d;">
+                            <i class="bi bi-info-circle me-1"></i> Tata Cara
+                        </button>
+                    </div>
+                    
+                    <div class="collapse" id="tataCaraCollapse">
+                        <hr style="border-color: #f59e0b; opacity: 0.2; margin-top: 1rem; margin-bottom: 1rem;">
+                        <ol class="mb-0 ps-3" style="font-size: 0.85rem; line-height: 1.7; color: #78350f;">
+                            <li><strong>Cari Titik Lokasi:</strong> Gunakan form pencarian pada *toolbar* di bawah untuk memastikan Titik Lokasi belum terdaftar.</li>
+                            <li><strong>Pilih Titik Lokasi:</strong> Jika titik lokasi sudah ada, klik *card* yang sesuai untuk langsung mengelola/merekap data instansi.</li>
+                            <li><strong>Tambah Baru:</strong> Jika titik lokasi benar-benar belum terdaftar, klik tombol biru <strong>"Tambah Titik Lokasi"</strong>.</li>
+                            <li><strong>Kelola Data:</strong> Lengkapi form detail lokasi, lalu simpan.</li>
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -86,14 +118,14 @@
                                         required>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label class="form-label mb-1">Tanggal Mulai Periode</label>
                                     <input type="date" class="form-control rounded" name="startdate" placeholder="Tanggal Mulai"
                                         required>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label class="form-label mb-1">Tanggal Selesai Periode</label>
                                     <input type="date" class="form-control rounded" name="enddate" placeholder="Tanggal Selesai"
@@ -144,7 +176,7 @@
                     </form>
 
                     <hr class="my-3">
-                    <div class="event-table-wrap">
+                    <div class="event-table-wrap table-responsive">
                         <table class="table table-sm table-bordered align-middle mb-0">
                             <thead>
                                 <tr>

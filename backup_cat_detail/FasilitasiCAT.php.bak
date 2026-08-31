@@ -589,10 +589,7 @@ class FasilitasiCAT extends BaseController
             return $item >= 1 && $item <= 12;
         }));
 
-        $instansi_id = $this->request->getPost('instansi_id');
-        $filter_instansi = !empty($instansi_id) ? [$instansi_id] : [];
-
-        $builder    = $this->catmodel->getBuilder('recap-hasil', ['id' => $key,'bulan' => $bulan, 'instansi_id' => $filter_instansi]);
+        $builder    = $this->catmodel->getBuilder('recap-hasil', ['id' => $key,'bulan' => $bulan, 'instansi_id' => '']);
         $columns = [
             [
                 'data' => 'id',

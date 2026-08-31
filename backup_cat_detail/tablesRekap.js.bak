@@ -123,7 +123,6 @@ const table = $('#dataTable').DataTable({
         data: function (d) {
             d.key = paramKey;
             d.bulan = selectedBulan;
-            d.instansi_id = $('#filterInstansi').val();
             return d;
         }
     },
@@ -339,78 +338,3 @@ $('#form-usulan-edit').on('submit', function (e) {
 });
 
 loadMetaDetailTilok();
-
-$(document).ready(function() {
-    // Inisialisasi Select2 untuk Filter Instansi
-    $('#filterInstansi').select2({
-        theme: 'bootstrap-5',
-        width: '100%',
-        allowClear: true,
-        placeholder: 'Pilih Instansi...',
-        minimumInputLength: 0,
-        ajax: {
-            url: AppConfig.initGlobal + 'instansi-list',
-            type: 'POST',
-            dataType: 'json',
-            delay: 300,
-            data: function (params) {
-                return {
-                    search: params.term
-                };
-            },
-            processResults: function (data) {
-                return {
-                    results: data
-                };
-            },
-            cache: true
-        }
-    }).on('change', function() {
-        table.ajax.reload();
-        loadSummaryDetailTilok();
-    });
-    
-    updateViewState();
-});
-
-function updateViewState() {
-    var instansiId = $('#filterInstansi').val();
-    if (!instansiId) {
-        $('#welcomeState').show();
-        $('#emptyState').hide();
-        $('#datatableContainer').hide();
-        $('#btnOpenTambahData').prop('disabled', true);
-    } else {
-        $('#btnOpenTambahData').prop('disabled', false);
-        var info = table.page.info();
-        if (info.recordsDisplay === 0) {
-            $('#welcomeState').hide();
-            $('#emptyState').show();
-            $('#datatableContainer').hide();
-        } else {
-            $('#welcomeState').hide();
-            $('#emptyState').hide();
-            
-            var wasHidden = $('#datatableContainer').is(':hidden');
-            $('#datatableContainer').show();
-            if (wasHidden) {
-                table.columns.adjust().responsive.recalc();
-            }
-        }
-    }
-}
-
-table.on('draw.dt', updateViewState);
-
-// Logic untuk tombol Tambah Rekap Data
-$('#btnOpenTambahData, #btnOpenTambahDataEmpty').on('click', function() {
-    var instansiId = $('#filterInstansi').val();
-    if (!instansiId) {
-        swlErrorHandler('Silakan pilih instansi terlebih dahulu di filter atas tabel sebelum menambah rekap data.');
-        return;
-    }
-    
-    var instansiText = $('#filterInstansi option:selected').text();
-    $('#activeInstansiLabel').text(instansiText);
-    $('#DataModal').modal('show');
-});

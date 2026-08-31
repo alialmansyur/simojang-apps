@@ -17,9 +17,6 @@
         notifyError(message);
     }
 
-    function getEmptySrc() {
-        
-
     function escapeHtml(text) {
         return String(text)
             .replace(/&/g, '&amp;')
@@ -43,7 +40,7 @@
         grid.innerHTML = ''
             + '<div class="col-12 text-center py-4 ref-empty">'
             + '  <div class="d-flex flex-column justify-content-center align-items-center">'
-            + '    <iframe src="' + getEmptySrc() + '" title="Tidak ada data"></iframe>'
+            + '    <div class="display-1 text-muted mb-3"><i class="bi bi-inbox"></i></div>'
             + '    <p class="text-muted mt-2 mb-0">' + escapeHtml(message) + '</p>'
             + '  </div>'
             + '</div>';

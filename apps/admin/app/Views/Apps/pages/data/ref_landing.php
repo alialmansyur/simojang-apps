@@ -1,12 +1,11 @@
-<?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
+<?= $this->extend('Apps/layouts/main_layout'); ?>
 <?= $this->section('style'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/settings/ref-landing.css') ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
-<main class="page-content d-flex align-items-center justify-content-center" aria-labelledby="refPageTitle">
-    <div class="container-sm text-start mx-auto ref-wrap">
+<div class="page-content py-4">
+    <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px; padding: 0 .85rem 1.05rem;">
         <div class="ref-welcome text-center" role="banner">
             <h2 class="ref-title" id="refPageTitle">Referensi Data Support</h2>
             <p class="ref-subtitle">Pilih menu referensi untuk kelola master data yang Anda miliki akses.</p>
@@ -31,7 +30,7 @@
             </div>
         </section>
     </div>
-</main>
+</div>
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
 <script src="<?= asset_url('apps/assets/js/custom/pages/settings/page-loader.js') ?>"></script>

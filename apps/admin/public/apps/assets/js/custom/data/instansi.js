@@ -46,12 +46,12 @@ $(document).ready(function () {
                     let checked = data == 1 ? 'checked' : '';
                     let label = data == 1 ? 'Aktif' : 'Non-Aktif';
                     return `
-                        <div class="form-check form-switch">
-                            <input class="form-check-input btn-status" type="checkbox"
+                        <div class="form-check form-switch d-flex align-items-center gap-2">
+                            <input class="form-check-input btn-status m-0" type="checkbox"
                                 id="switch-${row.id}"
                                 ${checked}
-                                name="status_poli" data-key="${row.id}">
-                            <label class="form-check-label" for="switch-${row.id}">${label}</label>
+                                name="status_poli" data-key="${row.id}" style="cursor: pointer;">
+                            <label class="form-check-label mb-0" for="switch-${row.id}" style="cursor: pointer;">${label}</label>
                         </div>`;
                 }
             }, 
@@ -188,7 +188,6 @@ $(document).ready(function () {
     });
 
     function statusData(key, sts) {
-        swlwaitProsessing
         $.ajax({
             type: "POST",
             url: AppConfig.initGlobal + "status-data",

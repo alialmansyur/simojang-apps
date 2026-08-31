@@ -82,6 +82,37 @@
             </div>
         </div>
 
+        <div class="row mb-3 mt-4">
+            <div class="col-12">
+                <div class="alert shadow-sm border-0 rounded-3 p-3 position-relative" style="background-color: #fffbe4; border-left: 6px solid #f59e0b !important;" role="alert">
+                    <div class="row align-items-center g-0 pe-5">
+                        <div class="col-auto pe-3">
+                            <i class="bi bi-exclamation-triangle-fill" style="color: #d97706; font-size: 2.2rem; line-height: 1;"></i>
+                        </div>
+                        <div class="col">
+                            <h6 class="fw-bold mb-1" style="color: #92400e; font-size: 1rem; line-height: 1.2;">Himbauan: Gunakan Event/Seleksi yang Sudah Ada</h6>
+                            <div style="font-size: 0.85rem; color: #b45309; line-height: 1.2;">Untuk mencegah duplikasi, mohon cari dan kelola data pada Event yang sudah terdaftar terlebih dahulu.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <button class="btn btn-sm text-nowrap fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#tataCaraCollapse" aria-expanded="false" aria-controls="tataCaraCollapse" style="background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d;">
+                            <i class="bi bi-info-circle me-1"></i> Tata Cara
+                        </button>
+                    </div>
+                    
+                    <div class="collapse" id="tataCaraCollapse">
+                        <hr style="border-color: #f59e0b; opacity: 0.2; margin-top: 1rem; margin-bottom: 1rem;">
+                        <ol class="mb-0 ps-3" style="font-size: 0.85rem; line-height: 1.7; color: #78350f;">
+                            <li><strong>Cari Event:</strong> Gunakan kotak pencarian untuk mengecek apakah Event (misal: CACT) sudah pernah dibuat sebelumnya.</li>
+                            <li><strong>Kelola Event:</strong> Jika sudah ada, langsung klik *card* event tersebut untuk mengelola Titik Lokasi di dalamnya.</li>
+                            <li><strong>Tambah Baru:</strong> Jika Event/Seleksi benar-benar baru dan belum terdaftar, barulah klik tombol biru <strong>"Tambah Event/Seleksi"</strong>.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <?php
             $uniqueYears = [];
             $uniqueEvents = [];
@@ -266,7 +297,7 @@
                 </form>
 
                 <hr class="my-3">
-                <div class="event-table-wrap">
+                <div class="event-table-wrap table-responsive">
                     <table class="table table-sm table-bordered align-middle mb-0">
                         <thead>
                             <tr>
