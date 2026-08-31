@@ -1,6 +1,6 @@
 </div>
 <script src="<?= asset_url('apps/assets/js/bootstrap.js') ?>"></script>
-<script src="<?= asset_url('apps/assets/js/app.js') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/app.js?v=1.0.0') ?>"></script>
 <script>
 // Release any sidebar scroll lock from third-party scripts
 (function() {

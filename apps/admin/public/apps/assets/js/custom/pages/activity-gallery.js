@@ -43,14 +43,46 @@ $(document).ready(function () {
 
     // Drag and drop UI feedback
     const uploadArea = $('#uploadArea');
+    
     uploadArea.on('dragover', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        uploadArea.addClass('border-primary').removeClass('border-dashed');
+    });
+
+    uploadArea.on('dragleave', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        $inputFoto.val('');
-        $preview.addClass('d-none');
-        $placeholder.removeClass('d-none');
-        $uploadArea.removeClass('border-primary').addClass('border-dashed');
+        uploadArea.removeClass('border-primary').addClass('border-dashed');
+    });
+
+    uploadArea.on('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadArea.removeClass('border-primary').addClass('border-dashed');
+        
+        const files = e.originalEvent.dataTransfer.files;
+        if (files && files.length > 0) {
+            const file = files[0];
+            
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran file maksimal 2MB.');
+                return;
+            }
+            
+            // Set the file to the input element programmatically
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            $('#inputFoto')[0].files = dataTransfer.files;
+            
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                $('#uploadPlaceholder').addClass('d-none');
+                $('#uploadPreview').removeClass('d-none');
+                $('#uploadPreview img').attr('src', ev.target.result);
+            }
+            reader.readAsDataURL(file);
+        }
     });
 
     // Reset Modal on Close
@@ -293,8 +325,40 @@ function renderGallery(data) {
     }
 
     $empty.addClass('d-none');
-    $carousel.removeClass('d-none');
     $grid.removeClass('d-none');
+
+    // Populate Carousel (Latest 3 items)
+    const carouselData = data.slice(0, 3);
+    const $carouselInner = $carousel.find('.carousel-inner');
+    const $carouselIndicators = $carousel.find('.carousel-indicators');
+    
+    $carouselInner.empty();
+    $carouselIndicators.empty();
+    
+    if (carouselData.length > 0) {
+        $carousel.removeClass('d-none');
+        carouselData.forEach((item, index) => {
+            const activeClass = index === 0 ? 'active' : '';
+            
+            // Indicator
+            $carouselIndicators.append(`
+                <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="${index}" class="${activeClass}" aria-current="${index === 0 ? 'true' : 'false'}" aria-label="Slide ${index + 1}"></button>
+            `);
+            
+            // Slide
+            $carouselInner.append(`
+                <div class="carousel-item ${activeClass} h-100">
+                    <img src="${item.img}" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%25%22%20height%3D%22100%25%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20role%3D%22img%22%20aria-label%3D%22No%20Image%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%20focusable%3D%22false%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e2e8f0%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22600%22%20font-size%3D%221.25rem%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3ENO%20IMAGE%3C%2Ftext%3E%3C%2Fsvg%3E'" class="d-block w-100" style="object-fit: cover; height: 400px;" alt="${item.title}">
+                    <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.5); border-radius: 8px; padding: 1rem; bottom: 20px;">
+                        <h5 class="text-white mb-1 fw-bold">${item.title}</h5>
+                        <p class="mb-0 text-light">${item.date_formatted}</p>
+                    </div>
+                </div>
+            `);
+        });
+    } else {
+        $carousel.addClass('d-none');
+    }
 
     data.forEach((item) => {
         const html = `
@@ -309,7 +373,7 @@ function renderGallery(data) {
                      data-desc="${item.desc}">
                      
                     <div class="gallery-card-img-wrapper">
-                        <img src="${item.img}" alt="${item.title}" class="gallery-card-img" loading="lazy">
+                        <img src="${item.img}" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%25%22%20height%3D%22100%25%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20role%3D%22img%22%20aria-label%3D%22No%20Image%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%20focusable%3D%22false%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e2e8f0%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22600%22%20font-size%3D%221.25rem%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3ENO%20IMAGE%3C%2Ftext%3E%3C%2Fsvg%3E'" alt="${item.title}" class="gallery-card-img" loading="lazy">
                         <div class="gallery-card-overlay">
                             <i class="bi bi-zoom-in gallery-card-overlay-icon"></i>
                         </div>

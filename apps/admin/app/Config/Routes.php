@@ -52,6 +52,8 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
 
     // Kalender Kegiatan
     $routes->get('/calendar-event', 'Apps\CalendarEventController::index');
+    $routes->get('/api/calendar-event/events', 'Apps\CalendarEventController::getEvents');
+    $routes->get('/api/calendar-event/kpi', 'Apps\CalendarEventController::getKpi');
 
     // $routes->post('/fetch-nspk-data', 'Apps\FetchData::fetchNSPKData');
     // $routes->post('/fetch-integrasi-data', 'Apps\FetchData::fetchIntegrasiData');

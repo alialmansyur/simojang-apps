@@ -10,7 +10,7 @@
 	<link rel="shortcut icon" href="<?= asset_url('apps/assets/images/logo/favicon.png') ?>" type="image/png">
 	<link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/app.css') ?>">
 	<link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/app-dark.css') ?>">
-	<link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/custom.css') ?>">
+	<link rel="stylesheet" href="<?= asset_url('apps/assets/css/main/custom.css?v=1.0.4') ?>">
 	<link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/bootstrap-icons/font/bootstrap-icons.css') ?>">
 	<link rel="stylesheet" href="<?= asset_url('apps/assets/extensions/toastify-js/src/toastify.css') ?>">
 

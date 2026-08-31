@@ -82,6 +82,41 @@ class MenuModel extends Model
         return $this->db->query($sql, [(int) $parentId])->getResultArray();
     }
 
+    public function getAllSubMenus(?int $userId = null)
+    {
+        if ($userId !== null) {
+            $roleId = $this->getRoleIdByUserId((int) $userId);
+            if ($roleId > 0 && $this->tableExists('auth_role_permissions')) {
+                $sql = "SELECT p.*
+                        FROM auth_role_permissions rp
+                        INNER JOIN auth_permissions p ON p.id = rp.permission_id
+                        WHERE rp.role_id = ?
+                          AND p.parent_id IS NOT NULL
+                          AND p.is_show <> 0
+                          AND COALESCE(rp.is_read, 0) = 1
+                        ORDER BY p.is_order ASC";
+                $results = $this->db->query($sql, [$roleId])->getResultArray();
+                if (!empty($results)) {
+                    return $results;
+                }
+            }
+
+            // Fallback ke auth_users_permissions
+            $sql = "SELECT p.*
+                    FROM auth_users_permissions up
+                    INNER JOIN auth_permissions p ON p.id = up.permission_id
+                    WHERE up.user_id = ?
+                      AND p.parent_id IS NOT NULL
+                      AND p.is_show <> 0
+                      AND COALESCE(up.is_read, 0) = 1
+                    ORDER BY p.is_order ASC";
+            return $this->db->query($sql, [(int) $userId])->getResultArray();
+        }
+
+        $sql = "SELECT * FROM auth_permissions WHERE parent_id IS NOT NULL AND is_show <> 0 ORDER BY is_order ASC";
+        return $this->db->query($sql)->getResultArray();
+    }
+
     public function getPermissions($userId, $menuId)
     {
         $userId = (int) $userId;

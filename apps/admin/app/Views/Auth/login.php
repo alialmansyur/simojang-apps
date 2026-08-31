@@ -26,7 +26,7 @@
             <div class="col-lg-4 col-12 position-relative z-1">
                 <div id="auth-left">
                     <div class="auth-logo mb-4 stagger-item" style="animation-delay: 0.1s;">
-                        <a href="#"><img src="<?= base_url('apps/');?>assets/images/logo/logo.png" alt="Logo"></a>
+                        <a href="#"><img src="<?= asset_url('apps/assets/images/logo/logo.png') ?>" alt="Logo"></a>
                     </div>
 
                     <h1 class="auth-title mb-1 stagger-item" style="animation-delay: 0.2s;">Simojang</h1>

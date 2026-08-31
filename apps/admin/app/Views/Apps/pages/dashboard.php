@@ -2,7 +2,7 @@
 
 <?= $this->section('style'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/dashboard.css?v=' . time()) ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/dashboard.css?v=1.0.0') ?>">
 <?= $this->endSection(); ?>
 
 <?= $this->section('content'); ?>
@@ -87,5 +87,5 @@
 <?= $this->endSection(); ?>
 
 <?= $this->section('scripts'); ?>
-<script src="<?= asset_url('apps/assets/js/custom/pages/dashboard.js?v=' . time()) ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/dashboard.js?v=1.0.0') ?>"></script>
 <?= $this->endSection(); ?>

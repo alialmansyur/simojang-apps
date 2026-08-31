@@ -97,6 +97,11 @@
         background: transparent;
         padding: 1.5rem;
         min-height: 600px;
+        overflow-x: auto;
+        width: 100%;
+    }
+    #calendar {
+        min-width: 700px;
     }
     .fc-theme-standard .fc-scrollgrid {
         border: 1px solid #e2e8f0;
@@ -338,6 +343,11 @@
         font-weight: 500;
     }
     
+    #modalEventDetail .text-end {
+        word-break: break-word;
+        text-align: right;
+    }
+    
     /* Toolbar Filters */
     .filter-toolbar {
         margin-bottom: 1.5rem;
@@ -364,20 +374,51 @@
     #modalEventDetail .text-muted {
         color: #94a3b8 !important;
     }
+    /* Responsive Fixes */
+    .page-content {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+    .tw-wrap {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden;
+    }
+    .tw-title, .tw-subtitle {
+        word-wrap: break-word;
+        white-space: normal !important;
+    }
+    .tw-head .form-select {
+        max-width: 100%;
+    }
+    @media (max-width: 576px) {
+        .tw-head {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+        .tw-head .d-flex {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            width: 100%;
+        }
+        .tw-head select {
+            width: 100% !important;
+        }
+    }
 </style>
 <?= $this->endSection(); ?>
 
 <?= $this->section('content'); ?>
-<main class="page-content" aria-labelledby="calendarPageTitle">
+<main class="page-content" aria-labelledby="calendarPageTitle" style="overflow-x: hidden;">
     <div class="text-start tw-wrap container-fluid">
         
         <!-- Header -->
         <div class="row align-items-center mt-4 mb-3" role="banner">
             <div class="col-12 col-md-8 text-start">
-                <h1 class="tw-title lh-1" id="calendarPageTitle" style="color: #1a202c; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem;">
+                <h1 class="tw-title lh-1" id="calendarPageTitle" style="color: #1a202c; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; white-space: normal;">
                     Kalender Kegiatan
                 </h1>
-                <p class="tw-subtitle text-secondary mb-0" style="font-size: 1rem; font-weight: 400;">
+                <p class="tw-subtitle text-secondary mb-0" style="font-size: 1rem; font-weight: 400; white-space: normal;">
                     Pantau dan kelola seluruh jadwal kegiatan instansi secara menyeluruh.
                 </p>
             </div>
@@ -390,7 +431,7 @@
 
         <!-- Filter Toolbar -->
         <div class="tw-head d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4" role="toolbar">
-            <div class="flex-grow-1" style="max-width: 450px;">
+            <div class="flex-grow-1" style="max-width: 450px; width: 100%;">
                 <div class="position-relative">
                     <i class="bi bi-search position-absolute text-muted" style="left: 1.2rem; top: 50%; transform: translateY(-50%); margin-top: -1px; line-height: 1; pointer-events: none;"></i>
                     <input type="text" id="searchEvent" class="form-control tw-search-input" placeholder="Cari kegiatan, lokasi..." style="padding-left: 2.8rem; padding-top: 0.65rem; padding-bottom: 0.65rem;">

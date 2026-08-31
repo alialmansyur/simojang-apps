@@ -56,8 +56,16 @@ abstract class BaseController extends Controller
         $userId = session()->get('userid');
         if ($userId) { 
             $menus = $this->MenuModel->getMenusPermissions($userId);
+            
+            // Fix N+1 query: fetch all submenus once
+            $allSubmenus = $this->MenuModel->getAllSubMenus((int) $userId);
+            $submenusByParent = [];
+            foreach ($allSubmenus as $sub) {
+                $submenusByParent[(int) $sub['parent_id']][] = $sub;
+            }
+
             foreach ($menus as &$menu) {
-                $menu['submenus'] = $this->MenuModel->getSubMenus((int) $menu['id'], (int) $userId);
+                $menu['submenus'] = $submenusByParent[(int) $menu['id']] ?? [];
             }
             $this->menus = $menus;
         }

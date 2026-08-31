@@ -18,16 +18,14 @@ $(document).ready(function () {
         $greetingEl.text(`${greeting}, silakan masuk untuk mengelola layanan dan aktivitas harian.`);
     }
 
-    $(function () {
-        $('#togglePassword').on('click', function () {
-            const $password = $('#passwordnew');
-            const $icon = $(this).find('i');
-            const isHidden = $password.attr('type') === 'password';
-            $password.attr('type', isHidden ? 'text' : 'password');
-            $icon.toggleClass('bi-eye bi-eye-slash');
-            $(this).attr('aria-label', isHidden ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
-        });
-    });    
+    $('#togglePassword').on('click', function () {
+        const $password = $('#passwordnew');
+        const $icon = $(this).find('i');
+        const isHidden = $password.attr('type') === 'password';
+        $password.attr('type', isHidden ? 'text' : 'password');
+        $icon.toggleClass('bi-eye bi-eye-slash');
+        $(this).attr('aria-label', isHidden ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+    });
 
     const $password = $('#passwordnew');
     const $capsHint = $('#capsLockHint');

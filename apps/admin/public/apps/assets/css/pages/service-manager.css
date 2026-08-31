@@ -137,7 +137,7 @@
 
 .tree-indent {
     display: inline-block;
-    width: 22px;
+    width: 28px;
     height: 100%;
     flex-shrink: 0;
 }
@@ -147,7 +147,6 @@
     align-items: center;
     justify-content: center;
     color: #64748b;
-    font-family: monospace, sans-serif;
     font-size: 1.05rem;
     line-height: 1;
     user-select: none;
@@ -203,7 +202,7 @@
     width: 22px;
     height: 22px;
     flex-shrink: 0;
-    margin-right: 0.4rem;
+    margin-right: 0.5rem;
 }
 
 .tree-icon {
@@ -260,7 +259,7 @@
 }
 
 .url-code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-family: inherit !important;
     font-size: 0.82rem;
     background-color: #f1f5f9;
     color: #0f172a;
@@ -411,6 +410,12 @@
     font-weight: 600 !important;
     padding-left: 0.85rem !important;
     line-height: 40px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: block !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
 }
 
 .select2-container--bootstrap-5 .select2-dropdown {

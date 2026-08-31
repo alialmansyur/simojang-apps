@@ -293,13 +293,11 @@ class SettingManagerController extends BaseController
 
     public function serviceManager()
     {
-        $pegawaiList = $this->manager->getServicePegawaiList('', 0);
         $selectedNip = trim((string) ($this->request->getGet('nip') ?? ''));
         $selectedPegawai = $selectedNip !== '' ? $this->manager->getServicePegawaiDetail($selectedNip) : null;
 
         return $this->renderView('Apps/pages/data/service_manager', [
             'title'           => 'Kelola Akses Layanan',
-            'pegawaiList'     => $pegawaiList,
             'selectedNip'     => $selectedNip,
             'selectedPegawai' => $selectedPegawai,
         ]);

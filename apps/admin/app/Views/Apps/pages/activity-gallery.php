@@ -3,6 +3,39 @@
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=99') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/activity-gallery.css?v=99') ?>">
+<style>
+    /* Responsive Fixes */
+    .page-content {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+    .tw-wrap {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden;
+    }
+    .tw-title, .tw-subtitle {
+        word-wrap: break-word;
+        white-space: normal !important;
+    }
+    .tw-head .form-select, .tw-head .form-control {
+        max-width: 100%;
+    }
+    @media (max-width: 576px) {
+        .tw-head {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+        .tw-head .d-flex {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            width: 100%;
+        }
+        .tw-head select, .tw-head input[type="month"], .tw-head button {
+            width: 100% !important;
+        }
+    }
+</style>
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
 <main class="page-content" aria-labelledby="galleryPageTitle">
@@ -126,7 +159,7 @@
                         <div class="col-12 mt-3">
                             <div class="d-flex justify-content-between align-items-end mb-1">
                                 <label class="form-label d-block fw-bold mb-0" style="font-size: 0.9rem; color: #1a202c;">Unggah Foto Kegiatan <span class="text-danger">*</span></label>
-                                <span class="text-muted" style="font-size: 0.75rem;">Maksimal 1 MB (.jpg, .png)</span>
+                                <span class="text-muted" style="font-size: 0.75rem;">Maksimal 2 MB (.jpg, .png)</span>
                             </div>
                             <div class="upload-area text-center p-4 position-relative flat-upload" id="uploadArea">
                                 <input type="file" id="inputFoto" name="foto" class="position-absolute w-100 h-100 top-0 start-0 opacity-0" style="cursor: pointer;" accept="image/png, image/jpeg, image/jpg, image/webp">
@@ -164,7 +197,7 @@
             </div>
             <div class="modal-body p-0 d-flex flex-column">
                 <div class="w-100 bg-light d-flex align-items-center justify-content-center" style="min-height: 40vh; max-height: 70vh;">
-                    <img src="" id="viewGalleryImg" class="img-fluid w-100 h-100" style="object-fit: contain;" alt="Gallery">
+                    <img src="" id="viewGalleryImg" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%25%22%20height%3D%22100%25%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20role%3D%22img%22%20aria-label%3D%22No%20Image%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%20focusable%3D%22false%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e2e8f0%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22600%22%20font-size%3D%221.25rem%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3ENO%20IMAGE%3C%2Ftext%3E%3C%2Fsvg%3E'" class="img-fluid w-100 h-100" style="object-fit: contain;" alt="Gallery">
                 </div>
                 <div class="p-4 bg-white border-top">
                     <div class="d-flex align-items-center gap-3 mb-2">

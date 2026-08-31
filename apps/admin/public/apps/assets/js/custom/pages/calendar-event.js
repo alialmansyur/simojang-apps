@@ -57,10 +57,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function fetchData() {
         if (typeof showLoading === 'function') showLoading('Memproses data...');
 
-        // Fetch both KPI and Events
         Promise.all([
-            fetch('https://kanreg3.id/simanja-api/public/dashboard/kpi').then(res => res.json()),
-            fetch('https://kanreg3.id/simanja-api/public/dashboard/events').then(res => res.json())
+            fetch(AppConfig.initGlobal + 'api/calendar-event/kpi').then(res => res.json()),
+            fetch(AppConfig.initGlobal + 'api/calendar-event/events').then(res => res.json())
         ])
         .then(([kpiData, eventsData]) => {
             if (typeof hideLoading === 'function') hideLoading();

@@ -16,12 +16,7 @@ use DateTime;
 class FetchData extends BaseController
 {
     use ResponseTrait;
-    public function __construct()
-    {
-        $this->apps = new AppsModel();
-        $sess = session()->get();
-
-    }
+    // Constructor removed to avoid duplicate initialization of $this->apps which is handled by BaseController::initController
 
     public function fetchLayanan(){
         $sess = session()->get();

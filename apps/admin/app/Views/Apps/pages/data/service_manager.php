@@ -4,11 +4,17 @@
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=99') ?>">
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/service-manager.css?v=' . time()) ?>">
+<style>
+    body, html {
+        overflow-x: hidden !important;
+        width: 100%;
+    }
+</style>
 <?= $this->endSection(); ?>
 
 <?= $this->section('content'); ?>
 <main class="page-content" aria-labelledby="servicePageTitle">
-    <div class="text-start tw-wrap container-fluid service-manager-wrap">
+    <div class="text-start tw-wrap container-fluid service-manager-wrap" style="min-width: 0;">
         
         <!-- Header -->
         <div class="row align-items-center mt-4 mb-3" role="banner">
@@ -20,12 +26,12 @@
                     Kelola izin akses modul layanan SIMOJANG per pegawai secara terpusat, konsisten, dan terintegrasi.
                 </p>
             </div>
-            <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0 d-flex justify-content-md-end gap-2">
-                <a href="<?= base_url('manage-role') ?>" class="btn btn-light fw-bold px-3 d-inline-flex align-items-center justify-content-center gap-2" style="height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; line-height: 1; color: #0f172a;">
+            <div class="col-12 col-md-4 mt-3 mt-md-0 d-flex flex-column flex-sm-row justify-content-md-end gap-2">
+                <a href="<?= base_url('manage-role') ?>" class="btn btn-light fw-bold px-3 d-inline-flex align-items-center justify-content-center gap-2 w-100 w-sm-auto" style="height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; line-height: 1; color: #0f172a;">
                     <i class="bi bi-shield-lock-fill d-inline-flex align-items-center" style="font-size: 1rem; line-height: 1; color: #1040c1;"></i>
                     <span>Role Manager</span>
                 </a>
-                <a href="<?= base_url('manage-user') ?>" class="btn btn-light fw-bold px-3 d-inline-flex align-items-center justify-content-center gap-2" style="height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; line-height: 1; color: #0f172a;">
+                <a href="<?= base_url('manage-user') ?>" class="btn btn-light fw-bold px-3 d-inline-flex align-items-center justify-content-center gap-2 w-100 w-sm-auto" style="height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; line-height: 1; color: #0f172a;">
                     <i class="bi bi-people-fill d-inline-flex align-items-center" style="font-size: 1rem; line-height: 1; color: #1040c1;"></i>
                     <span>User Manager</span>
                 </a>
@@ -34,23 +40,21 @@
 
         <!-- Toolbar -->
         <div class="tw-head d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4" role="toolbar">
-            <div class="d-flex flex-column flex-sm-row flex-wrap align-items-stretch align-items-sm-center gap-2 flex-grow-1" style="max-width: 680px;">
+            <div class="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 flex-grow-1" style="max-width: 680px; min-width: 0;">
                 <!-- Pegawai Dropdown Selector -->
-                <div style="min-width: 260px; max-width: 320px;" class="flex-grow-1">
-                    <select class="form-select tw-search-input fw-bold d-flex align-items-center" id="selectPegawai" style="height: 42px; padding-top: 0.5rem; padding-bottom: 0.5rem; font-size: 0.92rem; color: #0f172a;">
-                        <option value="">-- Pilih Pegawai --</option>
-                        <?php if (!empty($pegawaiList)): ?>
-                            <?php foreach ($pegawaiList as $p): ?>
-                                <option value="<?= esc($p['nip']) ?>" <?= (!empty($selectedNip) && $selectedNip === $p['nip']) ? 'selected' : '' ?> data-nama="<?= esc($p['nama']) ?>" data-unit="<?= esc($p['unit_kerja_nama']) ?>">
-                                    <?= esc($p['nama']) ?> (<?= esc($p['nip']) ?>)
-                                </option>
-                            <?php endforeach; ?>
+                <div class="flex-grow-1" style="min-width: 0;">
+                    <select class="form-select tw-search-input fw-bold w-100" id="selectPegawai" style="height: 42px; padding-top: 0.5rem; padding-bottom: 0.5rem; font-size: 0.92rem; color: #0f172a;">
+                        <option value="">-- Cari & Pilih Pegawai --</option>
+                        <?php if (!empty($selectedPegawai)): ?>
+                            <option value="<?= esc($selectedPegawai['nip']) ?>" selected data-nama="<?= esc($selectedPegawai['nama']) ?>" data-unit="<?= esc($selectedPegawai['unit_kerja_nama']) ?>">
+                                <?= esc($selectedPegawai['nama']) ?> (<?= esc($selectedPegawai['nip']) ?>) - <?= esc($selectedPegawai['unit_kerja_nama'] ?? '-') ?>
+                            </option>
                         <?php endif; ?>
                     </select>
                 </div>
 
                 <!-- Search Input for Tree Hierarchy -->
-                <div class="position-relative flex-grow-1 d-flex align-items-center">
+                <div class="position-relative flex-grow-1 d-flex align-items-center" style="min-width: 0;">
                     <span class="position-absolute start-0 top-0 bottom-0 d-flex align-items-center justify-content-center ps-3 text-muted" style="pointer-events: none; width: 42px; z-index: 5;">
                         <i class="bi bi-search" style="font-size: 0.95rem; line-height: 1; color: #64748b;"></i>
                     </span>
@@ -59,7 +63,7 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="d-flex flex-column flex-sm-row flex-wrap align-items-stretch align-items-sm-center gap-2">
+            <div class="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 flex-shrink-0">
                 <button type="button" class="btn btn-light d-inline-flex align-items-center justify-content-center gap-2 px-3" id="btnOpenPegawaiModal" style="height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; font-weight: 600; font-size: 0.95rem; line-height: 1; color: #0f172a;">
                     <i class="bi bi-people d-inline-flex align-items-center" style="font-size: 1.1rem; line-height: 1; color: #1040c1;"></i>
                     <span>Daftar Pegawai</span>
@@ -78,11 +82,11 @@
         <!-- Service Summary Banner Card -->
         <div class="service-summary-card mb-4 <?= empty($selectedNip) ? 'd-none' : '' ?>" id="serviceSummaryCard">
             <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3" style="min-width: 0;">
                     <div class="service-banner-icon-box">
                         <i class="bi bi-person-workspace" style="line-height: 1;"></i>
                     </div>
-                    <div>
+                    <div style="min-width: 0;">
                         <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
                             <h4 class="mb-0 fw-bold" id="cardPegawaiName" style="color: #0f172a; font-size: 1.25rem;">
                                 <?= esc($selectedPegawai['nama'] ?? 'Pilih Pegawai') ?>
@@ -122,7 +126,7 @@
             <!-- Prompt State when no Pegawai is selected -->
             <div class="tree-select-prompt text-center py-5 <?= !empty($selectedNip) ? 'd-none' : '' ?>" id="treeSelectPrompt">
                 <div class="d-flex flex-column align-items-center justify-content-center text-center my-4 tw-animate-entry">
-                    <img src="<?= asset_url('apps/assets/images/empty-content-profile.png') ?>" alt="Pilih Pegawai" style="max-width: 280px; margin-bottom: 1.5rem;">
+                    <img src="<?= asset_url('apps/assets/images/empty-content-profile.png') ?>" alt="Pilih Pegawai" style="max-width: 280px; width: 100%; height: auto; margin-bottom: 1.5rem;">
                     <h5 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.35rem;">Pilih Pegawai Terlebih Dahulu</h5>
                     <p class="small mb-3" style="max-width: 460px; margin: 0 auto; color: #475569; line-height: 1.6; font-size: 0.95rem;">
                         Silakan pilih pegawai melalui dropdown pencarian di atas atau klik tombol <strong>Daftar Pegawai</strong> untuk melihat dan mengelola hak akses modul layanannya.
@@ -169,7 +173,7 @@
             <!-- Empty Search State -->
             <div class="py-5 text-center d-none" id="treeEmptyState">
                 <div class="d-flex flex-column align-items-center justify-content-center text-center my-4 tw-animate-entry">
-                    <img src="<?= asset_url('apps/assets/images/empty-content-profile.png') ?>" alt="Tidak Ditemukan" style="max-width: 280px; margin-bottom: 1.5rem;">
+                    <img src="<?= asset_url('apps/assets/images/empty-content-profile.png') ?>" alt="Pilih Pegawai" style="max-width: 280px; width: 100%; height: auto; margin-bottom: 1.5rem;">
                     <h5 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.35rem;" id="treeEmptyTitle">Layanan Tidak Ditemukan</h5>
                     <p class="small mb-3" style="max-width: 450px; margin: 0 auto; color: #475569; line-height: 1.6; font-size: 0.95rem;" id="treeEmptyDesc">
                         Maaf, kami tidak dapat menemukan data layanan yang cocok dengan kata kunci pencarian Anda.
@@ -241,14 +245,7 @@
                                 Salin Izin Dari Pegawai Sumber <span class="text-danger">*</span>
                             </label>
                             <select class="form-select" id="selectSourcePegawai" name="source_nip" required style="color: #0f172a;">
-                                <option value="">-- Pilih Pegawai Sumber --</option>
-                                <?php if (!empty($pegawaiList)): ?>
-                                    <?php foreach ($pegawaiList as $p): ?>
-                                        <option value="<?= esc($p['nip']) ?>">
-                                            <?= esc($p['nama']) ?> (<?= esc($p['nip']) ?>) - <?= esc($p['unit_kerja_nama']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
+                                <option value="">-- Cari & Pilih Pegawai Sumber --</option>
                             </select>
                         </div>
                         <div class="col-12">

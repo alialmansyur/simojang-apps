@@ -87,11 +87,29 @@ class ServicePermissionModel extends Model
         $rows = $builder->get()->getResultArray();
         $totalActiveServices = $this->getTotalActiveServicesCount();
 
+        // Prefetch unit kerja map to prevent N+1 queries
+        $unitKerjaRows = $this->db->table('data_pegawai_unit_kerja')->select('id, nama')->get()->getResultArray();
+        $ukMap = [];
+        foreach ($unitKerjaRows as $uk) {
+            $ukMap[(int) $uk['id']] = $uk['nama'];
+        }
+
         foreach ($rows as &$row) {
             $row['total_allowed_services'] = (int) ($row['total_allowed_services'] ?? 0);
             $row['total_active_services'] = $totalActiveServices;
             if (empty($row['unit_kerja_nama'])) {
-                $row['unit_kerja_nama'] = $this->resolveUnitKerjaNamaMulti((string) ($row['unit_kerja_id'] ?? ''));
+                $unitIds = array_map('intval', array_filter(explode(',', (string) ($row['unit_kerja_id'] ?? '')), 'is_numeric'));
+                if (empty($unitIds)) {
+                    $row['unit_kerja_nama'] = '-';
+                } else {
+                    $names = [];
+                    foreach ($unitIds as $ukId) {
+                        if (isset($ukMap[$ukId])) {
+                            $names[] = $ukMap[$ukId];
+                        }
+                    }
+                    $row['unit_kerja_nama'] = empty($names) ? '-' : implode(', ', $names);
+                }
             }
         }
         unset($row);
@@ -523,14 +541,21 @@ class ServicePermissionModel extends Model
         $allAllowedServiceIds = $nip !== '' ? $this->getUserAllowedServiceIds($nip) : [];
         $allowedMap = array_flip($allAllowedServiceIds);
 
+        // Prefetch services to avoid N+1 query
+        $allServices = $this->db->table('data_timkerja_layanan')
+            ->select('id, timkerja_id')
+            ->where('is_show', 1)
+            ->get()
+            ->getResultArray();
+
+        $servicesByTk = [];
+        foreach ($allServices as $s) {
+            $servicesByTk[(int) $s['timkerja_id']][] = $s;
+        }
+
         foreach ($timkerjaList as &$tk) {
             $tkId = (int) $tk['id'];
-            $services = $this->db->table('data_timkerja_layanan')
-                ->select('id')
-                ->where('timkerja_id', $tkId)
-                ->where('is_show', 1)
-                ->get()
-                ->getResultArray();
+            $services = $servicesByTk[$tkId] ?? [];
 
             $totalLayanan = count($services);
             $accessibleLayanan = 0;
@@ -568,15 +593,13 @@ class ServicePermissionModel extends Model
             ->select([
                 'a.*',
                 'd.nama AS timkerja',
-                "SUM(CASE WHEN c.created_at >= CURDATE() AND c.created_at < CURDATE() + INTERVAL 1 DAY THEN 1 ELSE 0 END) AS uploads_today",
-                "IF(SUM(CASE WHEN c.created_at >= CURDATE() AND c.created_at < CURDATE() + INTERVAL 1 DAY THEN 1 ELSE 0 END) > 0, 1, 0) AS has_today",
-                "MAX(c.created_at) AS last_upload_at",
-            ])
-            ->join('activity_daily_logs c', 'c.layanan_id = a.id', 'left')
+                "(SELECT COUNT(id) FROM activity_daily_logs WHERE layanan_id = a.id AND created_at >= CURDATE() AND created_at < CURDATE() + INTERVAL 1 DAY) AS uploads_today",
+                "(SELECT IF(COUNT(id) > 0, 1, 0) FROM activity_daily_logs WHERE layanan_id = a.id AND created_at >= CURDATE() AND created_at < CURDATE() + INTERVAL 1 DAY) AS has_today",
+                "(SELECT MAX(created_at) FROM activity_daily_logs WHERE layanan_id = a.id) AS last_upload_at",
+            ], false)
             ->join('data_timkerja d', 'd.id = a.timkerja_id', 'left')
             ->where('a.timkerja_id', $tw->id)
             ->where('a.is_show', 1)
-            ->groupBy('a.id')
             ->orderBy('a.id', 'ASC');
 
         $keyword = trim($keyword);

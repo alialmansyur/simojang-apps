@@ -62,7 +62,7 @@ function getSkeletonMarkup() {
 function renderEmptyLottie() {
     $('#twEmptyLottie').html(`
 <div class="service-ui-empty-panel text-center py-5">
-    <img src="${window.AppConfig ? AppConfig.initGlobal : '/'}apps/assets/media/illustrations/empty-content-profile.png" alt="Empty" class="img-fluid mb-3" style="max-width: 180px; opacity: 0.85;">
+    <img src="${window.AppConfig ? AppConfig.initGlobal : '/'}apps/assets/images/empty-content-profile.png" alt="Empty" class="img-fluid mb-3" style="max-width: 180px; opacity: 0.85;">
     <h5 class="fw-bolder text-dark mb-1">Pencarian Tidak Ditemukan</h5>
     <p class="text-muted mb-0 mx-auto" style="max-width: 400px; font-size: .95rem;">
         Maaf, kami tidak dapat menemukan data yang Anda cari. Silakan periksa kembali kata kunci atau filter pencarian Anda.
@@ -97,7 +97,8 @@ async function loadData() {
     showFetchBackdrop();
 
     try {
-        const response = await fetch(AppConfig.initGlobal + 'fetch-timkerja', {
+        const baseUrl = window.AppConfig ? AppConfig.initGlobal : '/';
+        const response = await fetch(baseUrl + 'fetch-timkerja', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -164,7 +165,8 @@ function pageLoaded(data) {
             : `<span class="tw-access-icon icon-locked" title="Layanan tidak dapat diakses"><i class="bi bi-lock-fill"></i></span>`;
 
 
-        const cardLinkHref = hasAccess ? (AppConfig.initGlobal + "timkerja-layanan/" + value.uid) : "javascript:void(0)";
+        const baseUrl = window.AppConfig ? AppConfig.initGlobal : '/';
+        const cardLinkHref = hasAccess ? (baseUrl + "timkerja-layanan/" + value.uid) : "javascript:void(0)";
         const tooltipAttr = hasAccess ? '' : `data-bs-toggle="tooltip" data-bs-placement="top" title="Layanan tidak dapat diakses. Anda belum memiliki hak akses pada modul di tim kerja ini."`;
 
         const card = `

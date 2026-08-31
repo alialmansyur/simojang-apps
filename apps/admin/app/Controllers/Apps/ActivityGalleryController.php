@@ -80,12 +80,12 @@ class ActivityGalleryController extends BaseController
 
         // Only require foto if it's a new insert
         if (empty($id)) {
-            $rules['foto'] = 'uploaded[foto]|max_size[foto,1024]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png,image/webp]';
+            $rules['foto'] = 'uploaded[foto]|max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png,image/webp]';
         } else {
             // Allow empty if updating without changing photo, but validate if exists
             $file = $this->request->getFile('foto');
             if ($file && $file->isValid()) {
-                $rules['foto'] = 'max_size[foto,1024]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png,image/webp]';
+                $rules['foto'] = 'max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png,image/webp]';
             }
         }
 

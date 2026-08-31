@@ -185,7 +185,7 @@ class AppsModel extends Model
     public function progressLayananDaily($param){
         return $this->db->query("
             SELECT
-            SUM(total) total, SUM(uploaded) uploaded, ROUND((SUM(uploaded)/SUM(total)*100),1) percent
+            SUM(total) total, SUM(uploaded) uploaded, ROUND((SUM(uploaded)/NULLIF(SUM(total), 0)*100),1) percent
             FROM (
                 SELECT COUNT(*) AS total, 0 uploaded
                 FROM data_timkerja a

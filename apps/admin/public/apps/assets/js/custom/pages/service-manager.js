@@ -12,21 +12,70 @@ $(document).ready(function () {
     let isTreeLoading = false;
     const collapsedNodes = new Set();
 
-    // Initialize Select2 if available
     if ($.fn.select2) {
         $('#selectPegawai').select2({
             theme: 'bootstrap-5',
-            placeholder: '-- Pilih Pegawai --',
+            placeholder: '-- Cari & Pilih Pegawai --',
             allowClear: true,
-            width: '100%'
+            width: '100%',
+            ajax: {
+                url: AppConfig.initGlobal + 'api/manage-service/pegawai-list',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term || '',
+                        limit: 20
+                    };
+                },
+                processResults: function (data) {
+                    let results = [];
+                    if (data && data.status && data.data) {
+                        results = data.data.map(function(item) {
+                            return {
+                                id: item.nip,
+                                text: item.nama + ' (' + item.nip + ') - ' + (item.unit_kerja_nama || '-')
+                            };
+                        });
+                    }
+                    return { results: results };
+                },
+                cache: true
+            },
+            minimumInputLength: 0
         });
 
         $('#selectSourcePegawai').select2({
             theme: 'bootstrap-5',
             dropdownParent: $('#modalCopyPermission'),
-            placeholder: '-- Pilih Pegawai Sumber --',
+            placeholder: '-- Cari & Pilih Pegawai Sumber --',
             allowClear: true,
-            width: '100%'
+            width: '100%',
+            ajax: {
+                url: AppConfig.initGlobal + 'api/manage-service/pegawai-list',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term || '',
+                        limit: 20
+                    };
+                },
+                processResults: function (data) {
+                    let results = [];
+                    if (data && data.status && data.data) {
+                        results = data.data.map(function(item) {
+                            return {
+                                id: item.nip,
+                                text: item.nama + ' (' + item.nip + ') - ' + (item.unit_kerja_nama || '-')
+                            };
+                        });
+                    }
+                    return { results: results };
+                },
+                cache: true
+            },
+            minimumInputLength: 0
         });
     }
 
@@ -535,7 +584,7 @@ $(document).ready(function () {
                         ${
                             isSelected
                                 ? `<span class="badge bg-success-subtle text-success px-3 py-2 fw-bold" style="border: 1px solid #bbf7d0; border-radius: 6px;">Dipilih</span>`
-                                : `<button type="button" class="btn btn-outline-primary btn-sm px-3 fw-bold btn-select-pegawai" data-nip="${escapeHtml(p.nip)}" style="border-radius: 6px;">Pilih</button>`
+                                : `<button type="button" class="btn btn-outline-primary btn-sm px-3 fw-bold btn-select-pegawai" data-nip="${escapeHtml(p.nip)}" data-nama="${escapeHtml(p.nama)}" data-unit="${escapeHtml(p.unit_kerja_nama || '-')}" style="border-radius: 6px;">Pilih</button>`
                         }
                     </div>
                 </div>
@@ -546,8 +595,16 @@ $(document).ready(function () {
 
     $(document).on('click', '.btn-select-pegawai', function () {
         const nip = $(this).data('nip');
+        const nama = $(this).data('nama') || nip;
+        const unit = $(this).data('unit') || '-';
         if (nip) {
-            $('#selectPegawai').val(nip).trigger('change');
+            const $select = $('#selectPegawai');
+            if ($select.find("option[value='" + nip + "']").length) {
+                $select.val(nip).trigger('change');
+            } else {
+                const newOption = new Option(nama + ' (' + nip + ') - ' + unit, nip, true, true);
+                $select.append(newOption).trigger('change');
+            }
             $('#modalPegawaiList').modal('hide');
         }
     });
@@ -625,29 +682,7 @@ $(document).ready(function () {
 
     $('#modalCopyPermission').on('shown.bs.modal', function () {
         const $sourceSelect = $('#selectSourcePegawai');
-        $sourceSelect.empty().append('<option value="">-- Pilih Pegawai Sumber --</option>');
-
-        $('#selectPegawai option').each(function () {
-            const val = $(this).val();
-            const text = $(this).text();
-            if (val && val !== currentNip) {
-                $sourceSelect.append(new Option(text, val));
-            }
-        });
-
-        if ($.fn.select2) {
-            if ($sourceSelect.hasClass('select2-hidden-accessible')) {
-                $sourceSelect.select2('destroy');
-            }
-            $sourceSelect.select2({
-                theme: 'bootstrap-5',
-                dropdownParent: $('#modalCopyPermission'),
-                placeholder: '-- Pilih Pegawai Sumber --',
-                allowClear: true,
-                width: '100%'
-            });
-        }
-        $sourceSelect.val('').trigger('change');
+        $sourceSelect.val(null).trigger('change');
     });
 
     $('#btnConfirmCopy').on('click', function () {

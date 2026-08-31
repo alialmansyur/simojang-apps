@@ -1288,7 +1288,8 @@ body.theme-dark textarea {
     top: 0 !important;
     bottom: 0 !important;
     left: 0 !important;
-    z-index: 1000 !important;
+    z-index: 1020 !important;
+    pointer-events: none;
 }
 
 .sidebar-wrapper {
@@ -1298,6 +1299,7 @@ body.theme-dark textarea {
     background: var(--app-sidebar-bg);
     border-right: 1px solid var(--app-sidebar-border);
     box-sizing: border-box;
+    pointer-events: auto;
     display: flex !important;
     flex-direction: column !important;
     left: 0;
@@ -1381,7 +1383,7 @@ body.theme-dark textarea {
 .sidebar-wrapper .sidebar-toggler.x {
     display: none;
     position: absolute;
-    right: 0;
+    right: 0.8rem;
     top: 50%;
     transform: translateY(-50%);
     z-index: 2;
@@ -1389,14 +1391,13 @@ body.theme-dark textarea {
 
 .sidebar-wrapper .sidebar-toggler.x .sidebar-hide {
     align-items: center;
-    background: var(--app-sidebar-surface-soft);
-    border: 1px solid var(--app-sidebar-border);
-    border-radius: 999px;
+    background: transparent;
+    border: none;
     color: var(--app-sidebar-text);
     display: inline-flex;
-    height: 2.3rem;
     justify-content: center;
-    width: 2.3rem;
+    font-size: 1.75rem;
+    padding: 0;
 }
 
 .sidebar-search {
@@ -2383,7 +2384,7 @@ body.theme-dark .navbar-top .container-fluid {
 /* Flat UI Updates */
 .sidebar-wrapper {
     background-color: #ffffff !important;
-    transition: left 0.5s ease-out, width 0.5s ease-out;
+    transition: left 0.5s ease-out, width 0.5s ease-out, transform 0.5s ease-out;
     box-sizing: border-box !important;
     border: none !important;
     box-shadow: 1px 0 0 0 #ebedf3 !important;
@@ -2674,3 +2675,6 @@ body, #main, .page-content, .main-bg {
 
 .swal2-container { z-index: 99999 !important; }
 
+
+/* Fix sidebar backdrop z-index so it dims the topbar */
+.sidebar-backdrop { z-index: 1010 !important; }

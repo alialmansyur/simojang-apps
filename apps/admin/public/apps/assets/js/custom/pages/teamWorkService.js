@@ -163,7 +163,7 @@ function applyStateToControls() {
 function renderEmptyLottie() {
     $('#twsEmptyLottie').html(`
 <div class="service-ui-empty-panel text-center py-5">
-    <img src="${window.AppConfig ? AppConfig.initGlobal : '/'}apps/assets/media/illustrations/empty-content-profile.png" alt="Empty" class="img-fluid mb-3" style="max-width: 180px; opacity: 0.85;">
+    <img src="${window.AppConfig ? AppConfig.initGlobal : '/'}apps/assets/images/empty-content-profile.png" alt="Empty" class="img-fluid mb-3" style="max-width: 180px; opacity: 0.85;">
     <h5 class="fw-bolder text-dark mb-1">Pencarian Tidak Ditemukan</h5>
     <p class="text-muted mb-0 mx-auto" style="max-width: 400px; font-size: .95rem;">
         Maaf, kami tidak dapat menemukan data yang Anda cari. Silakan periksa kembali kata kunci atau filter pencarian Anda.
@@ -489,12 +489,13 @@ function renderServices(list = []) {
             </button>
         `;
 
+        const baseUrl = window.AppConfig ? AppConfig.initGlobal : '/';
         const card = `
             <div class="${colClass} tw-animate-entry" style="--animation-order: ${index};">
               <div class="card h-100 p-4 rounded-4 border tws-service-card tws-card-soft tws-anim-card overflow-hidden position-relative ${toneClass} ${accessState.cardDisabledClass}"
                   role="button" tabindex="${accessState.canAccess ? '0' : '-1'}"
                   aria-label="Buka layanan ${serviceNameAttr}"
-                  data-url="${accessState.canAccess ? AppConfig.initGlobal + value.url : ''}"
+                  data-url="${accessState.canAccess ? baseUrl + value.url : ''}"
                   data-can-access="${accessState.canAccess ? 1 : 0}"
                   data-service-key="${serviceKey}"
                   data-key="${value.id}"
@@ -537,7 +538,8 @@ async function loadData(options = {}) {
     beginLoadingUi();
 
     try {
-        const response = await fetch(AppConfig.initGlobal + 'fetch-layanan-timkerja', {
+        const baseUrl = window.AppConfig ? AppConfig.initGlobal : '/';
+        const response = await fetch(baseUrl + 'fetch-layanan-timkerja', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -605,7 +607,7 @@ function accessServiceCard($card) {
     const canAccess = Number($card.data('can-access')) === 1;
     const url = $card.data('url');
     const serviceKey = String($card.data('service-key') ?? '');
-    const serviceName = $card.find('.tws-service-name').text().trim() || 'Layanan ini';
+    const serviceName = $card.find('.tws-service-title').text().trim() || 'Layanan ini';
 
     if (!canAccess || !url) {
         if (typeof notifyWarning === 'function') {

@@ -37,6 +37,14 @@ class UserModel extends Model
     protected $updatedField  = 'updated_at';
 
     /**
+     * Mengambil data user berdasarkan username (case-insensitive)
+     */
+    public function getUserByUsername(string $username): ?array
+    {
+        return $this->where('LOWER(username)', strtolower($username))->first();
+    }
+
+    /**
      * Mencatat waktu login terakhir pengguna
      */
     public function recordLastLogin(int $userId): bool
@@ -493,6 +501,19 @@ class UserModel extends Model
                 'message' => 'Terjadi kesalahan saat reset password: ' . $e->getMessage(),
             ];
         }
+    }
+
+    /**
+     * Memperbarui password pengguna (updatePassword)
+     */
+    public function updatePassword(int $id, string $hashedPassword): bool
+    {
+        return (bool) $this->db->table('auth_users')
+            ->where('id', $id)
+            ->update([
+                'password'   => $hashedPassword,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
     }
 
     /**

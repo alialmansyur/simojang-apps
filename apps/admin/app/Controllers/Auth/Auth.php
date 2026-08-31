@@ -42,7 +42,7 @@ class Auth extends ResourceController
         $password = (string) $this->request->getPost('o_password');
         $rememberLogin = (string) $this->request->getPost('remember_login') === '1';
         $model = new UserModel();
-        $userdata = $model->where('LOWER(username)', strtolower($username))->first();
+        $userdata = $model->getUserByUsername($username);
 
         if (!$userdata) {
             return $this->respond([
@@ -155,7 +155,7 @@ class Auth extends ResourceController
         $sess       = session()->get();
         $username   = $sess['username'];
         $sessID     = $sess['userid'];
-        $userdata   = $model->where("username", $username)->first();
+        $userdata   = $model->getUserByUsername($username);
 
         if (!password_verify($password1, $userdata['password'])) {
             return $this->failUnauthorized('Password Lama anda tidak sesuai');
