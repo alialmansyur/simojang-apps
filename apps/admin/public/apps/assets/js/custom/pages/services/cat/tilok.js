@@ -555,7 +555,7 @@ function renderTilokCards(data) {
                         <div class="flex-shrink-0 d-flex align-items-center justify-content-center bg-primary-subtle text-primary" style="width: 48px; height: 48px; border-radius: 12px; transform: none !important;">
                             <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                         </div>
-                        <div>
+                        <div class="text-start">
                             <h6 class="fw-bold mb-1" style="font-size: 1.05rem; color: #1e293b;">${nama}</h6>
                             <div class="d-flex flex-wrap gap-2 align-items-center mt-1">
                                 <span class="text-primary fw-semibold" style="font-size: 0.8rem;">Total Rekap: ${row.total_rekap || 0}</span>
