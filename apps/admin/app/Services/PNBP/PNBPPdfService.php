@@ -111,6 +111,17 @@ class PNBPPdfService
         if (!is_dir($tempDir)) {
             @mkdir($tempDir, 0777, true);
         }
+        if (!is_writable($tempDir)) {
+            $sysTemp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'mpdf';
+            if (!is_dir($sysTemp)) {
+                @mkdir($sysTemp, 0777, true);
+            }
+            if (is_writable($sysTemp)) {
+                $tempDir = $sysTemp;
+            } else {
+                $tempDir = sys_get_temp_dir();
+            }
+        }
 
         $mpdf = new Mpdf([
             'mode'                 => 'utf-8',
