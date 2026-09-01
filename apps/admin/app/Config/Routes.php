@@ -285,6 +285,7 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/kill/data-pnbp-personel', 'Apps\Services\PNBPDocumentController::removePersonel');
     $routes->post('/kill/data-pnbp-item', 'Apps\Services\PNBPDocumentController::removeItem');
     $routes->post('/apps-pnbp/generate-pdf', 'Apps\Services\PNBPDocumentController::generatePdf');
+    $routes->get('/apps-pnbp/diagnose', 'Apps\Services\PNBPDocumentController::diagnose');
     $routes->get('/apps-pnbp/preview-pdf/(:segment)', 'Apps\Services\PNBPDocumentController::previewPdf/$1');
     $routes->get('/apps-pnbp/download-pdf/(:segment)', 'Apps\Services\PNBPDocumentController::downloadPdf/$1');
     // ----------------------------------------------------------------

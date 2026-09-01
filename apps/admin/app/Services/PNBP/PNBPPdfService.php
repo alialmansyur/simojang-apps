@@ -176,7 +176,7 @@ class PNBPPdfService
             'setAutoBottomMargin'  => 'stretch',
             'dpi'                  => 96,
             'img_dpi'              => 96,
-            'default_font'         => 'arial',
+            'default_font'         => 'dejavusanscondensed',
             'default_font_size'    => 10,
             'simpleTables'         => true,
             'packTableData'        => true,

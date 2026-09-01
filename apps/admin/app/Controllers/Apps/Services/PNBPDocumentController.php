@@ -516,6 +516,9 @@ class PNBPDocumentController extends BaseController
         }
 
         try {
+            ini_set('memory_limit', '256M');
+            set_time_limit(30);
+
             $result = $this->pdfService->generatePdfBinary($uid, true);
 
             return $this->response->setJSON([
@@ -525,6 +528,7 @@ class PNBPDocumentController extends BaseController
                 'download' => base_url('apps-pnbp/download-pdf/' . $uid),
             ]);
         } catch (\Throwable $e) {
+            log_message('error', '[PNBP PDF Error] ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return $this->response->setStatusCode(500)->setJSON([
                 'status'  => 'error',
                 'message' => 'Gagal generate PDF: ' . $e->getMessage(),
@@ -538,6 +542,9 @@ class PNBPDocumentController extends BaseController
     public function previewPdf(string $uid)
     {
         try {
+            ini_set('memory_limit', '256M');
+            set_time_limit(30);
+
             $result = $this->pdfService->generatePdfBinary($uid, false);
 
             return $this->response
@@ -545,6 +552,7 @@ class PNBPDocumentController extends BaseController
                 ->setHeader('Content-Disposition', 'inline; filename="' . $result['filename'] . '"')
                 ->setBody($result['binary']);
         } catch (\Throwable $e) {
+            log_message('error', '[PNBP PDF Preview Error] ' . $e->getMessage());
             throw PageNotFoundException::forPageNotFound($e->getMessage());
         }
     }
@@ -555,6 +563,9 @@ class PNBPDocumentController extends BaseController
     public function downloadPdf(string $uid)
     {
         try {
+            ini_set('memory_limit', '256M');
+            set_time_limit(30);
+
             $result = $this->pdfService->generatePdfBinary($uid, true);
 
             return $this->response
@@ -562,7 +573,56 @@ class PNBPDocumentController extends BaseController
                 ->setHeader('Content-Disposition', 'attachment; filename="' . $result['filename'] . '"')
                 ->setBody($result['binary']);
         } catch (\Throwable $e) {
+            log_message('error', '[PNBP PDF Download Error] ' . $e->getMessage());
             throw PageNotFoundException::forPageNotFound($e->getMessage());
         }
+    }
+
+    /**
+     * Endpoint Diagnostic: Test server environment and mPDF health
+     */
+    public function diagnose()
+    {
+        $start = microtime(true);
+        $tests = [];
+
+        $tests['php_version'] = PHP_VERSION;
+        $tests['ext_gd'] = extension_loaded('gd') ? 'OK' : 'MISSING';
+        $tests['ext_mbstring'] = extension_loaded('mbstring') ? 'OK' : 'MISSING';
+        $tests['ext_xml'] = extension_loaded('xml') ? 'OK' : 'MISSING';
+
+        $cacheDir = WRITEPATH . 'cache/mpdf';
+        if (!is_dir($cacheDir)) {
+            @mkdir($cacheDir, 0777, true);
+        }
+        $tests['cache_mpdf_writable'] = is_writable($cacheDir) ? 'YES' : 'NO (' . $cacheDir . ')';
+
+        $uploadDir = WRITEPATH . 'uploads/pnbp';
+        if (!is_dir($uploadDir)) {
+            @mkdir($uploadDir, 0777, true);
+        }
+        $tests['uploads_pnbp_writable'] = is_writable($uploadDir) ? 'YES' : 'NO (' . $uploadDir . ')';
+
+        try {
+            $mpdfStart = microtime(true);
+            $mpdf = $this->pdfService->createMpdfInstance('sp');
+            $mpdf->WriteHTML('<div style="font-family:dejavusans; font-size:14pt; color:#1e293b;"><b>SIMOJANG PNBP mPDF Diagnostic Test</b><p>mPDF is working properly on this server!</p></div>');
+            $pdf = $mpdf->Output('', 'S');
+            $mpdfElapsed = round((microtime(true) - $mpdfStart), 3);
+
+            $tests['mpdf_test'] = 'SUCCESS';
+            $tests['mpdf_output_size'] = strlen($pdf) . ' bytes';
+            $tests['mpdf_render_time'] = $mpdfElapsed . ' seconds';
+        } catch (\Throwable $e) {
+            $tests['mpdf_test'] = 'FAILED: ' . $e->getMessage();
+        }
+
+        $totalTime = round((microtime(true) - $start), 3);
+        $tests['total_diagnostic_time'] = $totalTime . ' seconds';
+
+        return $this->response->setJSON([
+            'status' => ($tests['mpdf_test'] === 'SUCCESS' ? 'success' : 'error'),
+            'diagnostics' => $tests,
+        ]);
     }
 }
