@@ -7,8 +7,18 @@
         border-radius: 1.25em;
     }
 
-    #dataTable {
-        width: 100% !important;
+    #dataTable tbody td {
+        vertical-align: middle;
+    }
+
+    #dataTable .form-switch {
+        padding-left: 0;
+        margin: 0 auto;
+    }
+
+    #dataTable .form-check-input.btn-status {
+        margin: 0 !important;
+        float: none !important;
     }
 
     .statistikinternal-gender-chart {

@@ -129,6 +129,38 @@
                 </div>
             </div>
 
+            <div class="row mb-3 mt-2">
+                <div class="col-12">
+                    <div class="alert shadow-sm border-0 rounded-3 p-3 position-relative mb-0" style="background-color: #fffbe4; border-left: 6px solid #f59e0b !important;" role="alert">
+                        <div class="row align-items-center g-0 pe-5">
+                            <div class="col-auto pe-3">
+                                <i class="bi bi-exclamation-triangle-fill" style="color: #d97706; font-size: 2.2rem; line-height: 1;"></i>
+                            </div>
+                            <div class="col">
+                                <h6 class="fw-bold mb-1" style="color: #92400e; font-size: 1rem; line-height: 1.2;">Panduan: Pengelolaan Rincian &amp; Tahapan Proyek</h6>
+                                <div style="font-size: 0.85rem; color: #b45309; line-height: 1.2;">Perbarui milestone, realisasi anggaran, dan penugasan tim kerja secara berkelanjutan untuk memastikan akurasi pelaporan progres proyek.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="position-absolute top-0 end-0 p-3">
+                            <button class="btn btn-sm text-nowrap fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#tataCaraCollapse" aria-expanded="false" aria-controls="tataCaraCollapse" style="background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d;">
+                                <i class="bi bi-info-circle me-1"></i> Tata Cara
+                            </button>
+                        </div>
+                        
+                        <div class="collapse" id="tataCaraCollapse">
+                            <hr style="border-color: #f59e0b; opacity: 0.2; margin-top: 1rem; margin-bottom: 1rem;">
+                            <ol class="mb-0 ps-3" style="font-size: 0.85rem; line-height: 1.7; color: #78350f;">
+                                <li><strong>Kelola Milestone &amp; Tugas:</strong> Buka tab <em>Milestone</em> untuk menambah tahapan kerja dan menandai sub-tugas yang telah selesai guna mengkalkulasi progres fisik.</li>
+                                <li><strong>Catat Realisasi Anggaran:</strong> Gunakan tab <em>Anggaran</em> untuk mencatat pengeluaran riil dan membandingkan serapan terhadap plafon yang dialokasikan.</li>
+                                <li><strong>Atur Tim &amp; Dokumen:</strong> Tetapkan anggota pelaksana pada tab <em>Tim Kerja</em> serta unggah berkas pendukung pada tab <em>Dokumen</em>.</li>
+                                <li><strong>Perbarui Status Proyek:</strong> Klik tombol <strong>"Edit Proyek"</strong> jika terdapat penyesuaian target tanggal selesai atau status penyelesaian proyek.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <section class="row mb-0">
                 <div class="col-md-12">
                     <div class="card shadow-sm" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">

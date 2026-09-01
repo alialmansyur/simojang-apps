@@ -23,9 +23,9 @@
             </div>
         </div>
 
-        <div class="row mb-3 mt-4">
+        <div class="row mb-3 mt-2">
             <div class="col-12">
-                <div class="alert shadow-sm border-0 rounded-3 p-3 position-relative" style="background-color: #fffbe4; border-left: 6px solid #f59e0b !important;" role="alert">
+                <div class="alert shadow-sm border-0 rounded-3 p-3 position-relative mb-0" style="background-color: #fffbe4; border-left: 6px solid #f59e0b !important;" role="alert">
                     <div class="row align-items-center g-0 pe-5">
                         <div class="col-auto pe-3">
                             <i class="bi bi-exclamation-triangle-fill" style="color: #d97706; font-size: 2.2rem; line-height: 1;"></i>

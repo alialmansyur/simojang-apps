@@ -75,13 +75,13 @@ class StatistikInternal extends BaseController
             'unit_sk_id' => $this->request->getPost('unit_sk'),
             'jenis_jabatan_id' => $this->request->getPost('jenis_jabatan'),
             'phone' => $this->request->getPost('phone'),
-            'email' => $this->request->getPost('email'),
-            'is_status' => 1
+            'email' => $this->request->getPost('email')
         ];
 
         if (!empty($key)) {
             $this->apps->updateData($dataInsert, $key, 'data_pegawai');
         } else {
+            $dataInsert['is_status'] = 1;
 
             if ($this->simodel->isDuplicateIntegrasi($nip) > 0) {
                 return $this->response->setJSON([

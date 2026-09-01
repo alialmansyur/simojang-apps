@@ -25,6 +25,38 @@
             </div>
         </div>
 
+        <div class="row mb-3 mt-2">
+            <div class="col-12">
+                <div class="alert shadow-sm border-0 rounded-3 p-3 position-relative mb-0" style="background-color: #fffbe4; border-left: 6px solid #f59e0b !important;" role="alert">
+                    <div class="row align-items-center g-0 pe-5">
+                        <div class="col-auto pe-3">
+                            <i class="bi bi-exclamation-triangle-fill" style="color: #d97706; font-size: 2.2rem; line-height: 1;"></i>
+                        </div>
+                        <div class="col">
+                            <h6 class="fw-bold mb-1" style="color: #92400e; font-size: 1rem; line-height: 1.2;">Himbauan: Pemutakhiran Data &amp; Statistik Kepegawaian Internal</h6>
+                            <div style="font-size: 0.85rem; color: #b45309; line-height: 1.2;">Pastikan data profil pegawai, unit penempatan tim kerja, dan proyeksi Batas Usia Pensiun (BUP) selalu terbarui secara valid dan akurat.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <button class="btn btn-sm text-nowrap fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#tataCaraCollapse" aria-expanded="false" aria-controls="tataCaraCollapse" style="background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d;">
+                            <i class="bi bi-info-circle me-1"></i> Tata Cara
+                        </button>
+                    </div>
+                    
+                    <div class="collapse" id="tataCaraCollapse">
+                        <hr style="border-color: #f59e0b; opacity: 0.2; margin-top: 1rem; margin-bottom: 1rem;">
+                        <ol class="mb-0 ps-3" style="font-size: 0.85rem; line-height: 1.7; color: #78350f;">
+                            <li><strong>Filter Berdasarkan Tim Kerja:</strong> Gunakan tombol dropdown <em>Pilih Tim Kerja / Bidang</em> untuk menyaring data pegawai sesuai unit penempatan.</li>
+                            <li><strong>Kelola Data Pegawai &amp; BUP:</strong> Beralih antar tab <strong>Data Pegawai</strong> untuk profil ASN aktif dan tab <strong>Pegawai Menjelang BUP</strong> untuk pemantauan masa pensiun.</li>
+                            <li><strong>Tambah atau Perbarui Data:</strong> Klik tombol <strong>"Tambah Data"</strong> untuk mencatat data pegawai baru atau gunakan aksi pada tabel untuk memperbarui data eksisting.</li>
+                            <li><strong>Kelola Master Data:</strong> Akses tab <strong>Master Data</strong> untuk mengatur referensi jabatan, golongan, dan konfigurasi unit kerja internal.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <section class="row mb-3">
             <div class="col-md-12">
                 <div class="service-ui-topbar mb-3 service-ui-static-topbar">
@@ -107,6 +139,7 @@
                                         <thead>
                                             <tr>
                                                 <th><strong></strong></th>
+                                                <th class="text-center" style="width: 50px;"><strong>Status</strong></th>
                                                 <th><strong>NIP</strong></th>
                                                 <th><strong>Nama</strong></th>
                                                 <th><strong>Gender</strong></th>
@@ -132,6 +165,7 @@
                                         <tfoot>
                                             <tr>
                                                 <th><strong></strong></th>
+                                                <th class="text-center" style="width: 50px;"><strong>Status</strong></th>
                                                 <th><strong>NIP</strong></th>
                                                 <th><strong>Nama</strong></th>
                                                 <th><strong>Gender</strong></th>
@@ -253,10 +287,25 @@
                             Statistik Pegawai
                         </h6>
 
-                        <div class="mb-1">
+                        <div class="mb-2">
                             <small class="text-muted">Total Pegawai</small>
                             <h4 class="fw-bold mb-0" id="totalPegawai">0</h4>
                         </div>
+
+                        <!-- STATUS KEAKTIFAN -->
+                        <div class="mb-2">
+                            <small class="text-muted">Status Keaktifan</small>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-light-success text-success fw-semibold"><i class="bi bi-check-circle me-1"></i>Aktif</span>
+                                <span id="activeStat" class="fw-semibold">0 (0%)</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-light-danger text-danger fw-semibold"><i class="bi bi-x-circle me-1"></i>Non-Aktif</span>
+                                <span id="inactiveStat" class="fw-semibold">0 (0%)</span>
+                            </div>
+                        </div>
+
+                        <hr class="my-2">
 
                         <!-- GENDER -->
                         <div class="mb-1">

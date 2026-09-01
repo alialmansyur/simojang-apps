@@ -25,6 +25,38 @@
             </div>
         </div>
 
+        <div class="row mb-3 mt-2">
+            <div class="col-12">
+                <div class="alert shadow-sm border-0 rounded-3 p-3 position-relative mb-0" style="background-color: #fffbe4; border-left: 6px solid #f59e0b !important;" role="alert">
+                    <div class="row align-items-center g-0 pe-5">
+                        <div class="col-auto pe-3">
+                            <i class="bi bi-exclamation-triangle-fill" style="color: #d97706; font-size: 2.2rem; line-height: 1;"></i>
+                        </div>
+                        <div class="col">
+                            <h6 class="fw-bold mb-1" style="color: #92400e; font-size: 0.95rem; line-height: 1.3;">Himbauan: Pelaporan Pembinaan &amp; Evaluasi Kinerja ASN</h6>
+                            <div style="font-size: 0.85rem; color: #b45309; line-height: 1.35;">Pastikan data capaian kinerja dan riwayat pendampingan instansi dicatat secara akurat sesuai periode evaluasi yang berlaku.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <button class="btn btn-sm text-nowrap fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#tataCaraCollapse" aria-expanded="false" aria-controls="tataCaraCollapse" style="background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d;">
+                            <i class="bi bi-info-circle me-1"></i> Tata Cara
+                        </button>
+                    </div>
+                    
+                    <div class="collapse" id="tataCaraCollapse">
+                        <hr style="border-color: #f59e0b; opacity: 0.2; margin-top: 0.85rem; margin-bottom: 0.85rem;">
+                        <ol class="mb-0 ps-3" style="font-size: 0.85rem; line-height: 1.7; color: #78350f;">
+                            <li><strong>Filter Data &amp; Kategori:</strong> Gunakan filter <em>Tahun</em>, <em>Pilih Bulan</em>, dan <em>Kategori</em> untuk menyaring riwayat pembinaan kinerja per instansi.</li>
+                            <li><strong>Entri Data Kinerja:</strong> Klik tombol <strong>"Tambah Data"</strong>, tentukan <em>Instansi</em>, pilih <em>Kategori</em>, dan isi periode penilaian.</li>
+                            <li><strong>Lengkapi Capaian &amp; Catatan:</strong> Masukkan nilai <em>Capaian Kinerja</em>, status evaluasi, serta catatan ringkas hasil pendampingan.</li>
+                            <li><strong>Simpan &amp; Perbarui:</strong> Klik <strong>"Simpan Data"</strong> untuk memperbarui rekapitulasi pembinaan kinerja di wilayah kerja Kanreg III BKN.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <section class="row">
             <div class="col-md-12">
                 <div class="service-ui-topbar mb-3 service-ui-static-topbar pk-topbar">

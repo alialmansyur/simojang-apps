@@ -113,6 +113,7 @@ class STKInternalModel extends Model
                 a.tmt_gol,
                 a.phone,
                 a.email,
+                a.is_status,
                 a.updated_at,
                 (SELECT GROUP_CONCAT(b.nama SEPARATOR ', ') FROM data_pegawai_unit_kerja b WHERE FIND_IN_SET(b.id, a.unit_kerja_id) > 0) AS unit_kerja,
                 c.nama AS unit_sk,
@@ -152,10 +153,8 @@ class STKInternalModel extends Model
 
         $builder = $this->db->table("($rawSql) AS recap");
 
-        // ?? MODE FILTER
-        if ($mode === 'pegawai') {
-            $builder->where('status_bup', 'Aktif');
-        } elseif ($mode === 'bup') {
+        // ?? MODE FILTER: 'pegawai' mode shows all employees without BUP exclusion
+        if ($mode === 'bup') {
             $builder->where('status_bup', 'Menjelang BUP');
         } elseif ($mode === 'telah_bup') {
             $builder->where('status_bup', 'Sudah BUP');
@@ -174,7 +173,7 @@ class STKInternalModel extends Model
                 $unit
             );
 
-            $whereUnit = " AND b.nama IN (" . implode(',', $escaped) . ") ";
+            $whereUnit = " AND EXISTS (SELECT 1 FROM data_pegawai_unit_kerja uk WHERE FIND_IN_SET(uk.id, a.unit_kerja_id) > 0 AND uk.nama IN (" . implode(',', $escaped) . "))";
         }
 
         $rawSql = "
@@ -182,13 +181,22 @@ class STKInternalModel extends Model
                 COUNT(*) AS total_pegawai,
 
                 /* ===============================
+                STATUS KEAKTIFAN
+                =============================== */
+                SUM(CASE WHEN a.is_status = 1 THEN 1 ELSE 0 END) AS total_aktif,
+                ROUND(SUM(CASE WHEN a.is_status = 1 THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0) * 100, 2) AS persen_aktif,
+
+                SUM(CASE WHEN a.is_status = 0 OR a.is_status IS NULL THEN 1 ELSE 0 END) AS total_nonaktif,
+                ROUND(SUM(CASE WHEN a.is_status = 0 OR a.is_status IS NULL THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0) * 100, 2) AS persen_nonaktif,
+
+                /* ===============================
                 GENDER
                 =============================== */
                 SUM(a.gender = 1) AS total_pria,
-                ROUND(SUM(a.gender = 1) / COUNT(*) * 100, 2) AS persen_pria,
+                ROUND(SUM(a.gender = 1) / NULLIF(COUNT(*), 0) * 100, 2) AS persen_pria,
 
                 SUM(a.gender = 2) AS total_wanita,
-                ROUND(SUM(a.gender = 2) / COUNT(*) * 100, 2) AS persen_wanita,
+                ROUND(SUM(a.gender = 2) / NULLIF(COUNT(*), 0) * 100, 2) AS persen_wanita,
 
                 /* ===============================
                 GENERASI
@@ -214,11 +222,7 @@ class STKInternalModel extends Model
                 ) AS total_telah_bup
 
             FROM data_pegawai a
-            LEFT JOIN data_pegawai_unit_kerja b ON b.id = a.unit_kerja_id
-            LEFT JOIN data_pegawai_unit_sk c ON c.id = a.unit_sk_id
-            LEFT JOIN data_pegawai_jenis_jabatan d ON d.id = a.jenis_jabatan_id
             WHERE 1=1
-            AND TIMESTAMPDIFF(YEAR, STR_TO_DATE(SUBSTRING(a.nip, 1, 8), '%Y%m%d'), CURDATE()) < 58
             $whereUnit
         ";
 
@@ -235,6 +239,8 @@ class STKInternalModel extends Model
         return $this->db->table('(' . $base->getCompiledSelect() . ') x')
             ->select('
                 COUNT(1) AS total_data,
+                SUM(CASE WHEN x.is_status = 1 THEN 1 ELSE 0 END) AS total_aktif,
+                SUM(CASE WHEN x.is_status = 0 OR x.is_status IS NULL THEN 1 ELSE 0 END) AS total_nonaktif,
                 SUM(CASE WHEN x.gender = 1 THEN 1 ELSE 0 END) AS total_pria,
                 SUM(CASE WHEN x.gender = 2 THEN 1 ELSE 0 END) AS total_wanita,
                 MAX(x.updated_at) AS last_update

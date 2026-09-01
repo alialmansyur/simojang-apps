@@ -1,9 +1,9 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
 <link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/service-table-ui.css?v=99') ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/humas/main.css') ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/services/humas/main.css') ?>">
 <div class="page-content p-2 p-md-4">
     <div class="container-fluid text-start mx-auto tw-wrap" style="max-width: 1160px;">
         <div class="page-heading mb-0">
@@ -20,6 +20,38 @@
                         <a href="javascript:history.back()" class="btn btn-primary">
                             <i class="bi bi-chevron-left fs-6"></i> <strong>Kembali</strong>
                         </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3 mt-2">
+            <div class="col-12">
+                <div class="alert shadow-sm border-0 rounded-3 p-3 position-relative mb-0" style="background-color: #fffbe4; border-left: 6px solid #f59e0b !important;" role="alert">
+                    <div class="row align-items-center g-0 pe-5">
+                        <div class="col-auto pe-3">
+                            <i class="bi bi-exclamation-triangle-fill" style="color: #d97706; font-size: 2.2rem; line-height: 1;"></i>
+                        </div>
+                        <div class="col">
+                            <h6 class="fw-bold mb-1" style="color: #92400e; font-size: 1rem; line-height: 1.2;">Himbauan: Pencatatan Capaian Kehumasan &amp; Publikasi Media</h6>
+                            <div style="font-size: 0.85rem; color: #b45309; line-height: 1.2;">Pastikan data publikasi media sosial dan website dicatat secara berkala sesuai dengan periode pelaporan dan metrik capaian yang valid.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <button class="btn btn-sm text-nowrap fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#tataCaraCollapse" aria-expanded="false" aria-controls="tataCaraCollapse" style="background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d;">
+                            <i class="bi bi-info-circle me-1"></i> Tata Cara
+                        </button>
+                    </div>
+                    
+                    <div class="collapse" id="tataCaraCollapse">
+                        <hr style="border-color: #f59e0b; opacity: 0.2; margin-top: 1rem; margin-bottom: 1rem;">
+                        <ol class="mb-0 ps-3" style="font-size: 0.85rem; line-height: 1.7; color: #78350f;">
+                            <li><strong>Periksa Periode &amp; Kanal Media:</strong> Gunakan menu <em>Pilih Bulan</em> atau pencarian untuk memastikan laporan pada media/kanal dan periode tersebut belum pernah diinputkan.</li>
+                            <li><strong>Entri Data Publikasi:</strong> Klik tombol <strong>"Tambah Data"</strong>, tentukan <em>Period (Bulan/Tahun)</em>, <em>Rentang Tanggal</em>, dan pilih jenis <em>Media Konten</em> (Instagram, YouTube, Website, dll).</li>
+                            <li><strong>Input Realisasi Capaian:</strong> Masukkan realisasi <em>Jumlah Konten</em> yang diterbitkan, total <em>Followers/Audiens</em>, serta catatan pendukung terkait kampanye publikasi.</li>
+                            <li><strong>Simpan &amp; Pantau Kinerja:</strong> Klik <strong>"Simpan Data"</strong> untuk memperbarui rekap capaian dan memantau perkembangan publikasi informasi di Kanreg III BKN.</li>
+                        </ol>
                     </div>
                 </div>
             </div>

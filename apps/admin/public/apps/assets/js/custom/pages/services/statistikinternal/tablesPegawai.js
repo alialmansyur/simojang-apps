@@ -23,6 +23,8 @@ function loadSummaryStatistikInternal() {
         success: function (response) {
             const s = response?.summary || {};
             $('#stkin-total-data').text(ServiceTableUI.formatNumber(s.total_data || 0));
+            $('#stkin-total-aktif').text(ServiceTableUI.formatNumber(s.total_aktif || 0));
+            $('#stkin-total-nonaktif').text(ServiceTableUI.formatNumber(s.total_nonaktif || 0));
             $('#stkin-last-update').text(ServiceTableUI.formatDateTime(s.last_update));
         }
     });
@@ -42,7 +44,7 @@ const table = $('#dataTable').DataTable({
         [10, 25, 50, 100],
         [10, 25, 50, 100]
     ],    
-    order: [[1, 'asc']],    
+    order: [[2, 'asc']],    
     // dom: 'lBfrtip',
     buttons: ['copy', 'excel', 'pdf', 'print'],
     ajax: {
@@ -53,9 +55,29 @@ const table = $('#dataTable').DataTable({
             d.mode = tableMode;
         }
     },
-    columnDefs: [{ className: 'dtr-control', targets: 0, orderable: false }],
+    columnDefs: [
+        { className: 'dtr-control', targets: 0, orderable: false },
+        { targets: [1, 20], orderable: false, searchable: false, className: 'text-center align-middle' }
+    ],
     columns: [
-        { data: null, defaultContent: '' },
+        { data: null, defaultContent: '', orderable: false, searchable: false },
+        {
+            data: 'is_status',
+            orderable: false,
+            searchable: false,
+            className: 'text-center align-middle',
+            render: function(data, type, row) {
+                let checked = (data == 1 || data === '1' || data === true) ? 'checked' : '';
+                return `
+                    <div class="form-check form-switch d-inline-flex align-items-center justify-content-center m-0 p-0" style="min-height: auto;">
+                        <input class="form-check-input btn-status m-0" type="checkbox"
+                            id="switch-${row.id}"
+                            ${checked}
+                            data-key="${row.id}"
+                            style="cursor: pointer; float: none; margin: 0 !important;">
+                    </div>`;
+            }
+        },
         { data: 'nip' },   
         { data: 'nama' },   
         {
@@ -117,6 +139,7 @@ const table = $('#dataTable').DataTable({
             data: null,
             orderable: false,
             searchable: false, 
+            className: 'text-center align-middle',
             render: function(data, type, row) {
                 return `
                     <button class="btn btn-sm btn-primary btn-update" data-id="${row.id}">
@@ -143,6 +166,8 @@ const table = $('#dataTable').DataTable({
                 loadSummary: loadSummaryStatistikInternal,
                 cards: [
                     { id: 'total-data', label: 'Total Pegawai', value: '0' },
+                    { id: 'total-aktif', label: 'Pegawai Aktif', value: '0' },
+                    { id: 'total-nonaktif', label: 'Pegawai Non-Aktif', value: '0' },
                     { id: 'data-shown', label: 'Data Ditampilkan', value: '0' },
                     { id: 'last-update', label: 'Update Terakhir', value: '-' }
                 ]
@@ -153,6 +178,62 @@ const table = $('#dataTable').DataTable({
     }
 });
 table.on('draw.dt', updateShownStkin);
+
+$('#dataTable tbody').on('click', '.btn-status', function (e) {
+    e.stopPropagation();
+    const $checkbox = $(this);
+    const key = $checkbox.data('key');
+    const isChecked = $checkbox.prop('checked');
+    const newStatus = isChecked ? 1 : 0;
+    const previousStatus = isChecked ? 0 : 1;
+    const actionText = newStatus === 1 ? 'mengaktifkan' : 'menonaktifkan';
+
+    Swal.fire({
+        text: `Apakah Anda yakin ingin ${actionText} data pegawai ini?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: newStatus === 1 ? "#3085d6" : "#d63031",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        allowOutsideClick: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: AppConfig.initGlobal + "status-data",
+                data: {
+                    key: key,
+                    status: newStatus,
+                    tableinfo: 'pegawai'
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response && response.status) {
+                        swlSuccess('Status berhasil diperbarui');
+                        table.ajax.reload(null, false);
+                        if (typeof loadSummaryStatistikInternal === 'function') {
+                            loadSummaryStatistikInternal();
+                        }
+                        if (typeof loadData === 'function') {
+                            loadData();
+                        }
+                    } else {
+                        $checkbox.prop('checked', previousStatus === 1);
+                        swlErrorHandler(response?.message || 'Gagal mengubah status');
+                    }
+                },
+                error: function (xhr) {
+                    $checkbox.prop('checked', previousStatus === 1);
+                    const msg = xhr.responseJSON?.message || 'Terjadi kesalahan saat mengubah status';
+                    swlErrorHandler(msg);
+                }
+            });
+        } else {
+            $checkbox.prop('checked', previousStatus === 1);
+        }
+    });
+});
 
 $('#dataTable tbody').on('click', 'tr td .btn-remove', function () {
     var key = $(this).attr('data-id');
@@ -262,7 +343,10 @@ function setSelect2Value(form, name, id, text) {
 }
 
 $('#pegawaiTab button').on('click', function () {
-    tableMode = $(this).data('mode');
-    table.ajax.reload(null, false);
-    loadSummaryStatistikInternal();
+    const mode = $(this).data('mode');
+    if (mode) {
+        tableMode = mode;
+        table.ajax.reload(null, false);
+        loadSummaryStatistikInternal();
+    }
 });

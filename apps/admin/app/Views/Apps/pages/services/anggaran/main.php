@@ -35,6 +35,38 @@ $serviceTableUiJsVersion = @filemtime(FCPATH . 'apps/assets/js/custom/pages/serv
             </div>
         </div>
 
+        <div class="row mb-3 mt-2">
+            <div class="col-12">
+                <div class="alert shadow-sm border-0 rounded-3 p-3 position-relative mb-0" style="background-color: #fffbe4; border-left: 6px solid #f59e0b !important;" role="alert">
+                    <div class="row align-items-center g-0 pe-5">
+                        <div class="col-auto pe-3">
+                            <i class="bi bi-exclamation-triangle-fill" style="color: #d97706; font-size: 2.2rem; line-height: 1;"></i>
+                        </div>
+                        <div class="col">
+                            <h6 class="fw-bold mb-1" style="color: #92400e; font-size: 1rem; line-height: 1.2;">Himbauan: Rekonsiliasi &amp; Pencatatan Realisasi Anggaran</h6>
+                            <div style="font-size: 0.85rem; color: #b45309; line-height: 1.2;">Pastikan data pagu dan realisasi belanja sesuai dengan data pada aplikasi SAKTI/SPAN serta dokumen SPM &amp; SP2D yang telah diterbitkan.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <button class="btn btn-sm text-nowrap fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#tataCaraCollapse" aria-expanded="false" aria-controls="tataCaraCollapse" style="background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d;">
+                            <i class="bi bi-info-circle me-1"></i> Tata Cara
+                        </button>
+                    </div>
+                    
+                    <div class="collapse" id="tataCaraCollapse">
+                        <hr style="border-color: #f59e0b; opacity: 0.2; margin-top: 1rem; margin-bottom: 1rem;">
+                        <ol class="mb-0 ps-3" style="font-size: 0.85rem; line-height: 1.7; color: #78350f;">
+                            <li><strong>Filter &amp; Pantau Rekapitulasi:</strong> Tentukan <em>Tahun Anggaran</em> dan rentang <em>Tanggal SPM/SP2D</em> untuk melihat ringkasan pagu revisi, pagu efektif, dan persentase serapan.</li>
+                            <li><strong>Kelola Master Data Pagu:</strong> Gunakan tombol <strong>"Master Data"</strong> untuk memperbarui struktur akun, pagu awal, revisi pagu, maupun lock pagu belanja.</li>
+                            <li><strong>Catat Realisasi Baru:</strong> Klik tombol <strong>"Realisasi Baru"</strong> untuk menginputkan transaksi pencairan anggaran berdasarkan nomor dan tanggal SPM/SP2D.</li>
+                            <li><strong>Ekspor Laporan:</strong> Klik <strong>"Export Excel"</strong> untuk mengunduh laporan realisasi anggaran lengkap per sub-komponen dan mata anggaran.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <section class="row">
             <div class="col-md-12">
                 <div class="service-ui-topbar mb-3 service-ui-static-topbar anggaran-topbar">

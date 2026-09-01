@@ -25,6 +25,38 @@
             </div>
         </div>
 
+        <div class="row mb-3 mt-2">
+            <div class="col-12">
+                <div class="alert shadow-sm border-0 rounded-3 p-3 position-relative mb-0" style="background-color: #fffbe4; border-left: 6px solid #f59e0b !important;" role="alert">
+                    <div class="row align-items-center g-0 pe-5">
+                        <div class="col-auto pe-3">
+                            <i class="bi bi-exclamation-triangle-fill" style="color: #d97706; font-size: 2.2rem; line-height: 1;"></i>
+                        </div>
+                        <div class="col">
+                            <h6 class="fw-bold mb-1" style="color: #92400e; font-size: 0.95rem; line-height: 1.3;">Himbauan: Pelaporan Pembinaan Kompetensi &amp; Karier ASN</h6>
+                            <div style="font-size: 0.85rem; color: #b45309; line-height: 1.35;">Pastikan setiap kegiatan sosialisasi, bimtek, atau workshop kompetensi pegawai tercatat lengkap dengan jumlah peserta dan metode yang valid.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <button class="btn btn-sm text-nowrap fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#tataCaraCollapse" aria-expanded="false" aria-controls="tataCaraCollapse" style="background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d;">
+                            <i class="bi bi-info-circle me-1"></i> Tata Cara
+                        </button>
+                    </div>
+                    
+                    <div class="collapse" id="tataCaraCollapse">
+                        <hr style="border-color: #f59e0b; opacity: 0.2; margin-top: 0.85rem; margin-bottom: 0.85rem;">
+                        <ol class="mb-0 ps-3" style="font-size: 0.85rem; line-height: 1.7; color: #78350f;">
+                            <li><strong>Filter Tahun &amp; Bulan:</strong> Gunakan filter <em>Tahun</em> dan dropdown <em>Pilih Bulan</em> untuk menyaring riwayat kegiatan serta melihat total partisipan.</li>
+                            <li><strong>Input Kegiatan Baru:</strong> Klik tombol <strong>"Tambah Data"</strong>, masukkan <em>Judul Kegiatan</em>, <em>Materi Pembinaan</em>, dan tanggal pelaksanaan.</li>
+                            <li><strong>Isi Peserta &amp; Metode:</strong> Masukkan jumlah peserta, pilih <em>Metode Pelaksanaan</em> (Daring, Luring, Hybrid), serta tentukan instansi sasaran.</li>
+                            <li><strong>Simpan &amp; Rekapitulasi:</strong> Klik <strong>"Simpan Data"</strong> untuk memperbarui rekapitulasi pengembangan kompetensi dan karier ASN.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="service-ui-topbar mb-3 service-ui-static-topbar pkk-topbar">
             <div class="service-ui-topbar-filters module-filter-row d-flex align-items-center gap-2 pkk-topbar-group">
                 <select id="pkkYearFilter" class="form-select form-select-sm w-auto pkk-filter-year"></select>

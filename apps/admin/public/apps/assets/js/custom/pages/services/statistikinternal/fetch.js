@@ -27,7 +27,13 @@ function pageLoaded(data) {
         </div>
     `);
 
-    $('#totalPegawai').text(res.total_pegawai);
+    $('#totalPegawai').text(res.total_pegawai || 0);
+    $('#activeStat').text(
+        (res.total_aktif || 0) + ' (' + (res.persen_aktif || 0) + '%)'
+    );
+    $('#inactiveStat').text(
+        (res.total_nonaktif || 0) + ' (' + (res.persen_nonaktif || 0) + '%)'
+    );
     $('#maleStat').text(
         res.total_pria + ' (' + res.persen_pria + '%)'
     );
