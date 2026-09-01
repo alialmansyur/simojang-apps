@@ -26,6 +26,11 @@ $routes->get('/login', 'Auth\Auth::index', ['filter' => 'guest']);
 $routes->post('/authprocess', 'Auth\Auth::authprocess');
 $routes->get('/logout', 'Auth\Auth::logout');
 
+// Public Digital Signature & Verification Routes (Scan QR Code)
+$routes->get('/pnbp-sign/(:segment)', 'Apps\Services\PNBPSignController::signView/$1');
+$routes->post('/pnbp-sign/submit', 'Apps\Services\PNBPSignController::submitSignature');
+$routes->get('/pnbp-verify/(:segment)', 'Apps\Services\PNBPSignController::verifyDocument/$1');
+
 // $routes->get('backup-database', 'Apps\AppsController::backupDatabase');
 
 $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function ($routes) {
@@ -262,6 +267,26 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/fetch/data-integrasi', 'Apps\Services\IntegrasiData::getData');        
     $routes->post('/fetch/summary-integrasi', 'Apps\Services\IntegrasiData::getSummary');
     $routes->post('/kill/data-integrasi', 'Apps\Services\IntegrasiData::removeData'); 
+    // ----------------------------------------------------------------
+    // Layanan Dokumen PNBP CAT
+    $routes->get('/apps-pnbp', 'Apps\Services\PNBPDocumentController::index');
+    $routes->get('/apps-pnbp/doc/(:segment)', 'Apps\Services\PNBPDocumentController::docTypeView/$1');
+    $routes->get('/apps-pnbp/detail/(:segment)', 'Apps\Services\PNBPDocumentController::detail/$1');
+    $routes->post('/fetch/data-pnbp-documents', 'Apps\Services\PNBPDocumentController::getData');
+    $routes->post('/fetch/summary-pnbp', 'Apps\Services\PNBPDocumentController::getSummary');
+    $routes->post('/fetch/pnbp-options-tilok', 'Apps\Services\PNBPDocumentController::getTilokOptions');
+    $routes->post('/fetch/pnbp-options-instansi', 'Apps\Services\PNBPDocumentController::getInstansiOptions');
+    $routes->post('/fetch/pnbp-options-pegawai', 'Apps\Services\PNBPDocumentController::getPegawaiOptions');
+    $routes->post('/store/save-pnbp-document', 'Apps\Services\PNBPDocumentController::storeDocument');
+    $routes->post('/store/save-pnbp-personel', 'Apps\Services\PNBPDocumentController::storePersonel');
+    $routes->post('/store/save-pnbp-items', 'Apps\Services\PNBPDocumentController::storeItems');
+    $routes->post('/store/save-pnbp-signature-param', 'Apps\Services\PNBPDocumentController::storeSignatureParam');
+    $routes->post('/kill/data-pnbp-document', 'Apps\Services\PNBPDocumentController::removeDocument');
+    $routes->post('/kill/data-pnbp-personel', 'Apps\Services\PNBPDocumentController::removePersonel');
+    $routes->post('/kill/data-pnbp-item', 'Apps\Services\PNBPDocumentController::removeItem');
+    $routes->post('/apps-pnbp/generate-pdf', 'Apps\Services\PNBPDocumentController::generatePdf');
+    $routes->get('/apps-pnbp/preview-pdf/(:segment)', 'Apps\Services\PNBPDocumentController::previewPdf/$1');
+    $routes->get('/apps-pnbp/download-pdf/(:segment)', 'Apps\Services\PNBPDocumentController::downloadPdf/$1');
     // ----------------------------------------------------------------
     // Layanan DMS         
     $routes->get('/apps-dms', 'Apps\Services\DMSData::index');

@@ -62,6 +62,10 @@
                             <i class="bi bi-display"></i>
                             <span>Layanan CAT</span>
                         </a>
+                        <a href="<?= base_url('apps-pnbp') ?>" class="dash-shortcut-item">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                            <span>Dokumen PNBP</span>
+                        </a>
                         <a href="<?= base_url('apps-dms') ?>" class="dash-shortcut-item">
                             <i class="bi bi-folder2-open"></i>
                             <span>Tata Naskah</span>

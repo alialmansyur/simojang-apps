@@ -30,6 +30,7 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
         ),
         'M' =>
         array (
+            'Mpdf\\QrCode\\' => 12,
             'Mpdf\\PsrLogAwareTrait\\' => 22,
             'Mpdf\\PsrHttpMessageShim\\' => 24,
             'Mpdf\\' => 5,
@@ -90,6 +91,10 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
+        'Mpdf\\QrCode\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/qrcode/src',
+        ),
         'Mpdf\\PsrLogAwareTrait\\' =>
         array (
             0 => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src',
@@ -141,12 +146,14 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
     );
 
     public static $classMap = array (
+        'App\\Commands\\TestPnbp' => __DIR__ . '/../..' . '/app/Commands/TestPnbp.php',
         'App\\Controllers\\Apps\\AccessManagerApiController' => __DIR__ . '/../..' . '/app/Controllers/Apps/AccessManagerApiController.php',
         'App\\Controllers\\Apps\\ActivityGalleryController' => __DIR__ . '/../..' . '/app/Controllers/Apps/ActivityGalleryController.php',
         'App\\Controllers\\Apps\\Agenda\\AgendaController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Agenda/AgendaController.php',
         'App\\Controllers\\Apps\\AjxController' => __DIR__ . '/../..' . '/app/Controllers/Apps/AjxController.php',
         'App\\Controllers\\Apps\\AppsController' => __DIR__ . '/../..' . '/app/Controllers/Apps/AppsController.php',
         'App\\Controllers\\Apps\\CalendarEventController' => __DIR__ . '/../..' . '/app/Controllers/Apps/CalendarEventController.php',
+        'App\\Controllers\\Apps\\DashboardController' => __DIR__ . '/../..' . '/app/Controllers/Apps/DashboardController.php',
         'App\\Controllers\\Apps\\DataMasterController' => __DIR__ . '/../..' . '/app/Controllers/Apps/DataMasterController.php',
         'App\\Controllers\\Apps\\DatabaseBackupController' => __DIR__ . '/../..' . '/app/Controllers/Apps/DatabaseBackupController.php',
         'App\\Controllers\\Apps\\FetchData' => __DIR__ . '/../..' . '/app/Controllers/Apps/FetchData.php',
@@ -174,6 +181,8 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
         'App\\Controllers\\Apps\\Services\\ManageProjectController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/ManageProjectController.php',
         'App\\Controllers\\Apps\\Services\\MeritController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/MeritController.php',
         'App\\Controllers\\Apps\\Services\\NSPKController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/NSPKController.php',
+        'App\\Controllers\\Apps\\Services\\PNBPDocumentController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/PNBPDocumentController.php',
+        'App\\Controllers\\Apps\\Services\\PNBPSignController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/PNBPSignController.php',
         'App\\Controllers\\Apps\\Services\\PembinaanASNController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/PembinaanASNController.php',
         'App\\Controllers\\Apps\\Services\\PeremajaanData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/PeremajaanData.php',
         'App\\Controllers\\Apps\\Services\\StatistikData' => __DIR__ . '/../..' . '/app/Controllers/Apps/Services/StatistikData.php',
@@ -184,8 +193,11 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
         'App\\Controllers\\Apps\\SettingManagerController' => __DIR__ . '/../..' . '/app/Controllers/Apps/SettingManagerController.php',
         'App\\Controllers\\Auth\\Auth' => __DIR__ . '/../..' . '/app/Controllers/Auth/Auth.php',
         'App\\Controllers\\BaseController' => __DIR__ . '/../..' . '/app/Controllers/BaseController.php',
+        'App\\Database\\Seeds\\PNBPSignerSeeder' => __DIR__ . '/../..' . '/app/Database/Seeds/PNBPSignerSeeder.php',
+        'App\\Database\\Seeds\\ServicePermissionSeeder' => __DIR__ . '/../..' . '/app/Database/Seeds/ServicePermissionSeeder.php',
         'App\\Filters\\Auth' => __DIR__ . '/../..' . '/app/Filters/Auth.php',
         'App\\Filters\\Cors' => __DIR__ . '/../..' . '/app/Filters/Cors.php',
+        'App\\Filters\\GuestFilter' => __DIR__ . '/../..' . '/app/Filters/GuestFilter.php',
         'App\\Filters\\JwtAuthFilter' => __DIR__ . '/../..' . '/app/Filters/JwtAuthFilter.php',
         'App\\Filters\\RbacFilter' => __DIR__ . '/../..' . '/app/Filters/RbacFilter.php',
         'App\\Filters\\ServiceAccessFilter' => __DIR__ . '/../..' . '/app/Filters/ServiceAccessFilter.php',
@@ -216,6 +228,11 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
         'App\\Models\\Apps\\Services\\MeritModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/MeritModel.php',
         'App\\Models\\Apps\\Services\\NSPKModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/NSPKModel.php',
         'App\\Models\\Apps\\Services\\PDMModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PDMModel.php',
+        'App\\Models\\Apps\\Services\\PNBPDocumentModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PNBPDocumentModel.php',
+        'App\\Models\\Apps\\Services\\PNBPItemModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PNBPItemModel.php',
+        'App\\Models\\Apps\\Services\\PNBPPersonelModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PNBPPersonelModel.php',
+        'App\\Models\\Apps\\Services\\PNBPSignatureModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PNBPSignatureModel.php',
+        'App\\Models\\Apps\\Services\\PNBPSignerModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PNBPSignerModel.php',
         'App\\Models\\Apps\\Services\\PembinaanDisiplinBudayaCitraModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PembinaanDisiplinBudayaCitraModel.php',
         'App\\Models\\Apps\\Services\\PembinaanKinerjaModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PembinaanKinerjaModel.php',
         'App\\Models\\Apps\\Services\\PembinaanKompetensiKarierModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PembinaanKompetensiKarierModel.php',
@@ -228,6 +245,8 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
         'App\\Models\\Apps\\SystemSettingModel' => __DIR__ . '/../..' . '/app/Models/Apps/SystemSettingModel.php',
         'App\\Models\\Auth\\AccessControlModel' => __DIR__ . '/../..' . '/app/Models/Auth/AccessControlModel.php',
         'App\\Models\\Auth\\AuthModel' => __DIR__ . '/../..' . '/app/Models/Auth/AuthModel.php',
+        'App\\Models\\Auth\\RoleModel' => __DIR__ . '/../..' . '/app/Models/Auth/RoleModel.php',
+        'App\\Models\\Auth\\ServicePermissionModel' => __DIR__ . '/../..' . '/app/Models/Auth/ServicePermissionModel.php',
         'App\\Models\\Auth\\UserAgent' => __DIR__ . '/../..' . '/app/Models/Auth/UserAgent.php',
         'App\\Models\\Auth\\UserModel' => __DIR__ . '/../..' . '/app/Models/Auth/UserModel.php',
         'App\\Models\\Pages\\AMModel' => __DIR__ . '/../..' . '/app/Models/Pages/AMModel.php',
@@ -238,6 +257,8 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
         'App\\Models\\Pages\\KTLGModel' => __DIR__ . '/../..' . '/app/Models/Pages/KTLGModel.php',
         'App\\Models\\Pages\\PDMModel' => __DIR__ . '/../..' . '/app/Models/Pages/PDMModel.php',
         'App\\Models\\Pages\\STKModel' => __DIR__ . '/../..' . '/app/Models/Pages/STKModel.php',
+        'App\\Services\\PNBP\\PNBPHelper' => __DIR__ . '/../..' . '/app/Services/PNBP/PNBPHelper.php',
+        'App\\Services\\PNBP\\PNBPPdfService' => __DIR__ . '/../..' . '/app/Services/PNBP/PNBPPdfService.php',
         'CodeIgniter\\API\\ResponseTrait' => __DIR__ . '/..' . '/codeigniter4/framework/system/API/ResponseTrait.php',
         'CodeIgniter\\Autoloader\\Autoloader' => __DIR__ . '/..' . '/codeigniter4/framework/system/Autoloader/Autoloader.php',
         'CodeIgniter\\Autoloader\\FileLocator' => __DIR__ . '/..' . '/codeigniter4/framework/system/Autoloader/FileLocator.php',
@@ -846,6 +867,12 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
         'Mpdf\\PsrHttpMessageShim\\Uri' => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src/Uri.php',
         'Mpdf\\PsrLogAwareTrait\\MpdfPsrLogAwareTrait' => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src/MpdfPsrLogAwareTrait.php',
         'Mpdf\\PsrLogAwareTrait\\PsrLogAwareTrait' => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src/PsrLogAwareTrait.php',
+        'Mpdf\\QrCode\\Output\\Html' => __DIR__ . '/..' . '/mpdf/qrcode/src/Output/Html.php',
+        'Mpdf\\QrCode\\Output\\Mpdf' => __DIR__ . '/..' . '/mpdf/qrcode/src/Output/Mpdf.php',
+        'Mpdf\\QrCode\\Output\\Png' => __DIR__ . '/..' . '/mpdf/qrcode/src/Output/Png.php',
+        'Mpdf\\QrCode\\Output\\Svg' => __DIR__ . '/..' . '/mpdf/qrcode/src/Output/Svg.php',
+        'Mpdf\\QrCode\\QrCode' => __DIR__ . '/..' . '/mpdf/qrcode/src/QrCode.php',
+        'Mpdf\\QrCode\\QrCodeException' => __DIR__ . '/..' . '/mpdf/qrcode/src/QrCodeException.php',
         'Mpdf\\ServiceFactory' => __DIR__ . '/..' . '/mpdf/mpdf/src/ServiceFactory.php',
         'Mpdf\\Shaper\\Indic' => __DIR__ . '/..' . '/mpdf/mpdf/src/Shaper/Indic.php',
         'Mpdf\\Shaper\\Myanmar' => __DIR__ . '/..' . '/mpdf/mpdf/src/Shaper/Myanmar.php',

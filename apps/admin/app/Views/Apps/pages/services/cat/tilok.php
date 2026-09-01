@@ -16,7 +16,10 @@
                     <?= esc($seleksi['nama_seleksi']) ?> (<?= esc($seleksi['periode']) ?>)
                 </p>
             </div>
-            <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0">
+            <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0 d-flex align-items-center justify-content-md-end gap-2">
+                <a href="<?= base_url('apps-pnbp') ?>" class="btn btn-outline-primary fw-semibold">
+                    <i class="bi bi-file-earmark-text-fill me-1"></i> Dokumen PNBP
+                </a>
                 <a href="<?= base_url('apps-cat') ?>" class="btn btn-primary">
                     <i class="bi bi-chevron-left fs-6"></i> Kembali
                 </a>

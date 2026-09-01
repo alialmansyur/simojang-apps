@@ -75,7 +75,10 @@
                     Kelola daftar Event dan Nama Seleksi Computer Assisted Test (CAT).
                 </p>
             </div>
-            <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0">
+            <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0 d-flex align-items-center justify-content-md-end gap-2">
+                <a href="<?= base_url('apps-pnbp') ?>" class="btn btn-outline-primary fw-semibold">
+                    <i class="bi bi-file-earmark-text-fill me-1"></i> Dokumen PNBP
+                </a>
                 <a href="<?= base_url('timkerja-layanan/' . esc($timkerjaUid ?? 'a13e4110-7ccb-11f0-be4c-5f752d8309a4')) ?>" class="btn btn-primary">
                     <i class="bi bi-chevron-left fs-6"></i> Kembali
                 </a>
