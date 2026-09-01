@@ -114,6 +114,7 @@
         </div>
 
         <?php
+            $currentYear = date('Y');
             $uniqueYears = [];
             $uniqueEvents = [];
             if (!empty($seleksiList)) {
@@ -130,6 +131,7 @@
                 rsort($uniqueYears);
                 sort($uniqueEvents);
             }
+            $defaultYear = in_array($currentYear, $uniqueYears) ? $currentYear : (!empty($uniqueYears) ? $uniqueYears[0] : '');
         ?>
         <div class="tw-head d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-3" role="toolbar">
             <div class="flex-grow-1" style="max-width: 450px;">
@@ -148,7 +150,7 @@
                 <select id="filterTahun" class="form-select fw-bold" style="width: auto !important; height: 42px; color: #1a202c !important; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
                     <option value="">Semua Tahun</option>
                     <?php foreach ($uniqueYears as $yr): ?>
-                        <option value="<?= esc($yr) ?>"><?= esc($yr) ?></option>
+                        <option value="<?= esc($yr) ?>" <?= ($yr == $defaultYear) ? 'selected' : '' ?>><?= esc($yr) ?></option>
                     <?php endforeach; ?>
                 </select>
                 <button type="button" class="btn btn-primary d-inline-flex align-items-center justify-content-center px-4" data-bs-toggle="modal" data-bs-target="#SeleksiModal" style="height: 42px; border-radius: 8px;">
@@ -160,6 +162,9 @@
         <div class="row g-3" id="seleksiList">
 
             <?php if (!empty($seleksiList)): ?>
+                <?php 
+                    $todayThreshold = date('Y-m-d 00:00:00');
+                ?>
                 <?php foreach ($seleksiList as $index => $sel): ?>
                     <?php 
                         $hash = abs(crc32($sel['jenis_tes_kode']));
@@ -175,6 +180,17 @@
                         $inlineStyles = "--twx-bg: {$bg}; --twx-text: {$text}; --twx-border: {$border}; --twx-hover-bg: {$hoverBg};";
 
                         $iconSvg = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>';
+
+                        // Logika Sedang Berlangsung: jika ada data terbaru yang di-input/update pada hari ini
+                        $activityDates = array_filter([
+                            $sel['last_rekap_date'] ?? null,
+                            $sel['last_rekap_updated'] ?? null,
+                            $sel['last_tilok_created'] ?? null,
+                            $sel['last_tilok_updated'] ?? null,
+                            $sel['created_at'] ?? null
+                        ]);
+                        $latestActivity = !empty($activityDates) ? max($activityDates) : null;
+                        $isOngoing = !empty($latestActivity) && ($latestActivity >= $todayThreshold);
                     ?>
                     <div class="col-12 col-md-6 col-lg-4 seleksi-item" data-name="<?= strtolower(esc($sel['nama_seleksi'])) ?>" data-event="<?= strtolower(esc($sel['jenis_tes_nama'])) ?>" data-periode="<?= esc($sel['periode']) ?>" style="display: none; <?= $inlineStyles ?>">
                         <div class="card shadow-sm position-relative twx-anim-card overflow-hidden twx-card-container">
@@ -185,7 +201,15 @@
                             
                             <div class="card-body p-3 d-flex flex-column position-relative" style="z-index: 1;">
                                 <div class="d-flex justify-content-between align-items-start w-100 mb-2">
-                                    <span class="badge twx-card-badge"><?= esc($sel['jenis_tes_kode']) ?></span>
+                                    <div class="d-flex align-items-center gap-1 flex-wrap">
+                                        <span class="badge twx-card-badge"><?= esc($sel['jenis_tes_kode']) ?></span>
+                                        <?php if ($isOngoing): ?>
+                                            <span class="badge cat-badge-ongoing" title="Event sedang berlangsung (aktivitas data H-1 s.d. hari ini)">
+                                                <span class="cat-pulse-dot"></span>
+                                                Berlangsung
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="text-muted text-nowrap twx-period-text"><i class="bi bi-calendar3 me-1"></i> <?= esc($sel['periode']) ?></span>
                                         <div class="d-flex align-items-center gap-2 ms-1 position-relative" style="z-index: 2;">
@@ -331,7 +355,7 @@
 
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
-<script src="<?= asset_url('apps/assets/js/custom/pages/services/service-table-ui.js') ?>"></script>
-<script src="<?= asset_url('apps/assets/js/custom/pages/services/cat/main.js') ?>"></script>
-<script src="<?= asset_url('apps/assets/js/custom/pages/services/cat/tables.js') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/services/service-table-ui.js?v=' . time()) ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/services/cat/main.js?v=' . time()) ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/services/cat/tables.js?v=' . time()) ?>"></script>
 <?= $this->endSection(); ?>

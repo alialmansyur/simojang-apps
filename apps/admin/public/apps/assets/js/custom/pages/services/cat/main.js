@@ -13,8 +13,6 @@ $(document).ready(function() {
         });
     }
 
-    $('.seleksi-item').show();
-    triggerStaggeredAnimation();
     // Filter Logic (Search + Tahun + Event)
     function applyFilters() {
         var searchValue = $('#searchInput').val().toLowerCase();
@@ -59,6 +57,9 @@ $(document).ready(function() {
     $('#searchInput').on('keyup', applyFilters);
     $('#filterTahun').on('change', applyFilters);
     $('#filterEvent').on('change', applyFilters);
+
+    // Initial Filter Execution (defaults to selected year)
+    applyFilters();
 
     // Bind Edit and Delete button clicks (delegated to document for dynamically shown cards)
     $(document).on('click', '.twx-edit-btn', function(e) {

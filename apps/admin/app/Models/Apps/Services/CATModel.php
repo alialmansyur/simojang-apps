@@ -81,7 +81,15 @@ class CATModel extends Model
         $tahun = $params['tahun'] ?? [];
 
         $builder = $this->db->table('txn_cat_seleksi a')
-            ->select('a.*, b.kode AS jenis_tes_kode, b.nama AS jenis_tes_nama, MAX(th.created_at) AS last_rekap_date')
+            ->select('
+                a.*, 
+                b.kode AS jenis_tes_kode, 
+                b.nama AS jenis_tes_nama, 
+                MAX(th.created_at) AS last_rekap_date,
+                MAX(th.updated_at) AS last_rekap_updated,
+                MAX(t.created_at) AS last_tilok_created,
+                MAX(t.updated_at) AS last_tilok_updated
+            ')
             ->join('data_support_jenis_tes b', 'b.id = a.jenis_tes_id', 'left')
             ->join('txn_cat_tilok t', 't.seleksi_id = a.id', 'left')
             ->join('txn_cat_hasil th', 'th.tilok_id = t.id', 'left')

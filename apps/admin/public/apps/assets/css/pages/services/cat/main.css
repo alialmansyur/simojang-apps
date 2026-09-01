@@ -77,6 +77,55 @@
     border-radius: 6px;
     border: 1px solid var(--twx-border);
 }
+/* Badge Ongoing Event & Pulse Animation */
+.cat-badge-ongoing {
+    background-color: #ecfdf5 !important;
+    color: #047857 !important;
+    border: 1px solid #a7f3d0 !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    padding: 0.35rem 0.6rem !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    letter-spacing: 0.02em !important;
+    line-height: 1 !important;
+}
+.cat-pulse-dot {
+    width: 7px;
+    height: 7px;
+    background-color: #10b981;
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.cat-pulse-dot::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 50%;
+    background-color: #10b981;
+    animation: catPulse 1.6s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+@keyframes catPulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.9;
+    }
+    60% {
+        transform: scale(2.6);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(2.6);
+        opacity: 0;
+    }
+}
 .twx-period-text {
     font-size: 0.75rem;
     font-weight: 600;
