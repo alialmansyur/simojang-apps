@@ -79,8 +79,8 @@
                 <strong><?= esc($signRight['jabatan'] ?? 'Koordinator Titik Lokasi') ?></strong>
                 
                 <div style="height: 70px; margin: 4px 0;">
-                    <?php if (!empty($signRight) && $signRight['sign_status'] === 'signed' && !empty($signRight['signature_image_path'])): ?>
-                        <img src="<?= FCPATH . 'writable/' . $signRight['signature_image_path'] ?>" style="height: 65px; max-width: 150px;">
+                    <?php if (!empty($signRight) && $signRight['sign_status'] === 'signed' && !empty($signRight['signature_base64'])): ?>
+                        <img src="<?= $signRight['signature_base64'] ?>" style="height: 65px; max-width: 150px;">
                     <?php elseif (!empty($signRight)): ?>
                         <barcode code="<?= base_url('pnbp-sign/' . $signRight['sign_token']) ?>" type="QR" class="barcode" size="0.8" error="M" disableborder="1" />
                         <br><span style="font-size: 7pt; color: #64748b;">Scan QR untuk TTD</span>

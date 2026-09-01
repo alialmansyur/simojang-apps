@@ -2,7 +2,9 @@
 <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
     <tr>
         <td style="width: 80px; text-align: center; vertical-align: middle;">
-            <img src="<?= FCPATH . 'apps/assets/images/logo_bkn.png' ?>" style="width: 75px; height: auto;" alt="Logo BKN">
+            <?php if (!empty($logoBase64)): ?>
+                <img src="<?= $logoBase64 ?>" style="width: 75px; height: auto;" alt="Logo BKN">
+            <?php endif; ?>
         </td>
         <td style="text-align: center; vertical-align: middle; padding-left: 10px;">
             <div style="font-size: 13pt; font-weight: bold; text-transform: uppercase; color: #000; letter-spacing: 0.5px;">

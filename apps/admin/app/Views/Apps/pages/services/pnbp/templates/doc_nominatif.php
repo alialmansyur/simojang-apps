@@ -113,30 +113,27 @@
                 <?= esc($signLeft['sign_title'] ?? 'Mengetahui / Menyetujui,') ?><br>
                 <strong><?= esc($signLeft['jabatan'] ?? 'Pejabat Pembuat Komitmen') ?></strong>
                 
-                <div style="height: 70px; margin: 4px 0;">
-                    <?php if (!empty($signLeft) && $signLeft['sign_status'] === 'signed' && !empty($signLeft['signature_image_path'])): ?>
-                        <img src="<?= FCPATH . 'writable/' . $signLeft['signature_image_path'] ?>" style="height: 65px; max-width: 150px;">
+                <div style="height: 65px; margin: 3px 0;">
+                    <?php if (!empty($signLeft) && $signLeft['sign_status'] === 'signed' && !empty($signLeft['signature_base64'])): ?>
+                        <img src="<?= $signLeft['signature_base64'] ?>" style="height: 65px; max-width: 150px;">
                     <?php elseif (!empty($signLeft)): ?>
                         <barcode code="<?= base_url('pnbp-sign/' . $signLeft['sign_token']) ?>" type="QR" class="barcode" size="0.8" error="M" disableborder="1" />
-                        <br><span style="font-size: 7pt; color: #64748b;">Scan QR untuk TTD</span>
+                        <br><span style="font-size: 7pt; color: #64748b;">Scan QR untuk TTD Digital</span>
                     <?php endif; ?>
                 </div>
-
-                <strong><u><?= esc($signLeft['nama'] ?? 'Ahmad Fauzi, S.Kom., M.T.I.') ?></u></strong><br>
+                <strong><u><?= esc($signLeft['nama'] ?? '-') ?></u></strong><br>
                 NIP. <?= esc($signLeft['nip'] ?? '-') ?>
             </td>
 
             <td style="width: 50%; text-align: center;">
-                Bandung, <?= \App\Services\PNBP\PNBPHelper::formatTanggalIndo($doc['doc_date']) ?><br>
-                <?= esc($signRight['sign_title'] ?? 'Lunas Dibayar,') ?><br>
-                <strong><?= esc($signRight['jabatan'] ?? 'Bendahara Pengeluaran') ?></strong>
-                
-                <div style="height: 70px; margin: 4px 0;">
-                    <?php if (!empty($signRight) && $signRight['sign_status'] === 'signed' && !empty($signRight['signature_image_path'])): ?>
-                        <img src="<?= FCPATH . 'writable/' . $signRight['signature_image_path'] ?>" style="height: 65px; max-width: 150px;">
+                Mengetahui,<br>
+                <strong><?= esc($signRight['jabatan'] ?? 'Kepala Kantor Regional III BKN') ?></strong>
+                <div style="height: 65px; margin: 3px 0;">
+                    <?php if (!empty($signRight) && $signRight['sign_status'] === 'signed' && !empty($signRight['signature_base64'])): ?>
+                        <img src="<?= $signRight['signature_base64'] ?>" style="height: 65px; max-width: 150px;">
                     <?php elseif (!empty($signRight)): ?>
                         <barcode code="<?= base_url('pnbp-sign/' . $signRight['sign_token']) ?>" type="QR" class="barcode" size="0.8" error="M" disableborder="1" />
-                        <br><span style="font-size: 7pt; color: #64748b;">Scan QR untuk TTD</span>
+                        <br><span style="font-size: 7pt; color: #64748b;">Scan QR untuk TTD Digital</span>
                     <?php endif; ?>
                 </div>
 

@@ -93,8 +93,8 @@
                 <strong><?= esc($signLeft['jabatan'] ?? 'Pejabat Pembuat Komitmen') ?></strong>
                 
                 <div style="height: 65px; margin: 4px 0;">
-                    <?php if (!empty($signLeft) && $signLeft['sign_status'] === 'signed' && !empty($signLeft['signature_image_path'])): ?>
-                        <img src="<?= FCPATH . 'writable/' . $signLeft['signature_image_path'] ?>" style="height: 60px; max-width: 130px;">
+                    <?php if (!empty($signLeft) && $signLeft['sign_status'] === 'signed' && !empty($signLeft['signature_base64'])): ?>
+                        <img src="<?= $signLeft['signature_base64'] ?>" style="height: 60px; max-width: 130px;">
                     <?php elseif (!empty($signLeft)): ?>
                         <barcode code="<?= base_url('pnbp-sign/' . $signLeft['sign_token']) ?>" type="QR" class="barcode" size="0.75" error="M" disableborder="1" />
                         <br><span style="font-size: 6.5pt; color: #64748b;">Scan QR TTD</span>
@@ -111,8 +111,8 @@
                 <strong><?= esc($signCenter['jabatan'] ?? 'Bendahara Pengeluaran') ?></strong>
                 
                 <div style="height: 65px; margin: 4px 0;">
-                    <?php if (!empty($signCenter) && $signCenter['sign_status'] === 'signed' && !empty($signCenter['signature_image_path'])): ?>
-                        <img src="<?= FCPATH . 'writable/' . $signCenter['signature_image_path'] ?>" style="height: 60px; max-width: 130px;">
+                    <?php if (!empty($signCenter) && $signCenter['sign_status'] === 'signed' && !empty($signCenter['signature_base64'])): ?>
+                        <img src="<?= $signCenter['signature_base64'] ?>" style="height: 60px; max-width: 130px;">
                     <?php elseif (!empty($signCenter)): ?>
                         <barcode code="<?= base_url('pnbp-sign/' . $signCenter['sign_token']) ?>" type="QR" class="barcode" size="0.75" error="M" disableborder="1" />
                         <br><span style="font-size: 6.5pt; color: #64748b;">Scan QR TTD</span>
@@ -129,8 +129,8 @@
                 <strong><?= esc($signRight['sign_title'] ?? 'Yang Menerima / Rekanan,') ?></strong>
                 
                 <div style="height: 65px; margin: 4px 0;">
-                    <?php if (!empty($signRight) && $signRight['sign_status'] === 'signed' && !empty($signRight['signature_image_path'])): ?>
-                        <img src="<?= FCPATH . 'writable/' . $signRight['signature_image_path'] ?>" style="height: 60px; max-width: 130px;">
+                    <?php if (!empty($signRight) && $signRight['sign_status'] === 'signed' && !empty($signRight['signature_base64'])): ?>
+                        <img src="<?= $signRight['signature_base64'] ?>" style="height: 60px; max-width: 130px;">
                     <?php elseif (!empty($signRight)): ?>
                         <barcode code="<?= base_url('pnbp-sign/' . $signRight['sign_token']) ?>" type="QR" class="barcode" size="0.75" error="M" disableborder="1" />
                         <br><span style="font-size: 6.5pt; color: #64748b;">Scan QR TTD</span>

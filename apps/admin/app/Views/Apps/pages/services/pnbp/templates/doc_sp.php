@@ -113,8 +113,8 @@
                 <strong><?= esc($signRight['jabatan'] ?? 'Kepala Kantor Regional III BKN') ?></strong>
                 
                 <div style="height: 75px; margin: 5px 0;">
-                    <?php if (!empty($signRight) && $signRight['sign_status'] === 'signed' && !empty($signRight['signature_image_path'])): ?>
-                        <img src="<?= FCPATH . 'writable/' . $signRight['signature_image_path'] ?>" style="height: 70px; max-width: 160px;">
+                    <?php if (!empty($signRight) && $signRight['sign_status'] === 'signed' && !empty($signRight['signature_base64'])): ?>
+                        <img src="<?= $signRight['signature_base64'] ?>" style="height: 70px; max-width: 160px;">
                     <?php elseif (!empty($signRight)): ?>
                         <barcode code="<?= base_url('pnbp-sign/' . $signRight['sign_token']) ?>" type="QR" class="barcode" size="0.9" error="M" disableborder="1" />
                         <br><span style="font-size: 7.5pt; color: #64748b;">Scan QR untuk TTD Digital</span>

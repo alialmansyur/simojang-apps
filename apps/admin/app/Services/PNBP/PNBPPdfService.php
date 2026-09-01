@@ -68,13 +68,48 @@ class PNBPPdfService
         $templateName = 'doc_' . $docType;
         $viewPath = 'Apps/pages/services/pnbp/templates/' . $templateName;
 
-        // Pisahkan signature berdasarkan posisi
+        // Logo BKN Base64 (Mencegah blocking/timeout request pada mPDF di Linux/Hosting)
+        $logoBase64 = '';
+        $logoCandidates = [
+            FCPATH . 'apps/assets/images/instansi/Badan Kepegawaian Negara.png',
+            FCPATH . 'apps/assets/images/logo/logo.png',
+            FCPATH . 'apps/assets/images/logo/logo-dark.png',
+        ];
+        foreach ($logoCandidates as $cand) {
+            if (file_exists($cand)) {
+                $raw = @file_get_contents($cand);
+                if ($raw !== false) {
+                    $logoBase64 = 'data:image/png;base64,' . base64_encode($raw);
+                    break;
+                }
+            }
+        }
+
+        // Pisahkan signature berdasarkan posisi dan konversi tanda tangan ke Base64
         $signatures = $docData['signatures'] ?? [];
         $signLeft   = null;
         $signCenter = null;
         $signRight  = null;
 
-        foreach ($signatures as $s) {
+        foreach ($signatures as &$s) {
+            $sigBase64 = '';
+            if (!empty($s['signature_image_path'])) {
+                $candidates = [
+                    WRITEPATH . $s['signature_image_path'],
+                    FCPATH . $s['signature_image_path'],
+                ];
+                foreach ($candidates as $f) {
+                    if (file_exists($f)) {
+                        $rawSig = @file_get_contents($f);
+                        if ($rawSig !== false) {
+                            $sigBase64 = 'data:image/png;base64,' . base64_encode($rawSig);
+                            break;
+                        }
+                    }
+                }
+            }
+            $s['signature_base64'] = $sigBase64;
+
             $pos = strtolower(trim((string) ($s['sign_position'] ?? 'right')));
             if ($pos === 'left') {
                 $signLeft = $s;
@@ -84,6 +119,7 @@ class PNBPPdfService
                 $signRight = $s;
             }
         }
+        unset($s);
 
         $viewData = [
             'doc'         => $docData,
@@ -95,6 +131,7 @@ class PNBPPdfService
             'signLeft'    => $signLeft,
             'signCenter'  => $signCenter,
             'signRight'   => $signRight,
+            'logoBase64'  => $logoBase64,
         ];
 
         return view($viewPath, $viewData);
@@ -141,7 +178,11 @@ class PNBPPdfService
             'img_dpi'              => 96,
             'default_font'         => 'arial',
             'default_font_size'    => 10,
+            'curlAllowUnsafeSslRequests' => true,
         ]);
+
+        $mpdf->curlTimeout = 3;
+        $mpdf->showImageErrors = false;
 
         $mpdf->SetAuthor('SIMOJANG - Kanreg III BKN');
         $mpdf->SetCreator('SIMOJANG DMS PNBP Generator');
