@@ -750,5 +750,40 @@ class FasilitasiCAT extends BaseController
             'status' => true,
             'summary' => $this->catmodel->getSummaryTilok($seleksi_uid),
         ]);
-    }     
+    }
+
+    public function getInstansiTilok()
+    {
+        $uid   = trim((string) $this->request->getPost('key'));
+        $bulan = $this->request->getPost('bulan');
+
+        if ($uid === '') {
+            return $this->response->setStatusCode(400)->setJSON([
+                'status'  => false,
+                'message' => 'Kunci data tidak valid'
+            ]);
+        }
+
+        if (!is_array($bulan)) {
+            $bulan = [];
+        }
+
+        if (count($bulan) > 6) {
+            return $this->response->setStatusCode(400)->setJSON([
+                'status'  => false,
+                'message' => 'Maksimal 6 bulan diperbolehkan'
+            ]);
+        }
+
+        $bulan = array_values(array_filter(array_map('intval', $bulan), static function ($item) {
+            return $item >= 1 && $item <= 12;
+        }));
+
+        $data = $this->catmodel->getInstansiTilokGrouped($uid, $bulan);
+
+        return $this->response->setJSON([
+            'status' => true,
+            'data'   => $data,
+        ]);
+    }
 }

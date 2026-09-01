@@ -318,6 +318,7 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/fetch/data-tilok-cat', 'Apps\Services\FasilitasiCAT::getDataTilok');  
     $routes->post('/fetch/summary-tilok-cat', 'Apps\Services\FasilitasiCAT::getSummaryTilok');
     $routes->post('/fetch/data-tilok-detail', 'Apps\Services\FasilitasiCAT::getDataDetailTilok');           
+    $routes->post('/fetch/instansi-tilok-cat', 'Apps\Services\FasilitasiCAT::getInstansiTilok');           
     $routes->post('/fetch/meta-tilok-detail', 'Apps\Services\FasilitasiCAT::getMetaDetailTilok');
     $routes->post('/fetch/summary-tilok-detail', 'Apps\Services\FasilitasiCAT::getSummaryDetailTilok');
     $routes->post('/kill/data-tilok-cat', 'Apps\Services\FasilitasiCAT::removeDataTilok');    

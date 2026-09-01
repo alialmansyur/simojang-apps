@@ -116,6 +116,7 @@ class CATModel extends Model
     public function getRecapHasil($params = [])
     {
         $id          = $params['id'] ?? null;
+        $bulan       = $params['bulan'] ?? [];
         $instansi_id = $params['instansi_id'] ?? [];
 
         $builder = $this->db->table('txn_cat_hasil a')
@@ -209,6 +210,41 @@ class CATModel extends Model
             'total_peserta' => 0,
             'last_update' => null,
         ];
+    }
+
+    public function getInstansiTilokGrouped(string $tilokUid, array $bulan = []): array
+    {
+        $builder = $this->db->table('txn_cat_hasil a');
+        $builder->select("
+            a.instansi_id,
+            COALESCE(d.nama, a.instansi_id) AS instansi_nama,
+            d.logo,
+            COUNT(a.id) AS total_sesi,
+            SUM(COALESCE(a.hadir, 0)) AS total_hadir,
+            SUM(COALESCE(a.tidak_hadir, 0)) AS total_tidak_hadir,
+            SUM(COALESCE(a.reschedule, 0)) AS total_reschedule,
+            SUM(COALESCE(a.hadir, 0) + COALESCE(a.tidak_hadir, 0)) AS total_peserta,
+            SUM(COALESCE(a.memenuhi, 0)) AS total_memenuhi,
+            SUM(COALESCE(a.tidak_memenuhi, 0)) AS total_tidak_memenuhi,
+            MIN(a.nilai_min) AS min_nilai,
+            MAX(a.nilai_max) AS max_nilai,
+            MIN(a.period_date) AS min_date,
+            MAX(a.period_date) AS max_date,
+            MAX(COALESCE(a.updated_at, a.created_at)) AS last_update
+        ", false);
+        $builder->join('txn_cat_tilok b', 'b.id = a.tilok_id', 'inner');
+        $builder->join('data_instansi d', 'd.kodeins = a.instansi_id', 'left');
+        $builder->where('b.uid', $tilokUid);
+
+        if (!empty($bulan)) {
+            $builder->whereIn('MONTH(a.period_date)', $bulan);
+        }
+
+        $builder->groupBy('a.instansi_id, d.nama, d.logo');
+        $builder->orderBy('last_update', 'DESC');
+        $builder->orderBy('d.nama', 'ASC');
+
+        return $builder->get()->getResultArray() ?? [];
     }
 
 }
