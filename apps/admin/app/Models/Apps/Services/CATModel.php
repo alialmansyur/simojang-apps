@@ -85,7 +85,8 @@ class CATModel extends Model
                 a.*, 
                 b.kode AS jenis_tes_kode, 
                 b.nama AS jenis_tes_nama, 
-                MAX(th.created_at) AS last_rekap_date,
+                MAX(th.period_date) AS last_rekap_date,
+                MAX(th.created_at) AS last_rekap_created,
                 MAX(th.updated_at) AS last_rekap_updated,
                 MAX(t.created_at) AS last_tilok_created,
                 MAX(t.updated_at) AS last_tilok_updated

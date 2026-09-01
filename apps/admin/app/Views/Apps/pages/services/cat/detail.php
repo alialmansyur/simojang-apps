@@ -19,20 +19,20 @@
                 <div class="mb-0 d-flex flex-column gap-1">
                     <div class="d-flex align-items-center gap-2 flex-wrap">
                         <span class="cat-detail-meta-label">Event :</span>
-                        <span class="cat-detail-event-val" id="catDetailEvent">-</span>
+                        <span class="cat-detail-event-val" id="catDetailEvent"><?= esc($meta['nama_seleksi'] ?? '-') ?></span>
                     </div>
                     <div class="d-flex align-items-center gap-2 flex-wrap">
                         <span class="cat-detail-sub-label">Titik Lokasi :</span>
-                        <span class="cat-detail-tilok-val" id="catDetailTilok">-</span>
-                        <span class="d-none" id="catDetailPeriodeWrap">
+                        <span class="cat-detail-tilok-val" id="catDetailTilok"><?= esc($meta['nama_tilok'] ?? '-') ?></span>
+                        <span class="<?= empty($meta['period']) && empty($meta['period_start_date']) ? 'd-none' : '' ?>" id="catDetailPeriodeWrap">
                             <span class="cat-detail-dot">&bull;</span>
                             <span class="cat-detail-sub-label">Periode :</span>
-                            <span class="cat-detail-sub-val" id="catDetailPeriodeText">-</span>
+                            <span class="cat-detail-sub-val" id="catDetailPeriodeText"><?= esc($meta['period'] ?? ((!empty($meta['period_start_date']) && !empty($meta['period_end_date'])) ? ($meta['period_start_date'] . ' s/d ' . $meta['period_end_date']) : '-')) ?></span>
                         </span>
-                        <span class="d-none" id="catDetailKapasitasWrap">
+                        <span class="<?= empty($meta['kapasitas']) ? 'd-none' : '' ?>" id="catDetailKapasitasWrap">
                             <span class="cat-detail-dot">&bull;</span>
                             <span class="cat-detail-sub-label">Kapasitas :</span>
-                            <span class="cat-detail-sub-val" id="catDetailKapasitasText">-</span>
+                            <span class="cat-detail-sub-val" id="catDetailKapasitasText"><?= esc(!empty($meta['kapasitas']) ? ($meta['kapasitas'] . ' PC') : '-') ?></span>
                         </span>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <button type="button" class="btn btn-outline-primary js-service-reload d-inline-flex align-items-center justify-content-center px-3 cat-btn-action" id="btnReloadData">
                         Muat Ulang
                     </button>
-                    <a href="javascript:void(0)" class="btn btn-primary d-inline-flex align-items-center justify-content-center px-3 cat-btn-action" id="btnHeaderBack">
+                    <a href="<?= !empty($meta['seleksi_uid']) ? base_url('apps-cat-tilok/' . esc($meta['seleksi_uid'])) : base_url('apps-cat') ?>" class="btn btn-primary d-inline-flex align-items-center justify-content-center px-3 cat-btn-action" id="btnHeaderBack">
                         <i class="bi bi-chevron-left me-1 cat-btn-action-icon"></i> <span>Kembali</span>
                     </a>
                 </div>
@@ -137,7 +137,9 @@
                     <div class="col-12 col-xl-5">
                         <div class="d-flex align-items-center gap-3">
                             <div class="flex-shrink-0 d-flex align-items-center justify-content-center cat-active-instansi-logo-wrap" id="rekapActiveLogoWrap">
-                                <i class="bi bi-buildings fs-2 text-primary"></i>
+                                <div class="d-flex align-items-center justify-content-center text-center bg-light border rounded-3 text-secondary fw-bold cat-no-logo-box">
+                                    No<br>Logo
+                                </div>
                             </div>
                             <div class="min-w-0">
                                 <h4 class="cat-active-instansi-title text-truncate mb-1" id="rekapActiveInstansiNama">-</h4>
@@ -295,6 +297,26 @@
                 </div>
                 <div class="modal-body">
                     
+                    <!-- Header Informasi Event, Titik Lokasi & Instansi -->
+                    <div class="card border mb-3 shadow-none rounded-3" style="background-color: #f8fafc; border-color: #e2e8f0 !important; border-left: 4px solid var(--bs-primary) !important;">
+                        <div class="card-body py-2 px-3">
+                            <div class="d-flex flex-column gap-1">
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="fw-semibold text-secondary" style="font-size: 0.95rem; color: #475569 !important;">Nama Event :</span>
+                                    <span class="fw-bold text-dark" id="modalInfoEvent" style="font-size: 1rem; color: #0f172a !important;"><?= esc($meta['nama_seleksi'] ?? '-') ?></span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="fw-semibold text-secondary" style="font-size: 0.95rem; color: #475569 !important;">Nama Titik Lokasi :</span>
+                                    <span class="fw-bold text-dark" id="modalInfoTilok" style="font-size: 1rem; color: #0f172a !important;"><?= esc($meta['nama_tilok'] ?? '-') ?></span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2 flex-wrap d-none" id="activeInstansiAlert">
+                                    <span class="fw-semibold text-secondary" style="font-size: 0.95rem; color: #475569 !important;">Instansi Aktif :</span>
+                                    <span class="fw-bold text-dark" id="activeInstansiLabel" style="font-size: 1rem; color: #0f172a !important;">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Section Pilihan Instansi (Hanya muncul jika mode Tambah Instansi Baru) -->
                     <div class="card border mb-3 shadow-none bg-light" id="instansiSelectorWrap">
                         <div class="card-body p-3 position-relative">
@@ -302,11 +324,6 @@
                             <select id="selectNewInstansi" name="instansi_baru" class="form-select select-instansi cat-select-instansi-wrap"></select>
                             <small class="text-muted">Ketik nama instansi dari data master instansi BKN.</small>
                         </div>
-                    </div>
-
-                    <!-- Alert Instansi Aktif (Muncul saat mode Tambah Sesi pada Instansi Terpilih) -->
-                    <div class="alert alert-info py-2 mb-3 d-none" id="activeInstansiAlert">
-                        <i class="bi bi-building me-1"></i> <strong>Instansi Aktif:</strong> <span id="activeInstansiLabel">-</span>
                     </div>
 
                     <form method="POST" id="form-usulan">
@@ -423,6 +440,10 @@
 </main>
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
+<script>
+    var SELEKSI_UID = "<?= esc($meta['seleksi_uid'] ?? '') ?>";
+    var TILOK_UID = "<?= esc($meta['uid'] ?? '') ?>";
+</script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/service-table-ui.js') ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/cat/entryRekap.js?v=' . time()) ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/cat/tablesRekap.js?v=' . time()) ?>"></script>

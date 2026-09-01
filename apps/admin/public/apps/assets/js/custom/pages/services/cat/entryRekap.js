@@ -136,6 +136,19 @@ $(document).ready(function () {
         tbody.append(newRow);
     }
 
+    // Helper: Sinkronisasi Info Event & Titik Lokasi pada Header Modal
+    function syncModalHeaderInfo() {
+        const eventName = (window.CatDetailState && window.CatDetailState.tilokMeta && window.CatDetailState.tilokMeta.nama_seleksi) 
+            || $('#catDetailEvent').text() 
+            || '-';
+        const tilokName = (window.CatDetailState && window.CatDetailState.tilokMeta && window.CatDetailState.tilokMeta.nama_tilok) 
+            || $('#catDetailTilok').text() 
+            || '-';
+
+        $('#modalInfoEvent').text(eventName).attr('title', eventName);
+        $('#modalInfoTilok').text(tilokName).attr('title', tilokName);
+    }
+
     // Trigger Open Modal - Mode: Tambah Instansi Baru (Level 1)
     $('#btnOpenTambahInstansi').on('click', function () {
         if (!window.CatDetailState) return;
@@ -144,6 +157,7 @@ $(document).ready(function () {
         $('#instansiSelectorWrap').removeClass('d-none');
         $('#activeInstansiAlert').addClass('d-none');
         $('#DataModalLabelCreate').text('Entri Rekap - Instansi Baru');
+        syncModalHeaderInfo();
 
         tbody.empty();
         addRow(); // Mulai dengan 1 baris
@@ -160,6 +174,7 @@ $(document).ready(function () {
         $('#activeInstansiAlert').removeClass('d-none');
         $('#activeInstansiLabel').text(activeNama);
         $('#DataModalLabelCreate').text(`Tambah Sesi Rekap - ${activeNama}`);
+        syncModalHeaderInfo();
 
         tbody.empty();
         addRow(); // Mulai dengan 1 baris

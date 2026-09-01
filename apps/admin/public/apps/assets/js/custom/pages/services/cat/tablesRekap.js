@@ -100,6 +100,14 @@ function loadMetaDetailTilok() {
             $('#catDetailTilok').text(meta.nama_tilok || '-');
             $('#catDetailEvent').text(meta.nama_seleksi || '-');
 
+            // Sync Modal Info Header (Entri Rekap - Instansi Baru)
+            $('#modalInfoEvent').text(meta.nama_seleksi || '-').attr('title', meta.nama_seleksi || '-');
+            $('#modalInfoTilok').text(meta.nama_tilok || '-').attr('title', meta.nama_tilok || '-');
+
+            if (meta.seleksi_uid) {
+                $('#btnHeaderBack').attr('href', AppConfig.initGlobal + 'apps-cat-tilok/' + meta.seleksi_uid);
+            }
+
             if (meta.period_start_date || meta.period) {
                 const periode = meta.period || `${meta.period_start_date} s/d ${meta.period_end_date}`;
                 $('#catDetailPeriodeText').text(periode);
@@ -405,10 +413,14 @@ function openInstansiRekapView(instansiId, instansiNama, stats = {}, logo = '') 
             <img src="${AppConfig.initGlobal}apps/assets/images/instansi/${escapeHtml(logo)}" 
                  alt="Logo ${escapeHtml(instansiNama)}" 
                  class="img-fluid cat-active-instansi-logo-img" 
-                 onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'bi bi-buildings fs-2 text-primary\\'></i>';">
+                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'d-flex align-items-center justify-content-center text-center bg-light border rounded-3 text-secondary fw-bold cat-no-logo-box\\'>No<br>Logo</div>';">
         `);
     } else {
-        logoWrap.html(`<i class="bi bi-buildings fs-2 text-primary"></i>`);
+        logoWrap.html(`
+            <div class="d-flex align-items-center justify-content-center text-center bg-light border rounded-3 text-secondary fw-bold cat-no-logo-box">
+                No<br>Logo
+            </div>
+        `);
     }
 
     // Switch View
@@ -593,11 +605,22 @@ $(document).ready(function () {
     });
 
     // Header Back Button
-    $('#btnHeaderBack').on('click', function () {
+    $('#btnHeaderBack').on('click', function (e) {
         if (CatDetailState.currentLevel === 'rekap') {
+            e.preventDefault();
             backToInstansiList();
         } else {
-            window.location.href = AppConfig.initGlobal + 'apps-cat';
+            const seleksiUid = CatDetailState.tilokMeta?.seleksi_uid || (typeof SELEKSI_UID !== 'undefined' ? SELEKSI_UID : '');
+            if (seleksiUid) {
+                e.preventDefault();
+                window.location.href = AppConfig.initGlobal + 'apps-cat-tilok/' + seleksiUid;
+            } else {
+                const currentHref = $(this).attr('href');
+                if (!currentHref || currentHref === 'javascript:void(0)') {
+                    e.preventDefault();
+                    window.location.href = AppConfig.initGlobal + 'apps-cat';
+                }
+            }
         }
     });
 

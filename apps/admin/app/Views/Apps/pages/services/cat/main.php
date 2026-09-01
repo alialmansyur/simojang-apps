@@ -76,7 +76,7 @@
                 </p>
             </div>
             <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0">
-                <a href="<?= base_url('timkerja-layanan') ?>" class="btn btn-primary">
+                <a href="<?= base_url('timkerja-layanan/' . esc($timkerjaUid ?? 'a13e4110-7ccb-11f0-be4c-5f752d8309a4')) ?>" class="btn btn-primary">
                     <i class="bi bi-chevron-left fs-6"></i> Kembali
                 </a>
             </div>
@@ -163,7 +163,7 @@
 
             <?php if (!empty($seleksiList)): ?>
                 <?php 
-                    $todayThreshold = date('Y-m-d 00:00:00');
+                    $today = date('Y-m-d');
                 ?>
                 <?php foreach ($seleksiList as $index => $sel): ?>
                     <?php 
@@ -181,16 +181,9 @@
 
                         $iconSvg = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>';
 
-                        // Logika Sedang Berlangsung: jika ada data terbaru yang di-input/update pada hari ini
-                        $activityDates = array_filter([
-                            $sel['last_rekap_date'] ?? null,
-                            $sel['last_rekap_updated'] ?? null,
-                            $sel['last_tilok_created'] ?? null,
-                            $sel['last_tilok_updated'] ?? null,
-                            $sel['created_at'] ?? null
-                        ]);
-                        $latestActivity = !empty($activityDates) ? max($activityDates) : null;
-                        $isOngoing = !empty($latestActivity) && ($latestActivity >= $todayThreshold);
+                        // Logika Sedang Berlangsung: murni dilihat dari tanggal data rekap terakhir (txn_cat_hasil.period_date), bukan dari created_at
+                        $lastRekapDate = !empty($sel['last_rekap_date']) ? substr($sel['last_rekap_date'], 0, 10) : null;
+                        $isOngoing = !empty($lastRekapDate) && ($lastRekapDate >= $today);
                     ?>
                     <div class="col-12 col-md-6 col-lg-4 seleksi-item" data-name="<?= strtolower(esc($sel['nama_seleksi'])) ?>" data-event="<?= strtolower(esc($sel['jenis_tes_nama'])) ?>" data-periode="<?= esc($sel['periode']) ?>" style="display: none; <?= $inlineStyles ?>">
                         <div class="card shadow-sm position-relative twx-anim-card overflow-hidden twx-card-container">
@@ -204,7 +197,7 @@
                                     <div class="d-flex align-items-center gap-1 flex-wrap">
                                         <span class="badge twx-card-badge"><?= esc($sel['jenis_tes_kode']) ?></span>
                                         <?php if ($isOngoing): ?>
-                                            <span class="badge cat-badge-ongoing" title="Event sedang berlangsung (aktivitas data H-1 s.d. hari ini)">
+                                            <span class="badge cat-badge-ongoing" title="Event sedang berlangsung (berdasarkan tanggal data rekap terakhir)">
                                                 <span class="cat-pulse-dot"></span>
                                                 Berlangsung
                                             </span>

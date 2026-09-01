@@ -42,10 +42,18 @@ class FasilitasiCAT extends BaseController
 
         $seleksiList = $this->catmodel->getBuilder('recap-seleksi')->get()->getResultArray();
 
+        $timkerja = $this->catmodel->db->table('data_timkerja_layanan a')
+            ->select('b.uid')
+            ->join('data_timkerja b', 'b.id = a.timkerja_id', 'inner')
+            ->where('a.url', 'apps-cat')
+            ->get()->getRowArray();
+        $timkerjaUid = !empty($timkerja['uid']) ? $timkerja['uid'] : 'a13e4110-7ccb-11f0-be4c-5f752d8309a4';
+
         return $this->renderView('Apps/pages/services/cat/main', [
             'seslog' => session()->get(),
             'jenisOptions' => $jenisOptions,
-            'seleksiList' => $seleksiList
+            'seleksiList' => $seleksiList,
+            'timkerjaUid' => $timkerjaUid
         ]);            
     } 
 
@@ -206,8 +214,11 @@ class FasilitasiCAT extends BaseController
             throw PageNotFoundException::forPageNotFound('Data tidak ditemukan');
         }
 
+        $meta = $this->catmodel->getDetailMeta($param);
+
         return $this->renderView('Apps/pages/services/cat/detail', [
             'seslog' => session()->get(),
+            'meta'   => $meta ?? $row,
         ]);
     }     
 
