@@ -178,6 +178,9 @@ class PNBPPdfService
             'img_dpi'              => 96,
             'default_font'         => 'arial',
             'default_font_size'    => 10,
+            'simpleTables'         => true,
+            'packTableData'        => true,
+            'useSubstitutions'     => false,
             'curlAllowUnsafeSslRequests' => true,
         ]);
 
