@@ -26,11 +26,13 @@ $routes->get('/login', 'Auth\Auth::index', ['filter' => 'guest']);
 $routes->post('/authprocess', 'Auth\Auth::authprocess');
 $routes->get('/logout', 'Auth\Auth::logout');
 
-// Public Digital Signature & Verification Routes (Scan QR Code)
+// Public Digital Signature & Verification Routes (Scan QR Code) & Health Diagnostic
 $routes->get('/pnbp-sign/(:segment)', 'Apps\Services\PNBPSignController::signView/$1');
 $routes->post('/pnbp-sign/submit', 'Apps\Services\PNBPSignController::submitSignature');
 $routes->get('/pnbp-verify/(:segment)', 'Apps\Services\PNBPSignController::verifyDocument/$1');
 $routes->get('/pnbp-diagnose', 'Apps\Services\PNBPDocumentController::diagnose');
+$routes->get('/apps-pnbp/diagnose', 'Apps\Services\PNBPDocumentController::diagnose');
+
 
 // $routes->get('backup-database', 'Apps\AppsController::backupDatabase');
 
