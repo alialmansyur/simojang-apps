@@ -344,6 +344,9 @@ class PNBPDocumentController extends BaseController
             $this->personelModel->insert($payload);
         }
 
+        // Invalidate cache dengan update timestamp dokumen
+        $this->pnbpModel->update((int) $doc['id'], ['updated_at' => date('Y-m-d H:i:s')]);
+
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Data personel berhasil disimpan.',
@@ -361,6 +364,11 @@ class PNBPDocumentController extends BaseController
                 'status'  => 'error',
                 'message' => 'ID personel tidak valid.',
             ]);
+        }
+
+        $row = $this->personelModel->find($id);
+        if ($row && !empty($row['document_id'])) {
+            $this->pnbpModel->update((int) $row['document_id'], ['updated_at' => date('Y-m-d H:i:s')]);
         }
 
         $this->personelModel->delete($id);
@@ -416,6 +424,9 @@ class PNBPDocumentController extends BaseController
             $this->itemModel->insert($payload);
         }
 
+        // Invalidate cache dengan update timestamp dokumen
+        $this->pnbpModel->update((int) $doc['id'], ['updated_at' => date('Y-m-d H:i:s')]);
+
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Item jamuan berhasil disimpan.',
@@ -433,6 +444,11 @@ class PNBPDocumentController extends BaseController
                 'status'  => 'error',
                 'message' => 'ID item tidak valid.',
             ]);
+        }
+
+        $row = $this->itemModel->find($id);
+        if ($row && !empty($row['document_id'])) {
+            $this->pnbpModel->update((int) $row['document_id'], ['updated_at' => date('Y-m-d H:i:s')]);
         }
 
         $this->itemModel->delete($id);
@@ -459,6 +475,11 @@ class PNBPDocumentController extends BaseController
                 'status'  => 'error',
                 'message' => 'Nama pejabat penandatangan wajib diisi.',
             ]);
+        }
+
+        $sigRow = $this->signatureModel->find($sigId);
+        if ($sigRow && !empty($sigRow['document_id'])) {
+            $this->pnbpModel->update((int) $sigRow['document_id'], ['updated_at' => date('Y-m-d H:i:s')]);
         }
 
         $this->signatureModel->update($sigId, [
@@ -516,10 +537,10 @@ class PNBPDocumentController extends BaseController
         }
 
         try {
-            ini_set('memory_limit', '256M');
-            set_time_limit(30);
+            ini_set('memory_limit', '512M');
+            set_time_limit(120);
 
-            $result = $this->pdfService->generatePdfBinary($uid, true);
+            $result = $this->pdfService->getOrGeneratePdf($uid, true);
 
             return $this->response->setJSON([
                 'status'   => 'success',
@@ -538,18 +559,24 @@ class PNBPDocumentController extends BaseController
 
     /**
      * Endpoint Streaming PDF Preview (Iframe / Browser Inline)
+     * Menggunakan Smart Disk Caching untuk streaming instan (0% beban CPU mPDF berulang)
      */
     public function previewPdf(string $uid)
     {
         try {
-            ini_set('memory_limit', '256M');
-            set_time_limit(30);
+            ini_set('memory_limit', '512M');
+            set_time_limit(120);
 
-            $result = $this->pdfService->generatePdfBinary($uid, false);
+            $result = $this->pdfService->getOrGeneratePdf($uid, false);
+            $contentLength = strlen($result['binary']);
 
             return $this->response
                 ->setHeader('Content-Type', 'application/pdf')
                 ->setHeader('Content-Disposition', 'inline; filename="' . $result['filename'] . '"')
+                ->setHeader('Content-Length', (string) $contentLength)
+                ->setHeader('Accept-Ranges', 'bytes')
+                ->setHeader('Cache-Control', 'private, max-age=0, must-revalidate')
+                ->setHeader('Pragma', 'public')
                 ->setBody($result['binary']);
         } catch (\Throwable $e) {
             log_message('error', '[PNBP PDF Preview Error] ' . $e->getMessage());
@@ -563,14 +590,18 @@ class PNBPDocumentController extends BaseController
     public function downloadPdf(string $uid)
     {
         try {
-            ini_set('memory_limit', '256M');
-            set_time_limit(30);
+            ini_set('memory_limit', '512M');
+            set_time_limit(120);
 
-            $result = $this->pdfService->generatePdfBinary($uid, true);
+            $result = $this->pdfService->getOrGeneratePdf($uid, false);
+            $contentLength = strlen($result['binary']);
 
             return $this->response
                 ->setHeader('Content-Type', 'application/pdf')
                 ->setHeader('Content-Disposition', 'attachment; filename="' . $result['filename'] . '"')
+                ->setHeader('Content-Length', (string) $contentLength)
+                ->setHeader('Cache-Control', 'private, max-age=0, must-revalidate')
+                ->setHeader('Pragma', 'public')
                 ->setBody($result['binary']);
         } catch (\Throwable $e) {
             log_message('error', '[PNBP PDF Download Error] ' . $e->getMessage());

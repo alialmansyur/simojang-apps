@@ -86,8 +86,9 @@ class PNBPSignController extends BaseController
         }
 
         $fileName = 'sig_' . $token . '.png';
+        $relPath  = 'uploads/signatures/' . $year . '/' . $fileName;
         $fullPath = $uploadDir . '/' . $fileName;
-        file_put_contents($fullPath, $decoded);
+        @file_put_contents($fullPath, $decoded);
 
         $ipAddress = $this->request->getIPAddress();
         $userAgent = $this->request->getUserAgent() ? $this->request->getUserAgent()->getAgentString() : 'Unknown';
@@ -97,7 +98,7 @@ class PNBPSignController extends BaseController
         // Update record signature
         $updatePayload = [
             'sign_status'          => 'signed',
-            'signature_image_path' => $fullPath,
+            'signature_image_path' => $relPath,
             'signed_at'            => $now,
             'signer_ip'            => $ipAddress,
             'signer_user_agent'    => $userAgent,
@@ -112,6 +113,12 @@ class PNBPSignController extends BaseController
         }
 
         $this->sigModel->update($signature['id'], $updatePayload);
+
+        // Touch timestamp dokumen induk untuk refresh cache PDF
+        if (!empty($signature['document_id'])) {
+            $docModel = new \App\Models\Apps\Services\PNBPDocumentModel();
+            $docModel->update((int) $signature['document_id'], ['updated_at' => $now]);
+        }
 
         return $this->response->setJSON([
             'status'   => 'success',

@@ -30,7 +30,9 @@ RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.
 # Production PHP settings
 RUN echo "upload_max_filesize=50M" >> /usr/local/etc/php/conf.d/production.ini \
     && echo "post_max_size=50M" >> /usr/local/etc/php/conf.d/production.ini \
-    && echo "memory_limit=256M" >> /usr/local/etc/php/conf.d/production.ini \
+    && echo "memory_limit=512M" >> /usr/local/etc/php/conf.d/production.ini \
+    && echo "max_execution_time=120" >> /usr/local/etc/php/conf.d/production.ini \
+    && echo "max_input_time=120" >> /usr/local/etc/php/conf.d/production.ini \
     && echo "display_errors=Off" >> /usr/local/etc/php/conf.d/production.ini \
     && echo "date.timezone=Asia/Jakarta" >> /usr/local/etc/php/conf.d/production.ini
 
@@ -39,6 +41,11 @@ WORKDIR /var/www/html
 COPY apps/admin/ /var/www/html/
 
 RUN mkdir -p /var/www/html/public/uploads/excel \
+    && mkdir -p /var/www/html/writable/cache/mpdf \
+    && mkdir -p /var/www/html/writable/uploads/pnbp \
+    && mkdir -p /var/www/html/writable/uploads/signatures \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
-    && chmod -R 775 /var/www/html/public/uploads
+    && chmod -R 775 /var/www/html/public/uploads \
+    && chmod -R 777 /var/www/html/writable
+

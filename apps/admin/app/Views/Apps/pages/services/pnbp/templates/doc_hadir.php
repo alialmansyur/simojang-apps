@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title><?= esc($doc['title']) ?></title>
     <style>
-        body { font-family: 'Arial', sans-serif; font-size: 9.5pt; line-height: 1.3; color: #000; }
+        body { font-family: 'dejavusanscondensed', 'dejavusans', sans-serif; font-size: 9.5pt; line-height: 1.3; color: #000; }
         .text-center { text-align: center; }
         .text-end { text-align: right; }
         .fw-bold { font-weight: bold; }
