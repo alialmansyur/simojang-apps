@@ -5,6 +5,7 @@ namespace App\Controllers\Apps\Services;
 use App\Controllers\BaseController;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\Apps\Services\PNBPDocumentModel;
+use App\Models\Apps\Services\PNBPDocTypeModel;
 use App\Models\Apps\Services\PNBPPersonelModel;
 use App\Models\Apps\Services\PNBPItemModel;
 use App\Models\Apps\Services\PNBPSignatureModel;
@@ -16,6 +17,7 @@ use App\Libraries\DataTablesLib;
 class PNBPDocumentController extends BaseController
 {
     protected PNBPDocumentModel $pnbpModel;
+    protected PNBPDocTypeModel $docTypeModel;
     protected PNBPPersonelModel $personelModel;
     protected PNBPItemModel $itemModel;
     protected PNBPSignatureModel $signatureModel;
@@ -26,6 +28,7 @@ class PNBPDocumentController extends BaseController
     public function __construct()
     {
         $this->pnbpModel      = new PNBPDocumentModel();
+        $this->docTypeModel   = new PNBPDocTypeModel();
         $this->personelModel  = new PNBPPersonelModel();
         $this->itemModel      = new PNBPItemModel();
         $this->signatureModel = new PNBPSignatureModel();
@@ -36,21 +39,38 @@ class PNBPDocumentController extends BaseController
 
     /**
      * Halaman 1: Katalog & List 9 Jenis Dokumen PNBP (/apps-pnbp)
+     * Memuat 9 dokumen dari database; dokumen dengan is_status = 0 ditampilkan dalam keadaan disabled
      */
     public function index()
     {
-        $docTypeDetails  = PNBPDocumentModel::$docTypeDetails;
-        $docTypeLabels   = PNBPDocumentModel::$docTypeLabels;
-        $docTypeBadges   = PNBPDocumentModel::$docTypeBadges;
-        $stats           = $this->pnbpModel->getDocTypeStats();
+        $allDocTypes     = $this->docTypeModel->getAllDocTypes();
+        $docTypeLabels   = $this->docTypeModel->getDocTypeLabels(false);
+        $docTypeBadges   = $this->docTypeModel->getDocTypeBadges(false);
+        $stats           = $this->pnbpModel->getDocTypeStats(array_keys($allDocTypes));
         $seleksiOptions  = $this->pnbpModel->getSeleksiOptions();
         $instansiOptions = $this->pnbpModel->getInstansiOptions('', 200);
 
+        // Kategori dinamis berdasarkan data dari database
+        $categoryCounts = [
+            'all'      => count($allDocTypes),
+            'personel' => 0,
+            'jamuan'   => 0,
+        ];
+        foreach ($allDocTypes as $doc) {
+            $catKey = $doc['category_key'] ?? 'personel';
+            if (isset($categoryCounts[$catKey])) {
+                $categoryCounts[$catKey]++;
+            } else {
+                $categoryCounts[$catKey] = 1;
+            }
+        }
+
         return $this->renderView('Apps/pages/services/pnbp/catalog', [
             'seslog'          => session()->get(),
-            'docTypeDetails'  => $docTypeDetails,
+            'docTypeDetails'  => $allDocTypes,
             'docTypeLabels'   => $docTypeLabels,
             'docTypeBadges'   => $docTypeBadges,
+            'categoryCounts'  => $categoryCounts,
             'stats'           => $stats,
             'seleksiOptions'  => $seleksiOptions,
             'instansiOptions' => $instansiOptions,
@@ -62,11 +82,14 @@ class PNBPDocumentController extends BaseController
      */
     public function docTypeView(string $docType)
     {
-        if (!isset(PNBPDocumentModel::$docTypeLabels[$docType])) {
-            throw PageNotFoundException::forPageNotFound('Jenis dokumen PNBP tidak dikenali.');
+        $docDetail = $this->docTypeModel->getDocTypeByCode($docType);
+        if (!$docDetail || empty($docDetail['is_status'])) {
+            throw PageNotFoundException::forPageNotFound('Jenis dokumen PNBP tidak ditemukan atau belum aktif.');
         }
 
-        $docDetail       = PNBPDocumentModel::$docTypeDetails[$docType] ?? [];
+        $activeDocTypes  = $this->docTypeModel->getActiveDocTypes();
+        $docTypeLabels   = $this->docTypeModel->getDocTypeLabels(false);
+        $docTypeBadges   = $this->docTypeModel->getDocTypeBadges(false);
         $seleksiOptions  = $this->pnbpModel->getSeleksiOptions();
         $instansiOptions = $this->pnbpModel->getInstansiOptions('', 200);
 
@@ -74,8 +97,9 @@ class PNBPDocumentController extends BaseController
             'seslog'          => session()->get(),
             'currentDocType'  => $docType,
             'currentDocDetail'=> $docDetail,
-            'docTypeLabels'   => PNBPDocumentModel::$docTypeLabels,
-            'docTypeBadges'   => PNBPDocumentModel::$docTypeBadges,
+            'activeDocTypes'  => $activeDocTypes,
+            'docTypeLabels'   => $docTypeLabels,
+            'docTypeBadges'   => $docTypeBadges,
             'seleksiOptions'  => $seleksiOptions,
             'instansiOptions' => $instansiOptions,
         ]);
@@ -94,15 +118,19 @@ class PNBPDocumentController extends BaseController
         $seleksiOptions  = $this->pnbpModel->getSeleksiOptions();
         $instansiOptions = $this->pnbpModel->getInstansiOptions('', 200);
         $tilokOptions    = !empty($doc['seleksi_id']) ? $this->pnbpModel->getTilokOptionsBySeleksi((int) $doc['seleksi_id']) : [];
+        $activeDocTypes  = $this->docTypeModel->getActiveDocTypes();
+        $docTypeLabels   = $this->docTypeModel->getDocTypeLabels(false);
+        $docTypeBadges   = $this->docTypeModel->getDocTypeBadges(false);
 
         return $this->renderView('Apps/pages/services/pnbp/detail', [
             'seslog'          => session()->get(),
             'doc'             => $doc,
+            'activeDocTypes'  => $activeDocTypes,
             'seleksiOptions'  => $seleksiOptions,
             'instansiOptions' => $instansiOptions,
             'tilokOptions'    => $tilokOptions,
-            'docTypeLabels'   => PNBPDocumentModel::$docTypeLabels,
-            'docTypeBadges'   => PNBPDocumentModel::$docTypeBadges,
+            'docTypeLabels'   => $docTypeLabels,
+            'docTypeBadges'   => $docTypeBadges,
         ]);
     }
 
@@ -291,21 +319,65 @@ class PNBPDocumentController extends BaseController
     }
 
     /**
+     * Endpoint AJAX: Simpan / Update Keterangan Header Dokumen
+     */
+    public function storeHeader()
+    {
+        $docUid           = trim((string) $this->request->getPost('document_uid'));
+        $headerKeterangan = trim((string) $this->request->getPost('header_keterangan'));
+        $instansiIds      = $this->request->getPost('instansi_ids');
+        $instansiNames    = $this->request->getPost('instansi_names');
+        $tanggalKegiatan  = trim((string) $this->request->getPost('tanggal_kegiatan'));
+
+        $doc = $this->pnbpModel->where('uid', $docUid)->first();
+        if (!$doc) {
+            return $this->response->setStatusCode(404)->setJSON([
+                'status'  => 'error',
+                'message' => 'Dokumen tidak ditemukan.',
+            ]);
+        }
+
+        $meta = !empty($doc['meta_data']) ? json_decode($doc['meta_data'], true) : [];
+        $meta['header_keterangan'] = $headerKeterangan;
+        $meta['instansi_ids']      = is_array($instansiIds) ? $instansiIds : (!empty($instansiIds) ? explode(',', $instansiIds) : []);
+        $meta['instansi_names']    = is_array($instansiNames) ? $instansiNames : (!empty($instansiNames) ? explode(',', $instansiNames) : []);
+        $meta['tanggal_kegiatan']  = $tanggalKegiatan;
+
+        $this->pnbpModel->update((int) $doc['id'], [
+            'meta_data'  => json_encode($meta),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        return $this->response->setJSON([
+            'status'  => 'success',
+            'message' => 'Keterangan header berhasil disimpan.',
+            'meta'    => $meta,
+        ]);
+    }
+
+    /**
      * Endpoint AJAX: Tambah / Update Personel pada Dokumen
      */
     public function storePersonel()
     {
-        $docUid     = trim((string) $this->request->getPost('document_uid'));
-        $personelId = (int) $this->request->getPost('personel_id');
-        $nip        = trim((string) $this->request->getPost('nip'));
-        $nama       = trim((string) $this->request->getPost('nama'));
-        $pangkatGol = trim((string) $this->request->getPost('pangkat_gol'));
-        $jabatan    = trim((string) $this->request->getPost('jabatan'));
-        $peran      = trim((string) $this->request->getPost('peran'));
-        $jumlahHari = (int) $this->request->getPost('jumlah_hari') ?: 1;
-        $uangHarian = (float) $this->request->getPost('uang_harian');
-        $transport  = (float) $this->request->getPost('transport');
-        $noRekening = trim((string) $this->request->getPost('no_rekening'));
+        $docUid        = trim((string) $this->request->getPost('document_uid'));
+        $personelId    = (int) $this->request->getPost('personel_id');
+        $nip           = trim((string) $this->request->getPost('nip'));
+        $nama          = trim((string) $this->request->getPost('nama'));
+        $pangkatGol    = trim((string) $this->request->getPost('pangkat_gol'));
+        $nik           = trim((string) $this->request->getPost('nik'));
+        $jabatan       = trim((string) $this->request->getPost('jabatan'));
+        $peran         = trim((string) $this->request->getPost('peran'));
+        $statusPegawai = trim((string) $this->request->getPost('status_pegawai'));
+        $bankNama      = trim((string) $this->request->getPost('bank_nama'));
+        $noRekening    = trim((string) $this->request->getPost('no_rekening'));
+        
+        $jumlahHari    = (int) $this->request->getPost('jumlah_hari') ?: 1;
+        $uangHarian    = (float) $this->request->getPost('uang_harian');
+        $transport     = (float) $this->request->getPost('transport');
+        
+        $jumlah        = (float) $this->request->getPost('jumlah');
+        $pajakPersen   = (float) $this->request->getPost('pajak_persen');
 
         $doc = $this->pnbpModel->where('uid', $docUid)->first();
         if (!$doc) {
@@ -322,20 +394,35 @@ class PNBPDocumentController extends BaseController
             ]);
         }
 
-        $totalBiaya = ($uangHarian * $jumlahHari) + $transport;
+        // Kalkulasi otomatis pajak & jumlah diterima
+        $pajakNominal   = round($jumlah * ($pajakPersen / 100), 2);
+        $jumlahDiterima = $jumlah - $pajakNominal;
+
+        if ($doc['doc_type'] === 'nominatif') {
+            $totalBiaya = $jumlah;
+        } else {
+            $totalBiaya = ($uangHarian * $jumlahHari) + $transport;
+        }
 
         $payload = [
-            'document_id' => (int) $doc['id'],
-            'nip'         => $nip ?: null,
-            'nama'        => $nama,
-            'pangkat_gol' => $pangkatGol ?: null,
-            'jabatan'     => $jabatan ?: null,
-            'peran'       => $peran ?: null,
-            'jumlah_hari' => $jumlahHari,
-            'uang_harian' => $uangHarian,
-            'transport'   => $transport,
-            'total_biaya' => $totalBiaya,
-            'no_rekening' => $noRekening ?: null,
+            'document_id'     => (int) $doc['id'],
+            'nip'             => $nip ?: null,
+            'nama'            => $nama,
+            'pangkat_gol'     => $pangkatGol ?: null,
+            'nik'             => $nik ?: null,
+            'jabatan'         => $jabatan ?: null,
+            'peran'           => $peran ?: null,
+            'status_pegawai'  => $statusPegawai ?: null,
+            'jumlah'          => $jumlah,
+            'pajak_persen'    => $pajakPersen,
+            'pajak_nominal'   => $pajakNominal,
+            'jumlah_diterima' => $jumlahDiterima,
+            'jumlah_hari'     => $jumlahHari,
+            'uang_harian'     => $uangHarian,
+            'transport'       => $transport,
+            'total_biaya'     => $totalBiaya,
+            'bank_nama'       => $bankNama ?: null,
+            'no_rekening'     => $noRekening ?: null,
         ];
 
         if ($personelId > 0) {
@@ -347,9 +434,12 @@ class PNBPDocumentController extends BaseController
         // Invalidate cache dengan update timestamp dokumen
         $this->pnbpModel->update((int) $doc['id'], ['updated_at' => date('Y-m-d H:i:s')]);
 
+        $totals = $this->personelModel->calculateTotalBudget((int) $doc['id']);
+
         return $this->response->setJSON([
             'status'  => 'success',
-            'message' => 'Data personel berhasil disimpan.',
+            'message' => 'Data pegawai/personel berhasil disimpan.',
+            'totals'  => $totals,
         ]);
     }
 
@@ -493,6 +583,64 @@ class PNBPDocumentController extends BaseController
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Parameter penandatangan berhasil diperbarui.',
+        ]);
+    }
+
+    /**
+     * Endpoint AJAX: Simpan Seluruh Parameter Tanda Tangan Sekaligus (Left & Right)
+     */
+    public function storeSignersAll()
+    {
+        $docUid    = trim((string) $this->request->getPost('document_uid'));
+        $signLeft  = $this->request->getPost('sign_left');
+        $signRight = $this->request->getPost('sign_right');
+
+        $doc = $this->pnbpModel->where('uid', $docUid)->first();
+        if (!$doc) {
+            return $this->response->setStatusCode(404)->setJSON([
+                'status'  => 'error',
+                'message' => 'Dokumen tidak ditemukan.',
+            ]);
+        }
+
+        $signers = [];
+        if (!empty($signLeft) && is_array($signLeft)) {
+            $signers[] = $signLeft;
+        }
+        if (!empty($signRight) && is_array($signRight)) {
+            $signers[] = $signRight;
+        }
+
+        $this->signatureModel->updateDocumentSigners((int) $doc['id'], $doc['doc_type'], $signers);
+        $this->pnbpModel->update((int) $doc['id'], ['updated_at' => date('Y-m-d H:i:s')]);
+
+        return $this->response->setJSON([
+            'status'  => 'success',
+            'message' => 'Parameter penandatangan berhasil disimpan dan diperbarui.',
+        ]);
+    }
+
+    /**
+     * Endpoint AJAX: Ambil data tabel personel dan total kalkulasi real-time
+     */
+    public function getNominatifTableData()
+    {
+        $docUid = trim((string) $this->request->getPost('document_uid'));
+        $doc = $this->pnbpModel->where('uid', $docUid)->first();
+        if (!$doc) {
+            return $this->response->setStatusCode(404)->setJSON([
+                'status'  => 'error',
+                'message' => 'Dokumen tidak ditemukan.',
+            ]);
+        }
+
+        $personel = $this->personelModel->getPersonelByDocumentId((int) $doc['id']);
+        $totals   = $this->personelModel->calculateTotalBudget((int) $doc['id']);
+
+        return $this->response->setJSON([
+            'status'   => 'success',
+            'personel' => $personel,
+            'totals'   => $totals,
         ]);
     }
 

@@ -281,9 +281,12 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/fetch/pnbp-options-instansi', 'Apps\Services\PNBPDocumentController::getInstansiOptions');
     $routes->post('/fetch/pnbp-options-pegawai', 'Apps\Services\PNBPDocumentController::getPegawaiOptions');
     $routes->post('/store/save-pnbp-document', 'Apps\Services\PNBPDocumentController::storeDocument');
+    $routes->post('/store/save-pnbp-header', 'Apps\Services\PNBPDocumentController::storeHeader');
     $routes->post('/store/save-pnbp-personel', 'Apps\Services\PNBPDocumentController::storePersonel');
     $routes->post('/store/save-pnbp-items', 'Apps\Services\PNBPDocumentController::storeItems');
     $routes->post('/store/save-pnbp-signature-param', 'Apps\Services\PNBPDocumentController::storeSignatureParam');
+    $routes->post('/store/save-pnbp-signers-all', 'Apps\Services\PNBPDocumentController::storeSignersAll');
+    $routes->post('/fetch/pnbp-nominatif-table', 'Apps\Services\PNBPDocumentController::getNominatifTableData');
     $routes->post('/kill/data-pnbp-document', 'Apps\Services\PNBPDocumentController::removeDocument');
     $routes->post('/kill/data-pnbp-personel', 'Apps\Services\PNBPDocumentController::removePersonel');
     $routes->post('/kill/data-pnbp-item', 'Apps\Services\PNBPDocumentController::removeItem');

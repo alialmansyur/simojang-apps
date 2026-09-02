@@ -6,16 +6,19 @@ use App\Controllers\BaseController;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\Apps\Services\PNBPSignatureModel;
 use App\Models\Apps\Services\PNBPDocumentModel;
+use App\Models\Apps\Services\PNBPDocTypeModel;
 
 class PNBPSignController extends BaseController
 {
     protected PNBPSignatureModel $sigModel;
     protected PNBPDocumentModel $docModel;
+    protected PNBPDocTypeModel $docTypeModel;
 
     public function __construct()
     {
-        $this->sigModel = new PNBPSignatureModel();
-        $this->docModel = new PNBPDocumentModel();
+        $this->sigModel     = new PNBPSignatureModel();
+        $this->docModel     = new PNBPDocumentModel();
+        $this->docTypeModel = new PNBPDocTypeModel();
     }
 
     /**
@@ -28,9 +31,14 @@ class PNBPSignController extends BaseController
             throw PageNotFoundException::forPageNotFound('Tautan tanda tangan tidak ditemukan atau tidak valid.');
         }
 
+        $labels = $this->docTypeModel->getDocTypeLabels(false);
+        if (empty($labels)) {
+            $labels = PNBPDocumentModel::$docTypeLabels;
+        }
+
         return view('Apps/pages/services/pnbp/sign_page', [
             'sig'           => $signature,
-            'docTypeLabels' => PNBPDocumentModel::$docTypeLabels,
+            'docTypeLabels' => $labels,
         ]);
     }
 
@@ -138,9 +146,14 @@ class PNBPSignController extends BaseController
             throw PageNotFoundException::forPageNotFound('Dokumen tidak terdaftar dalam sistem verifikasi keaslian.');
         }
 
+        $labels = $this->docTypeModel->getDocTypeLabels(false);
+        if (empty($labels)) {
+            $labels = PNBPDocumentModel::$docTypeLabels;
+        }
+
         return view('Apps/pages/services/pnbp/verify_page', [
             'sig'           => $signature,
-            'docTypeLabels' => PNBPDocumentModel::$docTypeLabels,
+            'docTypeLabels' => $labels,
         ]);
     }
 }

@@ -4,6 +4,113 @@
     max-width: 1300px;
 }
 
+/* ========================================================================= */
+/* GUARANTEED HIGH-CONTRAST DARK THEME & ICON CENTERING                      */
+/* ========================================================================= */
+.tws-wrap strong,
+.tws-wrap b,
+.tws-wrap h1,
+.tws-wrap h2,
+.tws-wrap h3,
+.tws-wrap h4,
+.tws-wrap h5,
+.tws-wrap h6,
+.pnbp-text-dark {
+    color: #0f172a !important;
+}
+
+.pnbp-text-secondary {
+    color: #334155 !important;
+}
+
+.pnbp-text-muted {
+    color: #475569 !important;
+}
+
+/* Button & Icon Perfect Vertical Alignment */
+.tws-wrap .btn,
+.pnbp-detail-container .btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+    gap: 0.45rem !important;
+}
+
+.tws-wrap .btn i.bi,
+.pnbp-detail-container .btn i.bi {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    vertical-align: 0 !important;
+    margin: 0 !important;
+    font-size: 1rem !important;
+}
+
+.tws-wrap .btn span,
+.pnbp-detail-container .btn span {
+    display: inline-flex !important;
+    align-items: center !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+
+/* Card Header Icon & Text Perfect Vertical Alignment */
+.tws-wrap .card-header h5,
+.pnbp-detail-container .card-header h5 {
+    display: inline-flex !important;
+    align-items: center !important;
+    line-height: 1.2 !important;
+}
+
+.tws-wrap .card-header h5 i.bi,
+.pnbp-detail-container .card-header h5 i.bi {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    vertical-align: 0 !important;
+    margin: 0 !important;
+}
+
+.tws-wrap .card-header h5 i.bi::before,
+.pnbp-detail-container .card-header h5 i.bi::before {
+    vertical-align: 0 !important;
+    line-height: 1 !important;
+}
+
+.pnbp-meta-box {
+    padding: 14px 16px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    height: 100%;
+}
+
+.pnbp-meta-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #475569 !important;
+    margin-bottom: 4px;
+}
+
+.pnbp-meta-val {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a !important;
+    line-height: 1.3;
+}
+
+.pnbp-meta-sub {
+    font-size: 0.82rem;
+    color: #475569 !important;
+    margin-top: 3px;
+}
+
 .tws-doc-badge {
     font-size: 0.75rem;
     font-weight: 700;
@@ -40,6 +147,21 @@
 
 .tws-access-btn {
     transition: all 0.2s ease;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.tws-access-btn.is-loading {
+    cursor: wait !important;
+    opacity: 0.85 !important;
+}
+
+.tws-access-btn .spinner-border,
+.tws-access-btn .spinner-border-sm {
+    border-width: 3px !important;
+    width: 1.15rem !important;
+    height: 1.15rem !important;
 }
 
 /* E-Sign Status Badges */
@@ -54,3 +176,191 @@
     color: #854d0e;
     border: 1px solid #fef08a;
 }
+
+/* ========================================================================= */
+/* SELECT2 BOOTSTRAP-5 STYLING (PAGES & MODALS)                              */
+/* ========================================================================= */
+.select2-container--bootstrap-5 {
+    width: 100% !important;
+}
+
+.select2-container--bootstrap-5.select2-container--open,
+.select2-container--open {
+    z-index: 99999 !important;
+}
+
+.select2-container--bootstrap-5 .select2-dropdown,
+.select2-dropdown {
+    z-index: 99999 !important;
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15) !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection {
+    min-height: 44px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    background-color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    color: #0f172a !important;
+    font-size: 0.875rem !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    padding-left: 12px !important;
+    padding-right: 28px !important;
+    line-height: normal !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple {
+    min-height: 44px !important;
+    padding: 4px 8px !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+    background-color: #eff6ff !important;
+    border: 1px solid #bfdbfe !important;
+    color: #1e40af !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+    border-radius: 4px !important;
+    padding: 2px 8px !important;
+}
+
+.select2-container--bootstrap-5 .select2-search--dropdown {
+    padding: 8px !important;
+}
+
+.select2-container--bootstrap-5 .select2-search__field {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    color: #0f172a !important;
+    background-color: #ffffff !important;
+    padding: 6px 10px !important;
+    font-size: 0.875rem !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option {
+    color: #0f172a !important;
+    font-size: 0.875rem !important;
+    padding: 8px 12px !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option--highlighted[aria-selected] {
+    background-color: #1040c1 !important;
+    color: #ffffff !important;
+}
+
+/* ========================================================================= */
+/* ALL PNBP MODALS: SOLID HIGH-CONTRAST DARK TEXT & CLEAN WHITE BACKGROUNDS  */
+/* ========================================================================= */
+#pnbpDocModal .modal-content,
+#pnbpSignerModal .modal-content,
+#pnbpNominatifEditModal .modal-content,
+#pnbpPersonelModal .modal-content,
+#pnbpItemModal .modal-content,
+#pnbpPreviewModal .modal-content {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+}
+
+#pnbpDocModal .modal-header,
+#pnbpSignerModal .modal-header,
+#pnbpNominatifEditModal .modal-header,
+#pnbpPersonelModal .modal-header,
+#pnbpItemModal .modal-header,
+#pnbpPreviewModal .modal-header {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+#pnbpDocModal .modal-footer,
+#pnbpSignerModal .modal-footer,
+#pnbpNominatifEditModal .modal-footer,
+#pnbpPersonelModal .modal-footer,
+#pnbpItemModal .modal-footer,
+#pnbpPreviewModal .modal-footer {
+    background-color: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+#pnbpDocModal .modal-title,
+#pnbpSignerModal .modal-title,
+#pnbpNominatifEditModal .modal-title,
+#pnbpPersonelModal .modal-title,
+#pnbpItemModal .modal-title,
+#pnbpPreviewModal .modal-title,
+#pnbpDocModal h1, #pnbpDocModal h2, #pnbpDocModal h3, #pnbpDocModal h4, #pnbpDocModal h5, #pnbpDocModal h6,
+#pnbpSignerModal h5, #pnbpNominatifEditModal h5, #pnbpPersonelModal h5, #pnbpItemModal h5 {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+#pnbpDocModal .form-label,
+#pnbpSignerModal .form-label,
+#pnbpNominatifEditModal .form-label,
+#pnbpPersonelModal .form-label,
+#pnbpItemModal .form-label {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 0.35rem !important;
+}
+
+#pnbpDocModal .form-control,
+#pnbpDocModal .form-select,
+#pnbpSignerModal .form-control,
+#pnbpSignerModal .form-select,
+#pnbpNominatifEditModal .form-control,
+#pnbpNominatifEditModal .form-select,
+#pnbpPersonelModal .form-control,
+#pnbpPersonelModal .form-select,
+#pnbpItemModal .form-control,
+#pnbpItemModal .form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+}
+
+#pnbpDocModal .form-control:focus,
+#pnbpDocModal .form-select:focus,
+#pnbpSignerModal .form-control:focus,
+#pnbpSignerModal .form-select:focus,
+#pnbpNominatifEditModal .form-control:focus,
+#pnbpNominatifEditModal .form-select:focus {
+    border-color: #1040c1 !important;
+    box-shadow: 0 0 0 3px rgba(16, 64, 193, 0.15) !important;
+    color: #0f172a !important;
+    background-color: #ffffff !important;
+}
+
+#pnbpDocModal option,
+#pnbpSignerModal option,
+#pnbpNominatifEditModal option {
+    color: #0f172a !important;
+    background-color: #ffffff !important;
+}
+
+#pnbpDocModal small,
+#pnbpDocModal .text-muted,
+#pnbpSignerModal small,
+#pnbpNominatifEditModal small {
+    color: #64748b !important;
+}
+
+#pnbpDocModal strong,
+#pnbpSignerModal strong,
+#pnbpNominatifEditModal strong {
+    color: #0f172a !important;
+}
+

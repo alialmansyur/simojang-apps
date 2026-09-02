@@ -44,6 +44,16 @@ class PNBPSignatureModel extends Model
     }
 
     /**
+     * Ambil daftar tanda tangan berdasarkan document_id
+     */
+    public function getSignaturesByDocumentId(int $docId): array
+    {
+        return $this->where('document_id', $docId)
+            ->orderBy('sort_order', 'ASC')
+            ->findAll();
+    }
+
+    /**
      * Cari tanda tangan berdasarkan sign_token beserta info dokumen untuk halaman penandatanganan
      */
     public function getSignatureWithDocument(string $token): ?array
@@ -74,12 +84,46 @@ class PNBPSignatureModel extends Model
     }
 
     /**
+     * Ambil data penandatangan terakhir berdasarkan jenis dokumen (untuk default transaksi baru)
+     */
+    public function getLatestSignaturesByDocType(string $docType): array
+    {
+        // 1. Cari dari transaksi dokumen terakhir untuk jenis dokumen tersebut
+        $latestDoc = $this->db->table('txn_pnbp_documents')
+            ->select('id')
+            ->where('doc_type', $docType)
+            ->orderBy('id', 'DESC')
+            ->get()
+            ->getRowArray();
+
+        if ($latestDoc) {
+            $sigs = $this->where('document_id', $latestDoc['id'])
+                ->orderBy('sort_order', 'ASC')
+                ->findAll();
+
+            if (!empty($sigs)) {
+                $result = [];
+                foreach ($sigs as $s) {
+                    $roleKey = $s['sign_role'] ?: $s['sign_position'];
+                    $result[$roleKey] = $s;
+                }
+                return $result;
+            }
+        }
+
+        // 2. Fallback ke cfg_pnbp_signers
+        $signerModel = new PNBPSignerModel();
+        return $signerModel->getDefaultSignersMap();
+    }
+
+    /**
      * Inisialisasi blok tanda tangan default untuk dokumen yang baru dibuat
      */
     public function initDefaultSignatures(int $documentId, string $docType, array $customSigners = []): void
     {
-        $signerModel = new PNBPSignerModel();
-        $defaultSigners = $signerModel->getDefaultSignersMap();
+        $latestSigners = $this->getLatestSignaturesByDocType($docType);
+        $signerModel   = new PNBPSignerModel();
+        $defaultMap    = $signerModel->getDefaultSignersMap();
 
         $signatures = [];
 
@@ -87,16 +131,16 @@ class PNBPSignatureModel extends Model
             case 'sp':
             case 'st':
                 // 1 Kolom TTD: Kakanreg
-                $kakanreg = $defaultSigners['kakanreg'] ?? null;
+                $kakanreg = $latestSigners['kakanreg'] ?? ($defaultMap['kakanreg'] ?? null);
                 $signatures[] = [
                     'document_id'   => $documentId,
                     'sign_position' => 'right',
                     'sign_role'     => 'kakanreg',
-                    'sign_title'    => 'Yang Memerintahkan,',
-                    'nip'           => $customSigners['kakanreg']['nip'] ?? ($kakanreg['default_nip'] ?? ''),
-                    'nama'          => $customSigners['kakanreg']['nama'] ?? ($kakanreg['default_nama'] ?? 'Kepala Kantor Regional'),
-                    'pangkat_gol'   => $customSigners['kakanreg']['pangkat_gol'] ?? ($kakanreg['default_pangkat_gol'] ?? ''),
-                    'jabatan'       => $customSigners['kakanreg']['jabatan'] ?? ($kakanreg['default_jabatan'] ?? 'Kepala Kantor Regional III BKN'),
+                    'sign_title'    => $customSigners['kakanreg']['sign_title'] ?? ($kakanreg['sign_title'] ?? 'Yang Memerintahkan,'),
+                    'nip'           => $customSigners['kakanreg']['nip'] ?? ($kakanreg['nip'] ?? ($kakanreg['default_nip'] ?? '')),
+                    'nama'          => $customSigners['kakanreg']['nama'] ?? ($kakanreg['nama'] ?? ($kakanreg['default_nama'] ?? 'Kepala Kantor Regional')),
+                    'pangkat_gol'   => $customSigners['kakanreg']['pangkat_gol'] ?? ($kakanreg['pangkat_gol'] ?? ($kakanreg['default_pangkat_gol'] ?? '')),
+                    'jabatan'       => $customSigners['kakanreg']['jabatan'] ?? ($kakanreg['jabatan'] ?? ($kakanreg['default_jabatan'] ?? 'Kepala Kantor Regional III BKN')),
                     'sign_token'    => $this->generateUniqueToken(),
                     'sign_status'   => 'pending',
                     'sort_order'    => 1,
@@ -104,19 +148,19 @@ class PNBPSignatureModel extends Model
                 break;
 
             case 'nominatif':
-                // 2 Kolom TTD: PPK (Kiri/Mengetahui) & Bendahara (Kanan/Lunas Dibayar)
-                $ppk = $defaultSigners['ppk'] ?? null;
-                $bendahara = $defaultSigners['bendahara'] ?? null;
+                // 2 Kolom TTD: PPK (Kiri/Mengetahui) & Bendahara (Kanan)
+                $ppk = $latestSigners['ppk_nominatif'] ?? ($defaultMap['ppk_nominatif'] ?? ($latestSigners['ppk'] ?? ($defaultMap['ppk'] ?? null)));
+                $bendahara = $latestSigners['bendahara_nominatif'] ?? ($defaultMap['bendahara_nominatif'] ?? ($latestSigners['bendahara'] ?? ($defaultMap['bendahara'] ?? null)));
 
                 $signatures[] = [
                     'document_id'   => $documentId,
                     'sign_position' => 'left',
-                    'sign_role'     => 'ppk',
-                    'sign_title'    => 'Mengetahui / Menyetujui,',
-                    'nip'           => $customSigners['ppk']['nip'] ?? ($ppk['default_nip'] ?? ''),
-                    'nama'          => $customSigners['ppk']['nama'] ?? ($ppk['default_nama'] ?? 'Pejabat Pembuat Komitmen'),
-                    'pangkat_gol'   => $customSigners['ppk']['pangkat_gol'] ?? ($ppk['default_pangkat_gol'] ?? ''),
-                    'jabatan'       => $customSigners['ppk']['jabatan'] ?? ($ppk['default_jabatan'] ?? 'Pejabat Pembuat Komitmen'),
+                    'sign_role'     => 'ppk_nominatif',
+                    'sign_title'    => $customSigners['ppk']['sign_title'] ?? ($ppk['sign_title'] ?? 'Mengetahui'),
+                    'nip'           => $customSigners['ppk']['nip'] ?? ($ppk['nip'] ?? ($ppk['default_nip'] ?? '197104241992032001')),
+                    'nama'          => $customSigners['ppk']['nama'] ?? ($ppk['nama'] ?? ($ppk['default_nama'] ?? 'LESTARI PRASETIJANI, SE, MM')),
+                    'pangkat_gol'   => $customSigners['ppk']['pangkat_gol'] ?? ($ppk['pangkat_gol'] ?? ($ppk['default_pangkat_gol'] ?? '')),
+                    'jabatan'       => $customSigners['ppk']['jabatan'] ?? ($ppk['jabatan'] ?? ($ppk['default_jabatan'] ?? 'Analis Pengelolaan Keuangan APBN Ahli Madya sebagai Pejabat Pembuat Komitmen Pusat Pengembangan Sistem Rekrutmen (PNBP)')),
                     'sign_token'    => $this->generateUniqueToken(),
                     'sign_status'   => 'pending',
                     'sort_order'    => 1,
@@ -125,12 +169,12 @@ class PNBPSignatureModel extends Model
                 $signatures[] = [
                     'document_id'   => $documentId,
                     'sign_position' => 'right',
-                    'sign_role'     => 'bendahara',
-                    'sign_title'    => 'Lunas Dibayar,',
-                    'nip'           => $customSigners['bendahara']['nip'] ?? ($bendahara['default_nip'] ?? ''),
-                    'nama'          => $customSigners['bendahara']['nama'] ?? ($bendahara['default_nama'] ?? 'Bendahara Pengeluaran'),
-                    'pangkat_gol'   => $customSigners['bendahara']['pangkat_gol'] ?? ($bendahara['default_pangkat_gol'] ?? ''),
-                    'jabatan'       => $customSigners['bendahara']['jabatan'] ?? ($bendahara['default_jabatan'] ?? 'Bendahara Pengeluaran'),
+                    'sign_role'     => 'bendahara_nominatif',
+                    'sign_title'    => $customSigners['bendahara']['sign_title'] ?? ($bendahara['sign_title'] ?? "Jakarta, ..................................................\nDiajukan ke Kuasa Pengguna Anggaran BKN\nPada tanggal..............................."),
+                    'nip'           => $customSigners['bendahara']['nip'] ?? ($bendahara['nip'] ?? ($bendahara['default_nip'] ?? '199009062014022001')),
+                    'nama'          => $customSigners['bendahara']['nama'] ?? ($bendahara['nama'] ?? ($bendahara['default_nama'] ?? 'FITRIANI PANJAITAN, S.Kom.')),
+                    'pangkat_gol'   => $customSigners['bendahara']['pangkat_gol'] ?? ($bendahara['pangkat_gol'] ?? ($bendahara['default_pangkat_gol'] ?? '')),
+                    'jabatan'       => $customSigners['bendahara']['jabatan'] ?? ($bendahara['jabatan'] ?? ($bendahara['default_jabatan'] ?? 'Bendahara Pengeluaran')),
                     'sign_token'    => $this->generateUniqueToken(),
                     'sign_status'   => 'pending',
                     'sort_order'    => 2,
@@ -227,5 +271,51 @@ class PNBPSignatureModel extends Model
         if (!empty($signatures)) {
             $this->insertBatch($signatures);
         }
+    }
+
+    /**
+     * Update data snapshot penandatangan untuk dokumen tertentu, dan perbarui default signer untuk dokumen baru berikutnya
+     */
+    public function updateDocumentSigners(int $documentId, string $docType, array $signers): bool
+    {
+        foreach ($signers as $sig) {
+            $sigId = (int) ($sig['id'] ?? 0);
+            $role  = $sig['sign_role'] ?? '';
+            $pos   = $sig['sign_position'] ?? '';
+
+            $updateData = [
+                'nama'        => trim((string) ($sig['nama'] ?? '')),
+                'nip'         => trim((string) ($sig['nip'] ?? '')),
+                'jabatan'     => trim((string) ($sig['jabatan'] ?? '')),
+                'pangkat_gol' => trim((string) ($sig['pangkat_gol'] ?? '')),
+                'sign_title'  => trim((string) ($sig['sign_title'] ?? '')),
+            ];
+
+            if ($sigId > 0) {
+                $this->update($sigId, $updateData);
+            } else {
+                $this->where('document_id', $documentId)
+                    ->where('sign_position', $pos)
+                    ->set($updateData)
+                    ->update();
+            }
+
+            // Update default config signer untuk transaksi baru berikutnya jika jenisnya nominatif
+            if ($docType === 'nominatif') {
+                $configKode = ($role === 'ppk' || $pos === 'left') ? 'ppk_nominatif' : 'bendahara_nominatif';
+                $existingCfg = $this->db->table('cfg_pnbp_signers')->where('kode', $configKode)->get()->getRowArray();
+                if ($existingCfg) {
+                    $this->db->table('cfg_pnbp_signers')->where('kode', $configKode)->update([
+                        'default_nama'        => $updateData['nama'],
+                        'default_nip'         => $updateData['nip'],
+                        'default_jabatan'     => $updateData['jabatan'],
+                        'default_pangkat_gol' => $updateData['pangkat_gol'],
+                        'updated_at'          => date('Y-m-d H:i:s'),
+                    ]);
+                }
+            }
+        }
+
+        return true;
     }
 }

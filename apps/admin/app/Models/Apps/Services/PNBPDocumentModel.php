@@ -363,12 +363,23 @@ class PNBPDocumentModel extends Model
     }
 
     /**
-     * Lookup data master pegawai (data_member) untuk Select2 autocomplete
+     * Lookup data master pegawai (data_pegawai) untuk Select2 autocomplete
      */
-    public function searchPegawai(string $keyword, int $limit = 20): array
+    public function searchPegawai(string $keyword, int $limit = 30): array
     {
-        $builder = $this->db->table('data_member a')
-            ->select('a.id, a.nip, a.nama, a.gol, a.pangkat, a.jabatan, a.email, a.phone');
+        $builder = $this->db->table('data_pegawai a')
+            ->select('
+                a.id,
+                a.nip,
+                a.nama,
+                a.jabatan,
+                a.status_pegawai_id AS status_pegawai,
+                g.nama AS gol,
+                a.email,
+                a.phone
+            ')
+            ->join('data_pegawai_golongan g', 'g.id = a.gol_id', 'left')
+            ->where('a.is_status', 1);
 
         $keyword = trim($keyword);
         if ($keyword !== '') {
@@ -386,9 +397,9 @@ class PNBPDocumentModel extends Model
     }
 
     /**
-     * Mengambil statistik jumlah dokumen per jenis dokumen untuk katalog 9 dokumen
+     * Mengambil statistik jumlah dokumen per jenis dokumen untuk katalog dokumen PNBP
      */
-    public function getDocTypeStats(): array
+    public function getDocTypeStats(array $docTypeKeys = []): array
     {
         $rows = $this->db->table($this->table)
             ->select('doc_type, COUNT(id) AS total_count, SUM(CASE WHEN status = "draft" THEN 1 ELSE 0 END) AS draft_count, SUM(CASE WHEN status IN ("generated", "final") THEN 1 ELSE 0 END) AS generated_count')
@@ -396,8 +407,18 @@ class PNBPDocumentModel extends Model
             ->get()
             ->getResultArray();
 
+        if (empty($docTypeKeys)) {
+            if ($this->db->tableExists('data_pnbp_doc_types')) {
+                $activeRows = $this->db->table('data_pnbp_doc_types')->select('doc_type')->where('is_status', 1)->get()->getResultArray();
+                $docTypeKeys = array_column($activeRows, 'doc_type');
+            }
+            if (empty($docTypeKeys)) {
+                $docTypeKeys = array_keys(self::$docTypeLabels);
+            }
+        }
+
         $stats = [];
-        foreach (array_keys(self::$docTypeLabels) as $key) {
+        foreach ($docTypeKeys as $key) {
             $stats[$key] = [
                 'total'     => 0,
                 'draft'     => 0,

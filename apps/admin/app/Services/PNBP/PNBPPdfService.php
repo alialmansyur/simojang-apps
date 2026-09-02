@@ -132,9 +132,14 @@ class PNBPPdfService
         }
         unset($s);
 
+        $meta = $docData['meta_data'] ?? [];
+        if (is_string($meta)) {
+            $meta = json_decode($meta, true) ?: [];
+        }
+
         $viewData = [
             'doc'         => $docData,
-            'meta'        => $docData['meta_data'] ?? [],
+            'meta'        => $meta,
             'personel'    => $docData['personel'] ?? [],
             'items'       => $docData['items'] ?? [],
             'attendees'   => $docData['attendees'] ?? [],

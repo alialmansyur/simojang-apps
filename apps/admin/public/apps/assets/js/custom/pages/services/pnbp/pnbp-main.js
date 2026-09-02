@@ -292,23 +292,79 @@ function resetPnbpModalForm() {
     form[0].reset();
     $('#doc_key').val('');
 
-    if (typeof CURRENT_DOC_TYPE !== 'undefined' && CURRENT_DOC_TYPE) {
-        $('#doc_type').val(CURRENT_DOC_TYPE).trigger('change');
-    }
+    const targetType = (typeof CURRENT_DOC_TYPE !== 'undefined' && CURRENT_DOC_TYPE) ? CURRENT_DOC_TYPE : 'nominatif';
+    $('#doc_type').val(targetType).trigger('change');
+    $('#doc_instansi_id').val('').trigger('change');
+    $('#doc_seleksi_id').val('').trigger('change');
+    $('#doc_tilok_id').html('<option value="">-- Pilih Event Dulu / Opsional --</option>').val('').trigger('change');
 
+    $('#doc_mak').val('030.01.WA.6253.EAA.001.051.A.524111');
     $('#pnbpDocModalLabel').html('<i class="bi bi-file-earmark-plus-fill text-primary me-2"></i> Buat Dokumen Baru');
     $('.jamuan-fields').addClass('d-none');
-    $('#doc_tilok_id').html('<option value="">-- Pilih Event Dulu --</option>');
+}
+
+function initPnbpDocModalSelect2() {
+    const modal = $('#pnbpDocModal');
+    if (!modal.length) return;
+
+    ['#doc_type', '#doc_instansi_id', '#doc_seleksi_id', '#doc_tilok_id'].forEach(function(sel) {
+        const el = $(sel);
+        if (el.length && !el.data('select2')) {
+            el.select2({
+                theme: 'bootstrap-5',
+                dropdownParent: modal,
+                width: '100%',
+                placeholder: el.find('option:first').text() || '-- Pilih --',
+                allowClear: sel !== '#doc_type'
+            });
+        }
+    });
+}
+
+function fillQuickSampleDoc() {
+    $('#doc_type').val('nominatif').trigger('change');
+    
+    // Select first available instansi if none selected
+    const instansiSelect = $('#doc_instansi_id');
+    const firstOption = instansiSelect.find('option').filter(function() { return $(this).val() !== ''; }).first();
+    const instansiVal = firstOption.val() || '4018';
+    const instansiNama = firstOption.data('nama') || firstOption.text().trim() || 'Arsip Nasional Republik Indonesia';
+    
+    if (!instansiSelect.find(`option[value="${instansiVal}"]`).length) {
+        const newOption = new Option(instansiNama, instansiVal, true, true);
+        instansiSelect.append(newOption);
+    }
+    instansiSelect.val(instansiVal).trigger('change');
+    
+    const now = new Date();
+    const ymd = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
+    const formattedDate = now.toISOString().slice(0, 10);
+    
+    $('#doc_date').val(formattedDate);
+    $('#doc_number').val('NOM/' + ymd + '/001');
+    $('#doc_mak').val('030.01.WA.6253.EAA.001.051.A.524111');
+    $('#doc_title').val('Fasilitasi Seleksi Pengembangan Karier dengan metode CAT BKN di Lingkungan Instansi ' + instansiNama);
+    $('#doc_notes').val('Dokumen Daftar Nominatif Honorarium Fasilitasi CAT.');
+    
+    if (typeof toastr !== 'undefined' && toastr.info) {
+        toastr.info('Data contoh nominatif berhasil dimuat.');
+    }
 }
 
 function loadTilokBySeleksi(seleksiId, selectedTilokId) {
     const tilokSelect = $('#doc_tilok_id');
     if (!seleksiId) {
-        tilokSelect.html('<option value="">-- Pilih Event Dulu --</option>');
+        tilokSelect.html('<option value="">-- Tanpa Event / Mandiri --</option>');
+        if (tilokSelect.hasClass('select2-hidden-accessible')) {
+            tilokSelect.val('').trigger('change.select2');
+        }
         return;
     }
 
     tilokSelect.html('<option value="">Memuat titik lokasi...</option>');
+    if (tilokSelect.hasClass('select2-hidden-accessible')) {
+        tilokSelect.val('').trigger('change.select2');
+    }
 
     $.ajax({
         url: AppConfig.initGlobal + 'fetch/pnbp-options-tilok',
@@ -325,6 +381,9 @@ function loadTilokBySeleksi(seleksiId, selectedTilokId) {
                 });
             } else {
                 tilokSelect.append('<option value="">(Belum ada tilok di event ini)</option>');
+            }
+            if (tilokSelect.hasClass('select2-hidden-accessible')) {
+                tilokSelect.trigger('change.select2');
             }
         }
     });
@@ -395,11 +454,40 @@ $(document).ready(function() {
         }
     });
 
-    // Card Click -> Go to detail
+    // Card Click -> Go to detail with spinner on arrow
     $(document).on('click', '.tws-service-card', function(e) {
-        if ($(e.target).closest('button, a').length) return;
+        if ($(e.target).closest('button:not(.tws-access-btn), a:not(.tws-access-btn), .btn-remove-doc, .btn-quick-generate').length) {
+            return;
+        }
+        if ($(this).hasClass('is-disabled')) {
+            e.preventDefault();
+            return false;
+        }
         const url = $(this).data('url');
         if (url) {
+            const btn = $(this).find('.tws-access-btn');
+            if (btn.length) {
+                btn.prop('disabled', true);
+                btn.addClass('is-loading');
+                btn.html('<span class="spinner-border spinner-border-sm text-white" style="width: 1.15rem; height: 1.15rem; border-width: 3px;" role="status" aria-hidden="true"></span>');
+            }
+            window.location.href = url;
+        }
+    });
+
+    // Arrow Button Explicit Click
+    $(document).on('click', '.tws-access-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const card = $(this).closest('.tws-service-card');
+        if (card.hasClass('is-disabled') || $(this).hasClass('disabled')) {
+            return false;
+        }
+        const url = card.data('url') || $(this).attr('href');
+        if (url && url !== '#' && !url.startsWith('javascript')) {
+            $(this).prop('disabled', true);
+            $(this).addClass('is-loading');
+            $(this).html('<span class="spinner-border spinner-border-sm text-white" style="width: 1.15rem; height: 1.15rem; border-width: 3px;" role="status" aria-hidden="true"></span>');
             window.location.href = url;
         }
     });
@@ -423,12 +511,29 @@ $(document).ready(function() {
         loadTilokBySeleksi($(this).val());
     });
 
-    $('#pnbpDocModal').on('show.bs.modal', function() {
-        if (!$('#doc_key').val()) {
-            if (typeof CURRENT_DOC_TYPE !== 'undefined' && CURRENT_DOC_TYPE) {
-                $('#doc_type').val(CURRENT_DOC_TYPE).trigger('change');
-            }
+    $('#btnQuickSampleDoc').on('click', function() {
+        fillQuickSampleDoc();
+    });
+
+    $('#doc_instansi_id').on('change', function() {
+        const selectedOpt = $(this).find('option:selected');
+        const instansiNama = selectedOpt.data('nama') || selectedOpt.text().trim();
+        const curTitle = $('#doc_title').val();
+        if (instansiNama && (!curTitle || curTitle.startsWith('Fasilitasi Seleksi Pengembangan Karier') || curTitle.includes('di Lingkungan Instansi'))) {
+            $('#doc_title').val('Fasilitasi Seleksi Pengembangan Karier dengan metode CAT BKN di Lingkungan Instansi ' + instansiNama);
         }
+    });
+
+    $('#pnbpDocModal').on('show.bs.modal', function() {
+        initPnbpDocModalSelect2();
+        if (!$('#doc_key').val()) {
+            const targetType = (typeof CURRENT_DOC_TYPE !== 'undefined' && CURRENT_DOC_TYPE) ? CURRENT_DOC_TYPE : 'nominatif';
+            $('#doc_type').val(targetType).trigger('change');
+        }
+    });
+
+    $('#pnbpDocModal').on('hidden.bs.modal', function() {
+        resetPnbpModalForm();
     });
 
     // Save Document Form Submit

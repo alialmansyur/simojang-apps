@@ -2,146 +2,247 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title><?= esc($doc['title']) ?></title>
+    <title><?= esc($doc['title'] ?? 'Daftar Nominatif') ?></title>
     <style>
-        body { font-family: 'dejavusanscondensed', 'dejavusans', sans-serif; font-size: 9pt; line-height: 1.3; color: #000; }
+        @page {
+            margin-top: 12mm;
+            margin-bottom: 15mm;
+            margin-left: 15mm;
+            margin-right: 15mm;
+        }
+        body { 
+            font-family: 'dejavusanscondensed', 'dejavusans', Arial, sans-serif; 
+            font-size: 8pt; 
+            line-height: 1.25; 
+            color: #000; 
+        }
         .text-center { text-align: center; }
+        .text-start { text-align: left; }
         .text-end { text-align: right; }
         .fw-bold { font-weight: bold; }
-        .table-data { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 12px; }
-        .table-data th, .table-data td { border: 1px solid #000; padding: 4px 6px; font-size: 8.5pt; }
-        .table-data th { background-color: #f1f5f9; text-align: center; vertical-align: middle; }
-        .signature-table { width: 100%; border-collapse: collapse; margin-top: 15px; page-break-inside: avoid; }
-        .signature-table td { vertical-align: top; }
+        .text-uppercase { text-transform: uppercase; }
+
+        .doc-title {
+            font-size: 11pt;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        .doc-header-text {
+            font-size: 8.5pt;
+            line-height: 1.4;
+            text-align: justify;
+            margin-bottom: 14px;
+        }
+
+        table.table-nominatif { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 5px; 
+            margin-bottom: 10px; 
+        }
+        table.table-nominatif thead {
+            display: table-header-group;
+        }
+        table.table-nominatif th { 
+            border: 1px solid #000; 
+            padding: 5px 3px; 
+            font-size: 7.5pt; 
+            font-weight: bold;
+            text-align: center; 
+            vertical-align: middle; 
+            background-color: #fff;
+            line-height: 1.2;
+        }
+        table.table-nominatif td { 
+            border: 1px solid #000; 
+            padding: 4px 4px; 
+            font-size: 7.5pt; 
+            vertical-align: middle; 
+            line-height: 1.25;
+        }
+        table.table-nominatif tr {
+            page-break-inside: avoid;
+        }
+
+        .signature-section { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 25px; 
+            page-break-inside: avoid; 
+        }
+        .signature-section td { 
+            vertical-align: top; 
+            font-size: 8pt;
+            line-height: 1.35;
+        }
     </style>
 </head>
 <body>
 
-    <?= $this->include('Apps/pages/services/pnbp/templates/_kop_surat') ?>
-    <?= $this->include('Apps/pages/services/pnbp/templates/_footer_page') ?>
+    <?php
+    $instansiNames = !empty($meta['instansi_names']) ? (is_array($meta['instansi_names']) ? implode(', ', $meta['instansi_names']) : $meta['instansi_names']) : ($doc['instansi_nama'] ?? 'Pemerintah Daerah');
+    $tanggalKgt = !empty($meta['tanggal_kegiatan']) ? $meta['tanggal_kegiatan'] : (!empty($doc['period_start_date']) ? \App\Services\PNBP\PNBPHelper::formatPeriode($doc['period_start_date'], $doc['period_end_date']) : \App\Services\PNBP\PNBPHelper::formatTanggalIndo($doc['doc_date']));
+    
+    $defaultKeterangan = "Honorarium Tim Panitia dalam rangka Fasilitasi Seleksi Pengembangan Karier dengan metode CAT BKN di Lingkungan Instansi " . $instansiNames . " di Kanreg III BKN, pada tanggal " . $tanggalKgt . ".";
+    $headerText = !empty($meta['header_keterangan']) ? $meta['header_keterangan'] : $defaultKeterangan;
+    ?>
 
-    <div class="text-center" style="margin-bottom: 12px;">
-        <div style="font-size: 11pt; font-weight: bold; text-decoration: underline; text-transform: uppercase;">
-            DAFTAR NOMINATIF PERJALANAN DINAS / PENUGASAN PETUGAS
-        </div>
-        <div style="font-size: 9pt; margin-top: 2px;">
-            Kegiatan: <strong><?= esc($doc['title']) ?></strong> &bull; Lokasi: <strong><?= esc($doc['nama_tilok'] ?: '-') ?></strong>
-        </div>
-        <div style="font-size: 8.5pt; color: #475569;">
-            Periode: <?= \App\Services\PNBP\PNBPHelper::formatPeriode($doc['period_start_date'] ?? null, $doc['period_end_date'] ?? null) ?> &bull; MAK: <?= esc($meta['mak'] ?? '-') ?>
-        </div>
+    <!-- Judul Dokumen -->
+    <div class="doc-title">
+        DAFTAR NOMINATIF
     </div>
 
-    <!-- Tabel Daftar Nominatif -->
-    <table class="table-data">
+    <!-- Paragraf Keterangan Header -->
+    <div class="doc-header-text">
+        <?= esc($headerText) ?>
+    </div>
+
+    <!-- Tabel Daftar Nominatif Sesuai Acuan Lampiran -->
+    <table class="table-nominatif">
         <thead>
             <tr>
-                <th style="width: 25px;">No</th>
-                <th>Nama Pegawai / NIP</th>
-                <th style="width: 90px;">Gol. / Pangkat</th>
-                <th>Jabatan / Peran</th>
-                <th style="width: 45px;">Hari</th>
-                <th style="width: 85px;">Uang Harian</th>
-                <th style="width: 85px;">Transport</th>
-                <th style="width: 95px;">Jumlah (Rp)</th>
-                <th style="width: 100px;">No. Rekening</th>
-                <th style="width: 80px;">Tanda Tangan</th>
+                <th style="width: 25px;">NO</th>
+                <th style="width: 175px;">NAMA/NIP</th>
+                <th style="width: 35px;">GOL</th>
+                <th style="width: 110px;">NIK</th>
+                <th style="width: 105px;">BANK & NO REK</th>
+                <th style="width: 85px;">JABATAN</th>
+                <th style="width: 70px;">JUMLAH</th>
+                <th style="width: 65px;">PAJAK<br>PPh psl 21</th>
+                <th style="width: 70px;">JUMLAH<br>DITERIMA</th>
             </tr>
         </thead>
         <tbody>
             <?php 
-                $totalUH = 0;
-                $totalTR = 0;
-                $totalGrand = 0;
+                $totalJumlah   = 0;
+                $totalPajak    = 0;
+                $totalDiterima = 0;
             ?>
             <?php if (!empty($personel)): ?>
                 <?php foreach ($personel as $i => $p): 
-                    $subUH = (float) $p['uang_harian'] * (int) $p['jumlah_hari'];
-                    $subTR = (float) $p['transport'];
-                    $subTotal = (float) $p['total_biaya'];
-                    $totalUH += $subUH;
-                    $totalTR += $subTR;
-                    $totalGrand += $subTotal;
+                    $jumlahVal   = (float) ($p['jumlah'] > 0 ? $p['jumlah'] : ($p['total_biaya'] ?? 0));
+                    $pajakNomVal = (float) ($p['pajak_nominal'] ?? 0);
+                    if ($pajakNomVal == 0 && !empty($p['pajak_persen']) && $p['pajak_persen'] > 0) {
+                        $pajakNomVal = round($jumlahVal * ($p['pajak_persen'] / 100), 2);
+                    }
+                    $diterimaVal = (float) ($p['jumlah_diterima'] > 0 ? $p['jumlah_diterima'] : ($jumlahVal - $pajakNomVal));
+
+                    $totalJumlah   += $jumlahVal;
+                    $totalPajak    += $pajakNomVal;
+                    $totalDiterima += $diterimaVal;
+
+                    // Parse Golongan
+                    $golText = trim((string) ($p['pangkat_gol'] ?? ''));
+                    if (preg_match('/\((.*?)\)/', $golText, $matches)) {
+                        $golDisplay = $matches[1];
+                    } else {
+                        $golDisplay = $golText ?: '-';
+                    }
+                    // Format romawi sederhana jika memungkinkan (misal III/a -> III)
+                    $golClean = explode('/', $golDisplay)[0];
+                    if (in_array(strtoupper($golClean), ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII'])) {
+                        $golFormatted = strtoupper($golClean);
+                    } else {
+                        $golFormatted = $golDisplay;
+                    }
+
+                    $bankName = trim((string) ($p['bank_nama'] ?? 'BRI'));
+                    if (empty($bankName) && !empty($p['no_rekening']) && preg_match('/^(Bank\s+\w+|\w+)/i', $p['no_rekening'], $bMatches)) {
+                        $bankName = $bMatches[1];
+                    }
+                    $noRek = trim((string) ($p['no_rekening'] ?? '-'));
+                    // Bersihkan nama bank dari no_rekening jika ada
+                    $cleanRek = preg_replace('/^[a-zA-Z\s]+/', '', $noRek);
+                    $cleanRek = trim($cleanRek, " ()-\t\n\r\0\x0B");
+                    if (empty($cleanRek)) {
+                        $cleanRek = $noRek;
+                    }
                 ?>
                 <tr>
                     <td class="text-center"><?= $i + 1 ?></td>
                     <td>
-                        <strong><?= esc($p['nama']) ?></strong><br>
-                        <small>NIP. <?= esc($p['nip'] ?: '-') ?></small>
+                        <div class="fw-bold text-uppercase"><?= esc($p['nama']) ?></div>
+                        <div><?= esc($p['nip'] ?: '-') ?></div>
                     </td>
-                    <td class="text-center"><?= esc($p['pangkat_gol'] ?: '-') ?></td>
-                    <td>
-                        <?= esc($p['jabatan'] ?: '-') ?><br>
-                        <small class="fw-bold text-primary">(<?= esc($p['peran'] ?: 'Petugas') ?>)</small>
+                    <td class="text-center"><?= esc($golFormatted) ?></td>
+                    <td class="text-center"><?= esc($p['nik'] ?: '-') ?></td>
+                    <td class="text-center">
+                        <div><i><?= esc($bankName ?: 'BRI') ?></i></div>
+                        <div>(<?= esc($cleanRek ?: '-') ?>)</div>
                     </td>
-                    <td class="text-center"><?= (int) $p['jumlah_hari'] ?></td>
-                    <td class="text-end"><?= \App\Services\PNBP\PNBPHelper::formatRupiah($p['uang_harian'], false) ?></td>
-                    <td class="text-end"><?= \App\Services\PNBP\PNBPHelper::formatRupiah($p['transport'], false) ?></td>
-                    <td class="text-end fw-bold"><?= \App\Services\PNBP\PNBPHelper::formatRupiah($p['total_biaya'], false) ?></td>
-                    <td><small><?= esc($p['no_rekening'] ?: '-') ?></small></td>
-                    <td class="text-center" style="font-size: 7pt; color: #94a3b8;">
-                        <?= $i + 1 ?>. ..........
-                    </td>
+                    <td class="text-center"><?= esc($p['jabatan'] ?: ($p['peran'] ?: 'Anggota')) ?></td>
+                    <td class="text-end"><?= number_format($jumlahVal, 0, ',', '.') ?></td>
+                    <td class="text-end"><?= $pajakNomVal > 0 ? number_format($pajakNomVal, 0, ',', '.') : '-' ?></td>
+                    <td class="text-end"><?= number_format($diterimaVal, 0, ',', '.') ?></td>
                 </tr>
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="10" class="text-center py-3">Belum ada rincian data nominatif personel.</td>
+                    <td colspan="9" class="text-center py-3">Belum ada rincian data nominatif pegawai.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
         <tfoot>
-            <tr style="background-color: #f8fafc; font-weight: bold;">
-                <td colspan="4" class="text-center">JUMLAH TOTAL</td>
-                <td class="text-center">-</td>
-                <td class="text-end"><?= \App\Services\PNBP\PNBPHelper::formatRupiah($totalUH, false) ?></td>
-                <td class="text-end"><?= \App\Services\PNBP\PNBPHelper::formatRupiah($totalTR, false) ?></td>
-                <td class="text-end"><?= \App\Services\PNBP\PNBPHelper::formatRupiah($totalGrand, false) ?></td>
-                <td colspan="2"></td>
+            <tr style="font-weight: bold;">
+                <td colspan="6" class="text-center fw-bold" style="letter-spacing: 0.05em;">JUMLAH SELURUHNYA</td>
+                <td class="text-end fw-bold"><?= number_format($totalJumlah, 0, ',', '.') ?></td>
+                <td class="text-end fw-bold"><?= $totalPajak > 0 ? number_format($totalPajak, 0, ',', '.') : '-' ?></td>
+                <td class="text-end fw-bold"><?= number_format($totalDiterima, 0, ',', '.') ?></td>
             </tr>
         </tfoot>
     </table>
 
-    <div style="font-size: 8.5pt; margin-bottom: 15px;">
-        Terbilang: <strong><i><?= \App\Services\PNBP\PNBPHelper::terbilang($totalGrand) ?></i></strong>
-    </div>
-
-    <!-- Blok 2 TTD: PPK (Kiri) & Bendahara (Kanan) -->
-    <table class="signature-table">
+    <!-- Blok Tanda Tangan Sesuai Acuan Lampiran -->
+    <table class="signature-section">
         <tr>
-            <td style="width: 50%; text-align: center;">
-                <?= esc($signLeft['sign_title'] ?? 'Mengetahui / Menyetujui,') ?><br>
-                <strong><?= esc($signLeft['jabatan'] ?? 'Pejabat Pembuat Komitmen') ?></strong>
+            <!-- Kolom Kiri: PPK / Mengetahui -->
+            <td style="width: 50%; text-align: center; padding-right: 25px;">
+                <?php
+                    $leftTitle = !empty($signLeft['sign_title']) ? $signLeft['sign_title'] : "Mengetahui\nAnalis Pengelolaan Keuangan APBN Ahli Madya\nsebagai Pejabat Pembuat Komitmen\nPusat Pengembangan Sistem Rekrutmen (PNBP)";
+                    $leftNama  = !empty($signLeft['nama']) ? $signLeft['nama'] : 'LESTARI PRASETIJANI, SE, MM';
+                    $leftNip   = !empty($signLeft['nip']) ? $signLeft['nip'] : '197104241992032001';
+                ?>
+                <div><?= nl2br(esc($leftTitle)) ?></div>
                 
-                <div style="height: 65px; margin: 3px 0;">
+                <!-- Space lapang untuk tanda tangan basah/digital di atas nama pejabat -->
+                <div style="height: 75px; margin: 8px 0; min-height: 70px;">
                     <?php if (!empty($signLeft) && $signLeft['sign_status'] === 'signed' && !empty($signLeft['signature_base64'])): ?>
                         <img src="<?= $signLeft['signature_base64'] ?>" style="height: 65px; max-width: 150px;">
-                    <?php elseif (!empty($signLeft)): ?>
-                        <barcode code="<?= base_url('pnbp-sign/' . $signLeft['sign_token']) ?>" type="QR" class="barcode" size="0.8" error="M" disableborder="1" />
-                        <br><span style="font-size: 7pt; color: #64748b;">Scan QR untuk TTD Digital</span>
+                    <?php else: ?>
+                        <div style="height: 70px;"></div>
                     <?php endif; ?>
                 </div>
-                <strong><u><?= esc($signLeft['nama'] ?? '-') ?></u></strong><br>
-                NIP. <?= esc($signLeft['nip'] ?? '-') ?>
+
+                <div class="fw-bold" style="text-decoration: underline;"><?= esc($leftNama) ?></div>
+                <div>NIP. <?= esc($leftNip) ?></div>
             </td>
 
-            <td style="width: 50%; text-align: center;">
-                Mengetahui,<br>
-                <strong><?= esc($signRight['jabatan'] ?? 'Kepala Kantor Regional III BKN') ?></strong>
-                <div style="height: 65px; margin: 3px 0;">
+            <!-- Kolom Kanan: Bendahara Pengeluaran -->
+            <td style="width: 50%; text-align: center; padding-left: 25px;">
+                <?php
+                    $rightTitle = !empty($signRight['sign_title']) ? $signRight['sign_title'] : "Jakarta, ..................................................\nDiajukan ke Kuasa Pengguna Anggaran BKN\nPada tanggal...............................\nBendahara Pengeluaran";
+                    $rightNama  = !empty($signRight['nama']) ? $signRight['nama'] : 'FITRIANI PANJAITAN, S.Kom.';
+                    $rightNip   = !empty($signRight['nip']) ? $signRight['nip'] : '199009062014022001';
+                ?>
+                <div><?= nl2br(esc($rightTitle)) ?></div>
+
+                <!-- Space lapang untuk tanda tangan basah/digital di atas nama pejabat -->
+                <div style="height: 75px; margin: 8px 0; min-height: 70px;">
                     <?php if (!empty($signRight) && $signRight['sign_status'] === 'signed' && !empty($signRight['signature_base64'])): ?>
                         <img src="<?= $signRight['signature_base64'] ?>" style="height: 65px; max-width: 150px;">
-                    <?php elseif (!empty($signRight)): ?>
-                        <barcode code="<?= base_url('pnbp-sign/' . $signRight['sign_token']) ?>" type="QR" class="barcode" size="0.8" error="M" disableborder="1" />
-                        <br><span style="font-size: 7pt; color: #64748b;">Scan QR untuk TTD Digital</span>
+                    <?php else: ?>
+                        <div style="height: 70px;"></div>
                     <?php endif; ?>
                 </div>
 
-                <strong><u><?= esc($signRight['nama'] ?? 'Siti Rahmawati, S.E., Ak.') ?></u></strong><br>
-                NIP. <?= esc($signRight['nip'] ?? '-') ?>
+                <div class="fw-bold" style="text-decoration: underline;"><?= esc($rightNama) ?></div>
+                <div>NIP. <?= esc($rightNip) ?></div>
             </td>
         </tr>
     </table>
 
 </body>
 </html>
+
