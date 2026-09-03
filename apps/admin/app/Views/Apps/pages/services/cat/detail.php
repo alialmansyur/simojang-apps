@@ -103,8 +103,8 @@
 
                 <div class="d-flex flex-wrap align-items-center gap-2">
                     <select id="sortInstansi" class="form-select fw-bold cat-sort-select">
+                        <option value="updated_desc" selected>Terbaru Update</option>
                         <option value="name_asc">Nama Instansi A-Z</option>
-                        <option value="updated_desc">Terbaru Update</option>
                         <option value="sessions_desc">Sesi Terbanyak</option>
                         <option value="peserta_desc">Peserta Terbanyak</option>
                     </select>

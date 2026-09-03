@@ -374,6 +374,19 @@ function getCurrentDateTime() {
     return `${dd}-${mm}-${yyyy} ${hh}:${ii}:${ss}`;
 }
 
+function parseDateToTimestamp(dateStr) {
+    if (!dateStr) return 0;
+    const cleanStr = String(dateStr).trim();
+    if (!cleanStr || cleanStr === '-' || cleanStr === '0000-00-00' || cleanStr === '0000-00-00 00:00:00') return 0;
+    
+    const iso = cleanStr.includes('T') ? cleanStr : cleanStr.replace(' ', 'T');
+    const parsed = Date.parse(iso);
+    if (!Number.isNaN(parsed)) return parsed;
+    
+    const fallback = Date.parse(cleanStr.replace(/-/g, '/'));
+    return !Number.isNaN(fallback) ? fallback : 0;
+}
+
 let allTilokData = [];
 let tilokState = {
     keyword: '',
@@ -424,8 +437,8 @@ function processAndRenderTilok() {
     // Sorting
     rendered.sort((a, b) => {
         if (tilokState.sort === 'updated_desc') {
-            const tA = a.last_rekap_updated ? Date.parse(a.last_rekap_updated) || 0 : (a.last_rekap_date ? Date.parse(a.last_rekap_date) || 0 : 0);
-            const tB = b.last_rekap_updated ? Date.parse(b.last_rekap_updated) || 0 : (b.last_rekap_date ? Date.parse(b.last_rekap_date) || 0 : 0);
+            const tA = parseDateToTimestamp(a.last_rekap_updated) || parseDateToTimestamp(a.last_rekap_date);
+            const tB = parseDateToTimestamp(b.last_rekap_updated) || parseDateToTimestamp(b.last_rekap_date);
             if (tB !== tA) return tB - tA;
             const nameA = String(a.nama_tilok || '').toLowerCase();
             const nameB = String(b.nama_tilok || '').toLowerCase();

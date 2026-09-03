@@ -15,7 +15,7 @@ window.CatDetailState = {
     filter: {
         keyword: '',
         status: 'all', // 'all', 'updated', 'pending'
-        sort: 'name_asc',
+        sort: 'updated_desc',
         currentPage: 1,
         itemsPerPage: 10
     },
@@ -73,6 +73,20 @@ function formatDateTime(value) {
 
 function formatNumber(num) {
     return Number(num || 0).toLocaleString('id-ID');
+}
+
+function parseDateToTimestamp(dateStr) {
+    if (!dateStr) return 0;
+    const cleanStr = String(dateStr).trim();
+    if (!cleanStr || cleanStr === '-' || cleanStr === '0000-00-00' || cleanStr === '0000-00-00 00:00:00') return 0;
+    
+    // Replace space with T for ISO format compatibility across all JS engines
+    const iso = cleanStr.includes('T') ? cleanStr : cleanStr.replace(' ', 'T');
+    const parsed = Date.parse(iso);
+    if (!Number.isNaN(parsed)) return parsed;
+    
+    const fallback = Date.parse(cleanStr.replace(/-/g, '/'));
+    return !Number.isNaN(fallback) ? fallback : 0;
 }
 
 // -------------------------------------------------------------------------
@@ -220,15 +234,26 @@ function processAndRenderInstansi() {
     // Sort
     rendered.sort((a, b) => {
         if (CatDetailState.filter.sort === 'updated_desc') {
-            const tA = a.last_update ? Date.parse(a.last_update) || 0 : 0;
-            const tB = b.last_update ? Date.parse(b.last_update) || 0 : 0;
-            return tB - tA;
+            const tA = parseDateToTimestamp(a.last_update) || parseDateToTimestamp(a.max_date);
+            const tB = parseDateToTimestamp(b.last_update) || parseDateToTimestamp(b.max_date);
+            if (tB !== tA) return tB - tA;
+            const nameA = String(a.instansi_nama || '').toLowerCase();
+            const nameB = String(b.instansi_nama || '').toLowerCase();
+            return nameA.localeCompare(nameB, 'id');
         }
         if (CatDetailState.filter.sort === 'sessions_desc') {
-            return Number(b.total_sesi || 0) - Number(a.total_sesi || 0);
+            const diff = Number(b.total_sesi || 0) - Number(a.total_sesi || 0);
+            if (diff !== 0) return diff;
+            const nameA = String(a.instansi_nama || '').toLowerCase();
+            const nameB = String(b.instansi_nama || '').toLowerCase();
+            return nameA.localeCompare(nameB, 'id');
         }
         if (CatDetailState.filter.sort === 'peserta_desc') {
-            return Number(b.total_peserta || 0) - Number(a.total_peserta || 0);
+            const diff = Number(b.total_peserta || 0) - Number(a.total_peserta || 0);
+            if (diff !== 0) return diff;
+            const nameA = String(a.instansi_nama || '').toLowerCase();
+            const nameB = String(b.instansi_nama || '').toLowerCase();
+            return nameA.localeCompare(nameB, 'id');
         }
         // name_asc
         const nameA = String(a.instansi_nama || '').toLowerCase();
