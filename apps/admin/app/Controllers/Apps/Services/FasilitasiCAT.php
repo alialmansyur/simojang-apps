@@ -962,8 +962,41 @@ class FasilitasiCAT extends BaseController
 
         $lastUpdateVal = $this->catmodel->getInstansiLastUpdate($key, $filter_instansi, $seleksi_id);
 
+        $summaryBuilder = $this->catmodel->db->table('txn_cat_hasil a')
+            ->select('
+                COUNT(a.id) AS total_sesi,
+                SUM(COALESCE(a.hadir, 0)) AS total_hadir,
+                SUM(COALESCE(a.tidak_hadir, 0)) AS total_tidak_hadir,
+                SUM(COALESCE(a.reschedule, 0)) AS total_reschedule,
+                SUM(COALESCE(a.hadir, 0) + COALESCE(a.tidak_hadir, 0)) AS total_peserta,
+                MIN(a.nilai_min) AS min_nilai,
+                MAX(a.nilai_max) AS max_nilai,
+                MAX(COALESCE(a.updated_at, a.created_at)) AS last_update
+            ')
+            ->join('txn_cat_tilok b', 'b.id = a.tilok_id', 'inner')
+            ->where('b.uid', $key);
+
+        if (!empty($filter_instansi)) {
+            $summaryBuilder->whereIn('a.instansi_id', $filter_instansi);
+        }
+        if (!empty($seleksi_id)) {
+            $summaryBuilder->where('a.seleksi_id', $seleksi_id);
+        }
+        if (!empty($bulan)) {
+            $summaryBuilder->whereIn('MONTH(a.period_date)', $bulan);
+        }
+        if (!empty($tanggal)) {
+            $summaryBuilder->where('a.period_date', $tanggal);
+        }
+        if (!empty($sesi)) {
+            $summaryBuilder->where('a.sesi', $sesi);
+        }
+
+        $summaryStat = $summaryBuilder->get()->getRowArray() ?? [];
+
         $result = $this->dataTables->render($builder, $columns);
         $result['last_update'] = $lastUpdateVal;
+        $result['summary_stat'] = $summaryStat;
         return $this->response->setJSON($result);   
     }
 
@@ -1085,6 +1118,12 @@ class FasilitasiCAT extends BaseController
             s.periode, 
             jt.kode AS jenis_tes,
             COUNT(a.id) AS total_sesi,
+            SUM(COALESCE(a.hadir, 0)) AS hadir,
+            SUM(COALESCE(a.tidak_hadir, 0)) AS tidak_hadir,
+            SUM(COALESCE(a.reschedule, 0)) AS reschedule,
+            SUM(COALESCE(a.hadir, 0) + COALESCE(a.tidak_hadir, 0)) AS total_peserta,
+            MIN(a.nilai_min) AS min_nilai,
+            MAX(a.nilai_max) AS max_nilai,
             MAX(COALESCE(a.updated_at, a.created_at)) AS last_update
         ');
         $builder->join('txn_cat_tilok b', 'b.id = a.tilok_id', 'inner');

@@ -599,12 +599,19 @@ function openInstansiRekapView(seleksiId, eventData) {
 
     // Update Banner Info
     $('#rekapActiveInstansiNama').text(CatDetailState.activeInstansi.nama || '-');
-    $('#statTotalSesi').text(eventData.total_sesi || '0');
-    // For other stats, maybe we don't have them in eventData, but we can reset or fetch later
-    // Just reset to 0 for now or hide if not provided
-    $('#statTotalHadir').text(eventData.hadir || '0');
-    $('#statTotalTidakHadir').text(eventData.tidak_hadir || '0');
-    $('#statRentangNilai').text('-');
+    $('#statTotalSesi').text(formatNumber(eventData.total_sesi || 0));
+    $('#statTotalHadir').text(formatNumber(eventData.hadir || 0));
+    $('#statTotalTidakHadir').text(formatNumber(eventData.tidak_hadir || 0));
+
+    const minScore = eventData.min_nilai !== null && eventData.min_nilai !== undefined && eventData.min_nilai !== '' ? eventData.min_nilai : null;
+    const maxScore = eventData.max_nilai !== null && eventData.max_nilai !== undefined && eventData.max_nilai !== '' ? eventData.max_nilai : null;
+    if (minScore !== null && maxScore !== null) {
+        $('#statRentangNilai').text(`${formatNumber(minScore)} - ${formatNumber(maxScore)}`);
+    } else if (maxScore !== null) {
+        $('#statRentangNilai').text(formatNumber(maxScore));
+    } else {
+        $('#statRentangNilai').text('-');
+    }
 
     // Update Active Logo
     const logoWrap = $('#rekapActiveLogoWrap');
@@ -838,16 +845,33 @@ const table = $('#dataTable').DataTable({
     }
 });
 
-// Sinkronisasi Update Terakhir Sesuai Data Rekapan Instansi
+// Sinkronisasi KPI Banner & Update Terakhir Sesuai Data Rekapan Sesi
 table.on('xhr.dt', function (e, settings, json) {
+    if (json && json.summary_stat) {
+        const stat = json.summary_stat;
+        $('#statTotalSesi').text(formatNumber(stat.total_sesi || 0));
+        $('#statTotalHadir').text(formatNumber(stat.total_hadir || 0));
+        $('#statTotalTidakHadir').text(formatNumber(stat.total_tidak_hadir || 0));
+
+        const minScore = stat.min_nilai !== null && stat.min_nilai !== undefined && stat.min_nilai !== '' ? stat.min_nilai : null;
+        const maxScore = stat.max_nilai !== null && stat.max_nilai !== undefined && stat.max_nilai !== '' ? stat.max_nilai : null;
+        if (minScore !== null && maxScore !== null) {
+            $('#statRentangNilai').text(`${formatNumber(minScore)} - ${formatNumber(maxScore)}`);
+        } else if (maxScore !== null) {
+            $('#statRentangNilai').text(formatNumber(maxScore));
+        } else {
+            $('#statRentangNilai').text('-');
+        }
+    }
+
     let lastUpdateVal = json?.last_update || null;
     if (!lastUpdateVal && Array.isArray(json?.data) && json.data.length > 0) {
         let maxTs = 0;
         json.data.forEach(function (row) {
             const t = row.updated_at || row.created_at;
             if (t) {
-                const ts = Date.parse(t.includes('T') ? t : t.replace(' ', 'T'));
-                if (!isNaN(ts) && ts > maxTs) {
+                const ts = parseDateToTimestamp(t);
+                if (ts > maxTs) {
                     maxTs = ts;
                     lastUpdateVal = t;
                 }
