@@ -26,6 +26,22 @@ class ActivityGalleryController extends BaseController
         return $this->renderView('Apps/pages/activity-gallery', $data);
     }
 
+    public function getLayanan()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(403)->setBody('Forbidden');
+        }
+
+        $timkerjaId = $this->request->getPost('timkerja_id');
+        if (empty($timkerjaId)) {
+            return $this->response->setJSON(['status' => 'success', 'data' => []]);
+        }
+
+        $layanan = $this->galleryModel->getLayananByTimKerja($timkerjaId);
+
+        return $this->response->setJSON(['status' => 'success', 'data' => $layanan]);
+    }
+
     public function getData()
     {
         if (!$this->request->isAJAX()) {
@@ -52,6 +68,8 @@ class ActivityGalleryController extends BaseController
                 'uid'            => $row['uid'],
                 'team_id'        => $row['timkerja_id'],
                 'team_name'      => $row['team_name'] ?? 'Tidak Diketahui',
+                'layanan_id'     => $row['layanan_id'],
+                'layanan_name'   => $row['nama_layanan'] ?? '',
                 'title'          => $row['judul'],
                 'date'           => $row['tanggal_kegiatan'],
                 'date_formatted' => $formattedDate,
@@ -73,6 +91,7 @@ class ActivityGalleryController extends BaseController
         
         $rules = [
             'timkerja' => 'required',
+            'layanan'  => 'permit_empty',
             'tanggal'  => 'required|valid_date',
             'judul'    => 'required',
             'deskripsi'=> 'required'
@@ -95,8 +114,10 @@ class ActivityGalleryController extends BaseController
             return $this->response->setJSON(['status' => 'error', 'message' => $firstError]);
         }
 
+        $layananId = $this->request->getPost('layanan');
         $dbData = [
             'timkerja_id'      => $this->request->getPost('timkerja'),
+            'layanan_id'       => !empty($layananId) ? $layananId : null,
             'tanggal_kegiatan' => $this->request->getPost('tanggal'),
             'judul'            => $this->request->getPost('judul'),
             'deskripsi'        => $this->request->getPost('deskripsi'),

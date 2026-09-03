@@ -55,6 +55,7 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     // Galeri Kegiatan
     $routes->get('/activity-gallery', 'Apps\ActivityGalleryController::index');
     $routes->post('/activity-gallery/get-data', 'Apps\ActivityGalleryController::getData');
+    $routes->post('/activity-gallery/get-layanan', 'Apps\ActivityGalleryController::getLayanan');
     $routes->post('/activity-gallery/store', 'Apps\ActivityGalleryController::store');
     $routes->post('/activity-gallery/delete', 'Apps\ActivityGalleryController::delete');
 

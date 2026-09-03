@@ -11,6 +11,12 @@ $(document).ready(function () {
         loadGalleryData();
     });
 
+    // Dependent Dropdown Tim Kerja -> Layanan
+    $('#inputTimKerja').on('change', function () {
+        const timkerjaId = $(this).val();
+        loadLayananOptions(timkerjaId);
+    });
+
     // Upload Photo Preview (Form Tambah Galeri)
     $('#inputFoto').on('change', function (e) {
         const file = e.target.files[0];
@@ -93,6 +99,7 @@ $(document).ready(function () {
         $('#btnSaveGallery').text('Simpan Data');
         $('#formAddGallery').removeData('edit-id');
         $('#inputFoto').prop('required', true); // Require photo on new add
+        $('#inputLayanan').html('<option value="">Pilih Tim Kerja terlebih dahulu</option>').prop('disabled', true);
     });
 
     // Event Save Modal (Real AJAX)
@@ -159,12 +166,18 @@ $(document).ready(function () {
         const img = $(this).data('img');
         const title = $(this).data('title');
         const team = $(this).data('team');
+        const layanan = $(this).data('layanan');
         const date = $(this).data('date');
         const desc = $(this).data('desc');
 
         $('#viewGalleryImg').attr('src', img);
         $('#viewGalleryTitle').text(title);
         $('#viewGalleryTeam').text(team);
+        if (layanan && layanan.trim() !== '') {
+            $('#viewGalleryLayanan').text(layanan).removeClass('d-none');
+        } else {
+            $('#viewGalleryLayanan').addClass('d-none').text('');
+        }
         $('#viewGalleryDate').html(`<i class="bi bi-calendar3"></i> ${date}`);
         $('#viewGalleryDesc').text(desc);
 
@@ -221,8 +234,12 @@ $(document).ready(function () {
         
         const id = $(this).data('id');
         const card = $(this).closest('.gallery-card');
+        const teamId = card.data('team-id');
+        const layananId = card.data('layanan-id');
         
-        $('#inputTimKerja').val(card.data('team-id'));
+        $('#inputTimKerja').val(teamId);
+        loadLayananOptions(teamId, layananId);
+
         $('#inputTanggal').val(card.data('raw-date'));
         $('#inputJudul').val(card.data('title'));
         $('#inputDeskripsi').val(card.data('desc'));
@@ -239,6 +256,46 @@ $(document).ready(function () {
         $('#modalAddGallery').modal('show');
     });
 });
+
+function loadLayananOptions(timkerjaId, selectedLayananId = null, callback = null) {
+    const $select = $('#inputLayanan');
+    
+    if (!timkerjaId) {
+        $select.html('<option value="">Pilih Tim Kerja terlebih dahulu</option>').prop('disabled', true);
+        if (typeof callback === 'function') callback();
+        return;
+    }
+
+    $select.html('<option value="">Memuat layanan...</option>').prop('disabled', true);
+
+    $.ajax({
+        url: AppConfig.initGlobal + 'activity-gallery/get-layanan',
+        type: 'POST',
+        data: { timkerja_id: timkerjaId },
+        dataType: 'json',
+        success: function (response) {
+            if (response.status === 'success') {
+                if (response.data && response.data.length > 0) {
+                    let options = '<option value="">-- Pilih Layanan (Opsional) --</option>';
+                    response.data.forEach(function (item) {
+                        const isSelected = selectedLayananId && String(selectedLayananId) === String(item.id) ? 'selected' : '';
+                        options += `<option value="${item.id}" ${isSelected}>${item.nama_layanan}</option>`;
+                    });
+                    $select.html(options).prop('disabled', false);
+                } else {
+                    $select.html('<option value="">Tidak ada layanan untuk tim kerja ini</option>').prop('disabled', true);
+                }
+            } else {
+                $select.html('<option value="">Gagal memuat layanan</option>').prop('disabled', true);
+            }
+            if (typeof callback === 'function') callback();
+        },
+        error: function () {
+            $select.html('<option value="">Gagal memuat layanan</option>').prop('disabled', true);
+            if (typeof callback === 'function') callback();
+        }
+    });
+}
 
 function triggerStaggeredAnimation() {
     $('.gallery-item-wrapper:visible').each(function(index) {
@@ -349,9 +406,13 @@ function renderGallery(data) {
             $carouselInner.append(`
                 <div class="carousel-item ${activeClass} h-100">
                     <img src="${item.img}" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%25%22%20height%3D%22100%25%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20role%3D%22img%22%20aria-label%3D%22No%20Image%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%20focusable%3D%22false%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e2e8f0%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22600%22%20font-size%3D%221.25rem%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3ENO%20IMAGE%3C%2Ftext%3E%3C%2Fsvg%3E'" class="d-block w-100" style="object-fit: cover; height: 400px;" alt="${item.title}">
-                    <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.5); border-radius: 8px; padding: 1rem; bottom: 20px;">
+                    <div class="carousel-caption d-none d-md-block" style="background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(6px); border-radius: 10px; padding: 1rem 1.5rem; bottom: 20px; left: 10%; right: 10%;">
+                        <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mb-2">
+                            <span class="badge" style="background-color: #3b82f6; color: #ffffff; font-size: 0.75rem;"><i class="bi bi-people me-1"></i>${item.team_name}</span>
+                            ${item.layanan_name ? `<span class="badge" style="background-color: #0284c7; color: #ffffff; font-size: 0.75rem;"><i class="bi bi-grid me-1"></i>${item.layanan_name}</span>` : ''}
+                        </div>
                         <h5 class="text-white mb-1 fw-bold">${item.title}</h5>
-                        <p class="mb-0 text-light">${item.date_formatted}</p>
+                        <p class="mb-0 text-light small"><i class="bi bi-calendar3 me-1"></i>${item.date_formatted}</p>
                     </div>
                 </div>
             `);
@@ -368,6 +429,8 @@ function renderGallery(data) {
                      data-title="${item.title}" 
                      data-team="${item.team_name}" 
                      data-team-id="${item.team_id}" 
+                     data-layanan="${item.layanan_name || ''}" 
+                     data-layanan-id="${item.layanan_id || ''}" 
                      data-date="${item.date_formatted}"
                      data-raw-date="${item.date}"
                      data-desc="${item.desc}">
@@ -380,9 +443,12 @@ function renderGallery(data) {
                     </div>
                     
                     <div class="gallery-card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-1">
-                            <span class="gallery-card-team">${item.team_name}</span>
-                            <div class="d-flex gap-2 position-relative z-3" style="margin-top:-2px;">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="d-flex flex-column gap-1 pe-2 overflow-hidden" style="max-width: calc(100% - 50px);">
+                                <span class="gallery-card-team text-truncate" title="${item.team_name}"><i class="bi bi-people me-1"></i>${item.team_name}</span>
+                                ${item.layanan_name ? `<span class="gallery-card-service" title="${item.layanan_name}"><i class="bi bi-grid me-1"></i>${item.layanan_name}</span>` : ''}
+                            </div>
+                            <div class="d-flex gap-2 position-relative z-3 flex-shrink-0" style="margin-top:-2px;">
                                 <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none btn-edit-gallery" style="color: #94a3b8;" data-id="${item.id}" title="Edit"><i class="bi bi-pencil-square" style="font-size: 1.05rem;"></i></button>
                                 <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none btn-delete-gallery" style="color: #94a3b8;" data-id="${item.id}" title="Hapus"><i class="bi bi-trash3" style="font-size: 1.05rem;"></i></button>
                             </div>

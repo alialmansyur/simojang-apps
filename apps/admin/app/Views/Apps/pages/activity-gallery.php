@@ -1,82 +1,55 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=99') ?>">
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/activity-gallery.css?v=99') ?>">
-<style>
-    /* Responsive Fixes */
-    .page-content {
-        max-width: 100vw;
-        overflow-x: hidden;
-    }
-    .tw-wrap {
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow-x: hidden;
-    }
-    .tw-title, .tw-subtitle {
-        word-wrap: break-word;
-        white-space: normal !important;
-    }
-    .tw-head .form-select, .tw-head .form-control {
-        max-width: 100%;
-    }
-    @media (max-width: 576px) {
-        .tw-head {
-            flex-direction: column !important;
-            align-items: stretch !important;
-        }
-        .tw-head .d-flex {
-            flex-direction: column !important;
-            align-items: stretch !important;
-            width: 100%;
-        }
-        .tw-head select, .tw-head input[type="month"], .tw-head button {
-            width: 100% !important;
-        }
-    }
-</style>
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css?v=' . time()) ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=' . time()) ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/activity-gallery.css?v=' . time()) ?>">
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
 <main class="page-content" aria-labelledby="galleryPageTitle">
-    <div class="text-start tw-wrap container-fluid">
+    <div class="text-start tw-wrap">
         
-        <!-- Header -->
-        <div class="row align-items-center mt-4 mb-3" role="banner">
-            <div class="col-12 col-md-8 text-start">
-                <h1 class="tw-title lh-1" id="galleryPageTitle" style="color: #1a202c; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem;">
-                    Galeri Kegiatan
-                </h1>
-                <p class="tw-subtitle text-secondary mb-0" style="font-size: 1rem; font-weight: 400;">
-                    Kelola dan jelajahi dokumentasi momen dari berbagai kegiatan di lingkungan instansi.
-                </p>
-            </div>
-            <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0">
-                <a href="<?= base_url('timkerja-layanan') ?>" class="btn btn-primary">
-                    <i class="bi bi-chevron-left fs-6"></i> Kembali
-                </a>
+        <!-- Welcome Header matching /timkerja -->
+        <div class="tw-welcome text-start mt-3 mb-2" role="banner">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                <div>
+                    <h1 class="tw-title lh-1" id="galleryPageTitle" style="color: #1a202c; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem;">
+                        Galeri Kegiatan
+                    </h1>
+                    <div style="max-width: 580px; margin: 0; line-height: 1.6;">
+                        <p class="tw-subtitle text-secondary mb-0" style="font-size: 1.05rem; font-weight: 500;">
+                            <strong>Dokumentasi kegiatan dan momen penting.</strong> Jelajahi atau kelola rekaman kegiatan seluruh tim kerja di lingkungan instansi.
+                        </p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                    <a href="<?= base_url('timkerja') ?>" class="btn btn-primary d-inline-flex align-items-center gap-2 px-3" style="height: 42px; border-radius: 8px;">
+                        <i class="bi bi-chevron-left fs-6"></i> <span class="fw-bold" style="font-size: 0.95rem;">Kembali</span>
+                    </a>
+                </div>
             </div>
         </div>
 
         <!-- Toolbar -->
-        <div class="tw-head d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4" role="toolbar">
-            <div class="flex-grow-1" style="max-width: 450px;">
-                <div class="position-relative">
-                    <i class="bi bi-search position-absolute text-muted" style="left: 1.2rem; top: 50%; transform: translateY(-50%); margin-top: -1px; line-height: 1; pointer-events: none;"></i>
-                    <input type="text" id="searchGallery" class="form-control tw-search-input" placeholder="Cari berdasarkan judul kegiatan..." style="padding-left: 2.8rem; padding-top: 0.65rem; padding-bottom: 0.65rem;">
+        <div class="tw-head row align-items-center mt-4 mb-3" role="toolbar" aria-label="Aksi galeri kegiatan">
+            <div class="col-12 d-flex flex-column flex-md-row align-items-stretch align-items-md-center justify-content-between gap-3">
+                <div class="flex-grow-1" style="max-width: 420px;">
+                    <div class="position-relative">
+                        <i class="bi bi-search position-absolute text-muted" style="left: 1.2rem; top: 50%; transform: translateY(-50%); margin-top: -1px; line-height: 1; pointer-events: none;"></i>
+                        <input type="text" id="searchGallery" class="form-control tw-search-input" placeholder="Cari berdasarkan judul kegiatan..." style="padding-left: 2.8rem; padding-top: 0.65rem; padding-bottom: 0.65rem;">
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex flex-column flex-sm-row flex-wrap align-items-stretch align-items-sm-center gap-2">
-                <select class="form-select tw-search-input flex-grow-1 flex-sm-grow-0" id="filterTimKerja" style="padding-top: 0.65rem; padding-bottom: 0.65rem; width: auto; min-width: 180px; max-width: 100%;">
-                    <option value="">Semua Tim Kerja</option>
-                    <?php foreach($timkerja as $tk): ?>
-                        <option value="<?= $tk['id'] ?>"><?= esc($tk['nama']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <input type="month" id="filterBulan" class="form-control fw-bold flex-grow-1 flex-sm-grow-0" style="width: auto; height: 42px; color: #1a202c !important; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
-                <button type="button" class="btn btn-primary d-inline-flex align-items-center justify-content-center px-4 flex-grow-1 flex-sm-grow-0" data-bs-toggle="modal" data-bs-target="#modalAddGallery" style="height: 42px; border-radius: 8px;">
-                    <span class="fw-bold" style="font-size: 0.95rem;">Tambah Data</span> <i class="bi bi-plus-lg ms-2 d-flex align-items-center" style="font-size: 1.1rem;"></i>
-                </button>
+                <div class="d-flex flex-column flex-sm-row flex-wrap align-items-stretch align-items-sm-center gap-2">
+                    <select class="form-select tw-search-input flex-grow-1 flex-sm-grow-0" id="filterTimKerja" style="padding-top: 0.65rem; padding-bottom: 0.65rem; width: auto; min-width: 180px; max-width: 100%;">
+                        <option value="">Semua Tim Kerja</option>
+                        <?php foreach($timkerja as $tk): ?>
+                            <option value="<?= $tk['id'] ?>"><?= esc($tk['nama']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="month" id="filterBulan" class="form-control fw-bold flex-grow-1 flex-sm-grow-0" style="width: auto; height: 42px; color: #1a202c !important; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+                    <button type="button" class="btn btn-primary d-inline-flex align-items-center justify-content-center px-4 flex-grow-1 flex-sm-grow-0" data-bs-toggle="modal" data-bs-target="#modalAddGallery" style="height: 42px; border-radius: 8px;">
+                        <span class="fw-bold" style="font-size: 0.95rem;">Tambah Data</span> <i class="bi bi-plus-lg ms-2 d-flex align-items-center" style="font-size: 1.1rem;"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -145,6 +118,12 @@
                             </select>
                         </div>
                         <div class="col-md-6">
+                            <label for="inputLayanan" class="form-label d-block fw-bold" style="font-size: 0.9rem; color: #1a202c; margin-bottom: 0.5rem;">Layanan</label>
+                            <select id="inputLayanan" name="layanan" class="form-select flat-input" disabled>
+                                <option value="">Pilih Tim Kerja terlebih dahulu</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
                             <label for="inputTanggal" class="form-label d-block fw-bold" style="font-size: 0.9rem; color: #1a202c; margin-bottom: 0.5rem;">Tanggal Kegiatan <span class="text-danger">*</span></label>
                             <input type="date" class="form-control flat-input" name="tanggal" id="inputTanggal" required>
                         </div>
@@ -200,9 +179,10 @@
                     <img src="" id="viewGalleryImg" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%25%22%20height%3D%22100%25%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20role%3D%22img%22%20aria-label%3D%22No%20Image%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%20focusable%3D%22false%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e2e8f0%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22600%22%20font-size%3D%221.25rem%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3ENO%20IMAGE%3C%2Ftext%3E%3C%2Fsvg%3E'" class="img-fluid w-100 h-100" style="object-fit: contain;" alt="Gallery">
                 </div>
                 <div class="p-4 bg-white border-top">
-                    <div class="d-flex align-items-center gap-3 mb-2">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
                         <span class="badge px-2 py-1" style="background-color: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; font-weight: 600;" id="viewGalleryTeam">Tim Kerja</span>
-                        <span class="text-muted small fw-medium" id="viewGalleryDate"><i class="bi bi-calendar3"></i> Tanggal</span>
+                        <span class="badge px-2 py-1 d-none" style="background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-weight: 600;" id="viewGalleryLayanan">Layanan</span>
+                        <span class="text-muted small fw-medium ms-auto" id="viewGalleryDate"><i class="bi bi-calendar3"></i> Tanggal</span>
                     </div>
                     <p class="text-secondary mb-0 mt-2" id="viewGalleryDesc" style="line-height: 1.6; font-size: 0.95rem;">Deskripsi kegiatan.</p>
                 </div>
@@ -226,5 +206,5 @@
 
 <?= $this->endSection(); ?>
 <?= $this->section('scripts'); ?>
-<script src="<?= asset_url('apps/assets/js/custom/pages/activity-gallery.js?v=99') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/activity-gallery.js?v=101') ?>"></script>
 <?= $this->endSection(); ?>
