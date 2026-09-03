@@ -127,7 +127,52 @@
         </div>
 
         <!-- ========================================================================= -->
-        <!-- LEVEL 2: VIEW DETAIL REKAP SESI INSTANSI TERPILIH                         -->
+        <!-- LEVEL 2: VIEW DAFTAR EVENT (SELEKSI) UNTUK INSTANSI TERPILIH              -->
+        <!-- ========================================================================= -->
+        <div id="viewLevelEvent" class="d-none">
+            <!-- Active Instansi Header Banner (Sebelum Pilih Event - Tanpa KPI Card) -->
+            <div class="instansi-active-banner p-3 p-md-4 mb-3 shadow-sm" id="eventInstansiBanner">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="flex-shrink-0 d-flex align-items-center justify-content-center cat-active-instansi-logo-wrap" id="eventActiveLogoWrap">
+                            <div class="d-flex align-items-center justify-content-center text-center bg-light border rounded-3 text-secondary fw-bold cat-no-logo-box">
+                                No<br>Logo
+                            </div>
+                        </div>
+                        <div class="min-w-0">
+                            <h4 class="cat-active-instansi-title text-truncate mb-1" id="eventActiveInstansiNama">-</h4>
+                            <div class="cat-active-instansi-desc" id="eventActiveInstansiMeta">
+                                Silakan pilih event seleksi untuk melihat dan mengelola rekapitulasi data sesi instansi ini.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toolbar Level 2 -->
+            <div class="tw-head d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-3 mt-1" role="toolbar">
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-outline-secondary fw-semibold js-back-to-instansi cat-btn-back-level2">
+                        <i class="bi bi-chevron-left me-1"></i> Kembali ke Daftar Instansi
+                    </button>
+                </div>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <button type="button" class="btn btn-primary d-inline-flex align-items-center justify-content-center px-4 cat-btn-tambah" id="btnOpenTambahEvent">
+                        <span class="fw-bold">Pilih / Tambah Event</span> <i class="bi bi-plus-lg ms-2 d-flex align-items-center cat-btn-tambah-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Container List Cards Event -->
+            <div class="row tw-animate-entry tws-list-mode cat-list-row-gap-0 tw-anim-order-3" id="loadedEvents">
+                <div class="col-12 text-center text-muted py-5">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Memuat daftar event...
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- LEVEL 3: VIEW DETAIL REKAP SESI INSTANSI & EVENT TERPILIH                 -->
         <!-- ========================================================================= -->
         <div id="viewLevelRekap" class="d-none">
             
@@ -207,11 +252,17 @@
             <!-- Toolbar Level 2 -->
             <div class="tw-head d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-3" role="toolbar">
                 <div class="d-flex align-items-center gap-2">
-                    <button type="button" class="btn btn-outline-secondary fw-semibold js-back-to-instansi cat-btn-back-level2">
-                        <i class="bi bi-chevron-left me-1"></i> Kembali ke Daftar Instansi
+                    <button type="button" class="btn btn-outline-secondary fw-semibold js-back-to-event cat-btn-back-level2">
+                        <i class="bi bi-chevron-left me-1"></i> Kembali ke Daftar Event
                     </button>
                 </div>
                 <div class="d-flex flex-wrap align-items-center gap-2">
+                    <!-- Filter Tanggal Sesi (Tinggi setara tombol) -->
+                    <div class="cat-filter-date-wrapper">
+                        <input type="date" id="filterTanggalSesi" class="form-control cat-filter-date-input" title="Filter Berdasarkan Tanggal">
+                    </div>
+
+                    <!-- Filter Bulan -->
                     <div class="dropdown">
                         <button class="btn btn-outline-primary dropdown-toggle fw-bold px-3 cat-btn-bulan" type="button" id="dropdownBulan" data-bs-toggle="dropdown" aria-expanded="false">
                             Pilih Bulan
@@ -226,6 +277,12 @@
                             </li>
                         </ul>
                     </div>
+
+                    <!-- Reset Filter Button -->
+                    <button type="button" class="btn btn-outline-secondary d-none" id="btnResetFilterSesi" title="Reset Filter">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                    </button>
+
                     <button type="button" class="btn btn-primary d-inline-flex align-items-center justify-content-center px-4 cat-btn-tambah" id="btnOpenTambahSesi">
                         <span class="fw-bold">Tambah Sesi</span> <i class="bi bi-plus-lg ms-2 d-flex align-items-center cat-btn-tambah-icon"></i>
                     </button>
@@ -241,40 +298,24 @@
                                 <table id="dataTable" class="table table-bordered table-hover nowrap align-middle">
                                     <thead>
                                         <tr>
-                                            <th></th>
-                                            <th><strong>Instansi Name</strong></th>
+                                            <th class="text-center" style="width: 35px;"><strong>#</strong></th>
                                             <th><strong>Tanggal</strong></th>
-                                            <th><strong>Sesi</strong></th>
-                                            <th><strong>Nilai Terendah</strong></th>
-                                            <th><strong>Nilai Tertinggi</strong></th>
-                                            <th><strong>Hadir</strong></th>
-                                            <th><strong>Tidak Hadir</strong></th>
-                                            <th><strong>Penjadwalan Ulang</strong></th>
-                                            <th><strong>Total Peserta</strong></th>
-                                            <th><strong>Created By</strong></th>
-                                            <th><strong>Created At</strong></th>
-                                            <th><strong>Aksi</strong></th>
+                                            <th class="text-center"><strong>Sesi</strong></th>
+                                            <th class="text-center"><strong>Nilai Min</strong></th>
+                                            <th class="text-center"><strong>Nilai Max</strong></th>
+                                            <th class="text-center"><strong>Hadir</strong></th>
+                                            <th class="text-center"><strong>Tidak Hadir</strong></th>
+                                            <th class="text-center"><strong>Reschedule</strong></th>
+                                            <th class="text-center"><strong>Total Peserta</strong></th>
+                                            <th class="text-center"><strong>Memenuhi</strong></th>
+                                            <th class="text-center"><strong>Tidak Memenuhi</strong></th>
+                                            <th><strong>Petugas</strong></th>
+                                            <th><strong>Waktu Rekap</strong></th>
+                                            <th class="text-center" style="width: 80px;"><strong>Aksi</strong></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th></th>
-                                            <th><strong>Instansi Name</strong></th>
-                                            <th><strong>Tanggal</strong></th>
-                                            <th><strong>Sesi</strong></th>
-                                            <th><strong>Nilai Terendah</strong></th>
-                                            <th><strong>Nilai Tertinggi</strong></th>
-                                            <th><strong>Hadir</strong></th>
-                                            <th><strong>Tidak Hadir</strong></th>
-                                            <th><strong>Penjadwalan Ulang</strong></th>
-                                            <th><strong>Total Peserta</strong></th>
-                                            <th><strong>Created By</strong></th>
-                                            <th><strong>Created At</strong></th>
-                                            <th><strong>Aksi</strong></th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -286,7 +327,57 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- MODAL 1: TAMBAH DATA REKAP (INSTANSI BARU / TAMBAH SESI MULTI-ROW)        -->
+    <!-- MODAL TAMBAH INSTANSI BARU                                                -->
+    <!-- ========================================================================= -->
+    <div class="modal fade" id="ModalTambahInstansi" tabindex="-1" aria-labelledby="ModalTambahInstansiLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalTambahInstansiLabel">Pilih Instansi Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold mb-1" for="selectNewInstansi">Instansi:</label>
+                        <select id="selectNewInstansi" name="instansi_baru" class="form-select select-instansi cat-select-instansi-wrap"></select>
+                        <small class="text-muted">Ketik nama instansi dari data master instansi BKN.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batalkan</button>
+                    <button type="button" class="btn btn-primary" id="btnSubmitTambahInstansi">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL PILIH EVENT                                                         -->
+    <!-- ========================================================================= -->
+    <div class="modal fade" id="ModalTambahEvent" tabindex="-1" aria-labelledby="ModalTambahEventLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalTambahEventLabel">Pilih Event Seleksi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold mb-1" for="selectNewEvent">Event:</label>
+                        <select id="selectNewEvent" class="form-select select-event"></select>
+                        <small class="text-muted">Cari dan pilih event seleksi yang sudah tersedia.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batalkan</button>
+                    <button type="button" class="btn btn-primary" id="btnSubmitTambahEvent">Pilih & Lanjutkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL 1: TAMBAH DATA REKAP (TAMBAH SESI MULTI-ROW)                        -->
     <!-- ========================================================================= -->
     <div class="modal fade modal-smooth" id="DataModal" tabindex="-1" aria-labelledby="DataModalLabelCreate" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
@@ -317,14 +408,7 @@
                         </div>
                     </div>
 
-                    <!-- Section Pilihan Instansi (Hanya muncul jika mode Tambah Instansi Baru) -->
-                    <div class="card border mb-3 shadow-none bg-light" id="instansiSelectorWrap">
-                        <div class="card-body p-3 position-relative">
-                            <label class="form-label fw-bold mb-1" for="selectNewInstansi">Pilih Instansi:</label>
-                            <select id="selectNewInstansi" name="instansi_baru" class="form-select select-instansi cat-select-instansi-wrap"></select>
-                            <small class="text-muted">Ketik nama instansi dari data master instansi BKN.</small>
-                        </div>
-                    </div>
+
 
                     <form method="POST" id="form-usulan">
                         <input type="hidden" name="key" id="detailKeyFormCreate" value="">
@@ -342,14 +426,15 @@
                                     <tr>
                                         <th class="col-w-160">Tanggal</th>
                                         <th class="col-w-90">Sesi</th>
-                                        <th class="col-w-120">Nilai Min</th>
-                                        <th class="col-w-120">Nilai Max</th>
-                                        <th class="col-w-100">Hadir</th>
-                                        <th class="col-w-100">Tidak Hadir</th>
-                                        <th class="col-w-110">Reschedule</th>
-                                        <th class="col-w-120">Memenuhi (Lulus)</th>
-                                        <th class="col-w-120">Tidak Memenuhi</th>
-                                        <th class="col-w-60 text-center">Aksi</th>
+                                        <th class="col-w-110">Nilai Min</th>
+                                        <th class="col-w-110">Nilai Max</th>
+                                        <th class="col-w-90">Hadir</th>
+                                        <th class="col-w-90">Tdk Hadir</th>
+                                        <th class="col-w-90">Reschedule</th>
+                                        <th class="col-w-90 text-center">Total</th>
+                                        <th class="col-w-100">Memenuhi</th>
+                                        <th class="col-w-100">Tdk Memenuhi</th>
+                                        <th class="col-w-80 text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="usulanTableBody"></tbody>
@@ -372,17 +457,71 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- MODAL 2: EDIT SINGLE ROW REKAP DATA SESI                                  -->
+    <!-- MODAL 4: TAMBAH INSTANSI                                                  -->
     <!-- ========================================================================= -->
-    <div class="modal fade" id="DataModalDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content cat-modal-rounded">
+    <div class="modal fade modal-smooth" id="InstansiModal" tabindex="-1" aria-labelledby="InstansiModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="DataModalLabel">Update Data Rekap Sesi</h1>
+                    <h5 class="modal-title" id="InstansiModalLabel">Tambah Instansi</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <form id="form-instansi-select">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold mb-1">Cari & Pilih Instansi:</label>
+                            <select id="selectOnlyInstansi" name="instansi_id" class="form-select select-instansi" style="width: 100%"></select>
+                            <small class="text-muted">Ketik nama instansi dari data master BKN.</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btnSubmitInstansi">Simpan Instansi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL 3: PILIH EVENT UNTUK INSTANSI                                       -->
+    <!-- ========================================================================= -->
+    <div class="modal fade modal-smooth" id="EventModal" tabindex="-1" aria-labelledby="EventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="EventModalLabel">Pilih Event (Seleksi)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-event-select">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold mb-1">Cari & Pilih Event:</label>
+                            <select id="selectEvent" name="seleksi_id" class="form-select select-event" style="width: 100%"></select>
+                            <small class="text-muted">Pilih event yang akan ditambahkan rekap sesinya.</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btnSubmitEvent">Lanjutkan ke Sesi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL 2: EDIT SINGLE ROW REKAP DATA SESI                                  -->
+    <!-- ========================================================================= -->
+    <div class="modal fade modal-force-rounded" id="DataModalDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content cat-modal-detail-content" style="border-radius: 18px !important; overflow: hidden !important;">
+                <div class="modal-header border-0 pb-0 pt-4 px-4">
+                    <h1 class="modal-title fs-5 fw-bold text-primary" id="DataModalLabel">Update Data Rekap Sesi</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-4 py-3">
                     <form id="form-usulan-edit" autocomplete="off">
                         <input type="hidden" name="key">
                         <div class="row g-3">
@@ -429,9 +568,9 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary sbmt-edit">Simpan Perubahan</button>
+                <div class="modal-footer border-0 px-4 pb-4 pt-2">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary px-4 sbmt-edit">Simpan Perubahan</button>
                 </div>
             </div>
         </div>
@@ -445,7 +584,7 @@
     var TILOK_UID = "<?= esc($meta['uid'] ?? '') ?>";
 </script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/service-table-ui.js') ?>"></script>
-<script src="<?= asset_url('apps/assets/js/custom/pages/services/cat/entryRekap.js?v=' . time()) ?>"></script>
 <script src="<?= asset_url('apps/assets/js/custom/pages/services/cat/tablesRekap.js?v=' . time()) ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/pages/services/cat/entryRekap.js?v=' . time()) ?>"></script>
 <?= $this->endSection(); ?>
 

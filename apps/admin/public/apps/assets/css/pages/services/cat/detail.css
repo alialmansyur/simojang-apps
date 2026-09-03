@@ -67,12 +67,21 @@
         overflow: visible;
     }
 
-    #DataModalDetail .select2-container {
+    #ModalTambahEvent .modal-content,
+    #ModalTambahInstansi .modal-content,
+    #ModalTambahEvent .modal-body,
+    #ModalTambahInstansi .modal-body {
+        overflow: visible !important;
+    }
+
+    #ModalTambahEvent .select2-container,
+    #ModalTambahInstansi .select2-container {
         width: 100% !important;
+        z-index: 1060 !important;
     }
 
     .select2-container--open {
-        z-index: 2000;
+        z-index: 9999 !important;
     }
 
     @keyframes modalContentFade {
@@ -417,6 +426,15 @@
 }
 
 /* Card List Instansi Dynamic Styling */
+.tws-card-instansi-title {
+    font-size: 1.05rem !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    line-height: 1.3 !important;
+    letter-spacing: -0.01em !important;
+    margin: 0 !important;
+}
+
 .cat-instansi-logo-box {
     width: 48px;
     height: 48px;
@@ -459,9 +477,83 @@
     min-width: 32px;
 }
 
+.cat-instansi-delete-btn {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    font-size: 0.95rem !important;
+    line-height: 1 !important;
+    transition: all 0.2s ease;
+}
+
+.cat-instansi-delete-btn i,
+.cat-instansi-delete-btn .bi {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 0.95rem !important;
+}
+
+.cat-instansi-delete-btn:hover {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    transform: scale(1.08);
+}
+
+.cat-event-edit-btn {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    font-size: 0.95rem !important;
+    line-height: 1 !important;
+    transition: all 0.2s ease;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    background-color: #ffffff;
+}
+
+.cat-event-edit-btn i,
+.cat-event-edit-btn .bi {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 0.95rem !important;
+}
+
+.cat-event-edit-btn:hover {
+    background-color: #f1f5f9 !important;
+    color: #0d6efd !important;
+    border-color: #93c5fd !important;
+    transform: scale(1.08);
+}
+
 .cat-instansi-arrow-icon {
     font-size: 1.15rem;
     line-height: 0;
+}
+
+.cat-spinner-bold {
+    width: 1rem !important;
+    height: 1rem !important;
+    border-width: 2.5px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
 }
 
 .cat-empty-logo-img {
@@ -614,6 +706,119 @@
 .col-w-120 { min-width: 120px !important; }
 .col-w-160 { min-width: 160px !important; }
 .cat-modal-rounded { border-radius: 12px !important; }
+
+/* Filter Tanggal Level 3 - Tinggi & Styling Setara Tombol */
+.cat-filter-date-wrapper {
+    display: inline-flex;
+    align-items: center;
+}
+
+.cat-filter-date-input {
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 6px 12px !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    color: #1e293b !important;
+    background-color: #ffffff !important;
+    box-shadow: none !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.cat-filter-date-input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+    outline: none !important;
+}
+
+/* DataTable Uniform Color (Thead & Tbody Seragam) */
+#dataTable {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+
+#dataTable thead th {
+    background-color: #f8fafc !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    border: 1px solid #e2e8f0 !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+    padding: 10px 12px !important;
+    vertical-align: middle !important;
+}
+
+#dataTable thead th strong {
+    font-weight: 700 !important;
+    color: #0f172a !important;
+}
+
+#dataTable tbody tr {
+    background-color: #ffffff !important;
+}
+
+#dataTable tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+#dataTable tbody td {
+    background-color: transparent !important;
+    color: #334155 !important;
+    font-size: 0.85rem !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 9px 12px !important;
+    vertical-align: middle !important;
+}
+
+/* Modal 'Update Data Rekap Sesi' (#DataModalDetail) Rounded Content/Body */
+div#DataModalDetail .modal-dialog,
+div#DataModalDetail .modal-content,
+div#DataModalDetail.modal-force-rounded .modal-content,
+.cat-modal-detail-content {
+    border-radius: 20px !important;
+    --bs-modal-border-radius: 20px !important;
+    --bs-modal-inner-border-radius: 20px !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+div#DataModalDetail .modal-header {
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    background-color: #ffffff !important;
+}
+
+div#DataModalDetail .modal-body {
+    background-color: #ffffff !important;
+}
+
+div#DataModalDetail .modal-footer {
+    border-bottom-left-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+    background-color: #ffffff !important;
+}
+
+div#DataModalDetail .modal-footer .btn {
+    border-radius: 8px !important;
+}
+
+div#DataModalDetail .form-control,
+div#DataModalDetail .form-select,
+div#DataModalDetail .select2-container .select2-selection {
+    border-radius: 8px !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+div#DataModalDetail .form-control:focus,
+div#DataModalDetail .form-select:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
 
 /* Animation Order & Helper Classes */
 .cat-bg-opacity-5 { opacity: 0.05 !important; }

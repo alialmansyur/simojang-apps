@@ -29,6 +29,7 @@ class FasilitasiCAT extends BaseController
     }
 
     public function index(){
+        $catJenisPeriodeList = $this->catmodel->getBuilder('recap-jenis-periode')->get()->getResultArray();
         $jenisRows = $this->apps->getCatJenisTes();
         $jenisOptions = [];
         foreach ($jenisRows as $row) {
@@ -40,34 +41,37 @@ class FasilitasiCAT extends BaseController
             $jenisOptions[$id] = $label;
         }
 
-        $seleksiList = $this->catmodel->getBuilder('recap-seleksi')->get()->getResultArray();
-
-        $timkerja = $this->catmodel->db->table('data_timkerja_layanan a')
-            ->select('b.uid')
-            ->join('data_timkerja b', 'b.id = a.timkerja_id', 'inner')
-            ->where('a.url', 'apps-cat')
-            ->get()->getRowArray();
-        $timkerjaUid = !empty($timkerja['uid']) ? $timkerja['uid'] : 'a13e4110-7ccb-11f0-be4c-5f752d8309a4';
+        $timkerjaUid = $this->catmodel->getTimkerjaUidByUrl('apps-cat');
 
         return $this->renderView('Apps/pages/services/cat/main', [
             'seslog' => session()->get(),
+            'catJenisPeriodeList' => $catJenisPeriodeList,
+            'jenisRows' => $jenisRows,
             'jenisOptions' => $jenisOptions,
-            'seleksiList' => $seleksiList,
             'timkerjaUid' => $timkerjaUid
         ]);            
-    } 
+    }
 
-    public function tilok($uid){
-        $seleksi = $this->catmodel->db->table('txn_cat_seleksi')->where('uid', $uid)->get()->getRowArray();
-        if (!$seleksi) {
-            throw PageNotFoundException::forPageNotFound('Data Seleksi tidak ditemukan');
+    public function tilok($id){
+        $catPeriode = $this->catmodel->getJenisPeriodeDetail($id);
+
+        if (!$catPeriode) {
+            throw PageNotFoundException::forPageNotFound('Data Jenis Tes / Periode tidak ditemukan');
         }
 
         return $this->renderView('Apps/pages/services/cat/tilok', [
             'seslog' => session()->get(),
-            'seleksi' => $seleksi
+            'catPeriode' => $catPeriode,
+            'jenisTes' => [
+                'id' => $catPeriode['jenis_tes_id'],
+                'nama' => $catPeriode['jenis_tes_nama'] ?? '',
+                'kode' => $catPeriode['jenis_tes_kode'] ?? ''
+            ],
+            'periodeTahun' => $catPeriode['periode'] ?? date('Y')
         ]);            
     }
+
+
 
     public function getJenisTesList()
     {
@@ -209,12 +213,19 @@ class FasilitasiCAT extends BaseController
     }
     
     public function detail($param){
-        $row = $this->catmodel->where('uid', $param)->first();
+        $param = trim((string) $param);
+        $builder = $this->catmodel->db->table('txn_cat_tilok a');
+        if (is_numeric($param)) {
+            $builder->groupStart()->where('a.id', (int) $param)->orWhere('a.uid', $param)->groupEnd();
+        } else {
+            $builder->where('a.uid', $param);
+        }
+        $row = $builder->get()->getRowArray();
         if (!$row) {
             throw PageNotFoundException::forPageNotFound('Data tidak ditemukan');
         }
 
-        $meta = $this->catmodel->getDetailMeta($param);
+        $meta = $this->catmodel->getDetailMeta($row['uid'] ?? $param);
 
         return $this->renderView('Apps/pages/services/cat/detail', [
             'seslog' => session()->get(),
@@ -224,93 +235,115 @@ class FasilitasiCAT extends BaseController
 
     public function storeDataSeleksi()
     {
-        $sess = session()->get();
-        $key        = $this->request->getPost('key');
-        $jenis      = $this->request->getPost('jenis');
-        $nama       = $this->request->getPost('nama');
-        $periode    = $this->request->getPost('periode');
-    
-        if (!$jenis || !$nama || !$periode) {
+        $sess       = session()->get();
+        $key        = trim((string) $this->request->getPost('key'));
+        $jenis      = (int) $this->request->getPost('jenis');
+        $periode    = trim((string) $this->request->getPost('periode'));
+
+        if ($jenis <= 0 || $periode === '') {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Data tidak lengkap. Semua kolom wajib diisi.'
+                'message' => 'Jenis tes dan tahun pelaksanaan wajib diisi.'
+            ]);
+        }
+
+        // Ambil nama jenis tes dari model
+        $masterJenis = $this->catmodel->getMasterJenisTes($jenis);
+        if (!$masterJenis) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Jenis tes yang dipilih tidak valid.'
+            ]);
+        }
+
+        $namaJenis = $masterJenis['nama'] ?: ($masterJenis['kode'] ?: 'Jenis Tes CAT');
+
+        // Validasi: Cegah jenis tes yang sama terdaftar lebih dari sekali pada tahun/periode yang sama
+        $existing = $this->catmodel->checkDuplicateJenisPeriode($jenis, $periode, $key !== '' ? $key : null);
+        if ($existing) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => "Data sudah ada: Jenis tes '{$namaJenis}' sudah terdaftar untuk tahun pelaksanaan {$periode}."
             ]);
         }
 
         $dataInsert = [
             'jenis_tes_id'  => $jenis,
-            'nama_seleksi'  => $nama,
             'periode'       => $periode,
-            'created_by'    => $sess['username']
+            'created_by'    => $sess['username'] ?? 'system'
         ];
 
-        if (!empty($key)) {
-            $this->apps->updateDataByField('uid', $key, $dataInsert, 'txn_cat_seleksi');
-        } else {
-            $dataInsert['uid'] = bin2hex(random_bytes(16));
-            $this->apps->storeData($dataInsert, 'txn_cat_seleksi');
+        try {
+            $this->catmodel->saveJenisPeriode($dataInsert, !empty($key) ? $key : null);
+        } catch (\Throwable $e) {
+            log_message('error', 'Gagal menyimpan jenis tes periode: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => "Data sudah ada: Jenis tes '{$namaJenis}' sudah terdaftar untuk tahun pelaksanaan {$periode}."
+            ]);
         }
 
         return $this->response->setJSON([
             'status' => 'success',
-            'message' => 'Data berhasil disimpan.'
+            'message' => 'Jenis tes untuk tahun ' . $periode . ' berhasil disimpan.'
         ]);
     }
 
     public function storeDataTilok()
     {
-        $sess = session()->get();
-        $action      = strtolower(trim((string) $this->request->getPost('action')));
-        $key         = $this->request->getPost('key');
-        $seleksi_uid = $this->request->getPost('seleksi_uid');
-        $startdate   = $this->request->getPost('startdate');
-        $enddate     = $this->request->getPost('enddate');
-        $tilok       = $this->request->getPost('tilok');
-        $capacity    = $this->request->getPost('capacity');
-    
-        if (!$seleksi_uid || !$startdate || !$enddate || !$tilok || !$capacity) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Data tidak lengkap. Semua kolom wajib diisi.'
-            ]);
+        $sess             = session()->get();
+        $action           = strtolower(trim((string) $this->request->getPost('action')));
+        $key              = $this->request->getPost('key');
+        $jenis_periode_id = (int) $this->request->getPost('jenis_periode_id');
+        $seleksi_uid      = trim((string) $this->request->getPost('seleksi_uid'));
+        $jenis_tes_id     = (int) $this->request->getPost('jenis_tes_id');
+        $period           = trim((string) ($this->request->getPost('period') ?? $this->request->getPost('periode')));
+        $startdate        = $this->request->getPost('startdate') ?? $this->request->getPost('period_start_date');
+        $enddate          = $this->request->getPost('enddate') ?? $this->request->getPost('period_end_date');
+        $tilok            = trim((string) ($this->request->getPost('nama_tilok') ?? $this->request->getPost('tilok')));
+        $capacity         = $this->request->getPost('kapasitas') ?? $this->request->getPost('capacity');
+
+        // Cari jenis_periode jika belum ada
+        if ($jenis_periode_id <= 0 && !empty($seleksi_uid)) {
+            $catPeriode = $this->catmodel->getJenisPeriodeRow('uid', $seleksi_uid);
+            if ($catPeriode) {
+                $jenis_periode_id = (int) $catPeriode['id'];
+                if ($jenis_tes_id <= 0) $jenis_tes_id = (int) $catPeriode['jenis_tes_id'];
+                if (empty($period)) $period = $catPeriode['periode'];
+            }
         }
 
-        $seleksi = $this->catmodel->db->table('txn_cat_seleksi')->where('uid', $seleksi_uid)->get()->getRowArray();
-        if (!$seleksi) {
+        if ($jenis_periode_id > 0 && ($jenis_tes_id <= 0 || empty($period))) {
+            $catPeriode = $this->catmodel->getJenisPeriodeRow('id', $jenis_periode_id);
+            if ($catPeriode) {
+                if ($jenis_tes_id <= 0) $jenis_tes_id = (int) $catPeriode['jenis_tes_id'];
+                if (empty($period)) $period = $catPeriode['periode'];
+            }
+        }
+
+        if (empty($tilok)) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Data Seleksi tidak valid.'
+                'message' => 'Nama titik lokasi wajib diisi.'
             ]);
         }
 
         $dataInsert = [
-            'seleksi_id'           => $seleksi['id'],
-            'jenis_tes_id'         => $seleksi['jenis_tes_id'],
-            'period'               => $seleksi['periode'],
-            'period_start_date'    => $startdate,
-            'period_end_date'      => $enddate,
+            'jenis_periode_id'     => $jenis_periode_id > 0 ? $jenis_periode_id : null,
+            'jenis_tes_id'         => $jenis_tes_id > 0 ? $jenis_tes_id : null,
+            'period'               => $period ?: date('Y'),
+            'period_start_date'    => !empty($startdate) ? $startdate : null,
+            'period_end_date'      => !empty($enddate) ? $enddate : null,
             'nama_tilok'           => $tilok,
-            'kapasitas'            => $capacity,
-            'created_by'           => $sess['username']
+            'kapasitas'            => !empty($capacity) ? (float) $capacity : 0,
+            'created_by'           => $sess['username'] ?? 'system'
         ];
 
-        if ($action === 'update' && !empty($key)) {
-            $existingRow = $this->catmodel->find((int) $key);
-            if (!$existingRow) {
-                return $this->response->setStatusCode(404)->setJSON([
-                    'status' => 'error',
-                    'message' => 'Data yang akan diperbarui tidak ditemukan.'
-                ]);
-            }
-
-            $this->apps->updateData($dataInsert,$key,'txn_cat_tilok');
-        } else {
-            $this->apps->storeData($dataInsert, 'txn_cat_tilok');
-        }
+        $this->catmodel->saveTilok($dataInsert, !empty($key) ? $key : null);
 
         return $this->response->setJSON([
             'status' => 'success',
-            'message' => 'Data berhasil disimpan.'
+            'message' => 'Data titik lokasi berhasil disimpan.'
         ]);
     }
 
@@ -354,10 +387,69 @@ class FasilitasiCAT extends BaseController
         ]);
     }
 
+    public function storeDataInstansi()
+    {
+        $sess = session()->get();
+        $tilokInput = trim((string) ($this->request->getPost('tilok_id') ?: $this->request->getPost('tilok_uid') ?: $this->request->getPost('key')));
+        $instansi_id = trim((string) $this->request->getPost('instansi_id'));
+
+        if ($tilokInput === '' || $instansi_id === '') {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'Titik lokasi dan Instansi wajib dipilih.'
+            ]);
+        }
+
+        // Resolve tilok_id jika berupa UUID
+        $tilokBuilder = $this->apps->db->table('txn_cat_tilok')
+            ->select('id, uid, nama_tilok');
+        if (is_numeric($tilokInput)) {
+            $tilokBuilder->groupStart()->where('id', (int) $tilokInput)->orWhere('uid', $tilokInput)->groupEnd();
+        } else {
+            $tilokBuilder->where('uid', $tilokInput);
+        }
+        $tilok = $tilokBuilder->get()->getRowArray();
+
+        if (!$tilok) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'Titik lokasi tidak ditemukan.'
+            ]);
+        }
+
+        $tilok_id = (int) $tilok['id'];
+
+        // Cek apakah sudah terdaftar di tilok ini
+        $existing = $this->apps->db->table('txn_cat_tilok_instansi')
+            ->where('tilok_id', $tilok_id)
+            ->where('instansi_id', $instansi_id)
+            ->get()->getRow();
+            
+        if (!$existing) {
+            $this->apps->db->table('txn_cat_tilok_instansi')->insert([
+                'tilok_id'    => $tilok_id,
+                'instansi_id' => $instansi_id,
+                'created_at'  => date('Y-m-d H:i:s')
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status'  => 'success',
+            'message' => 'Instansi berhasil ditambahkan ke titik lokasi.',
+            'data'    => [
+                'tilok_id'    => $tilok_id,
+                'instansi_id' => $instansi_id
+            ]
+        ]);
+    }
+
     public function storeDataRekap()
     {
         $sess = session()->get();
-        $key        = $this->request->getPost('key');
+        $key        = $this->request->getPost('key'); // tilok_id or uid
+        $seleksi_id = $this->request->getPost('seleksi_id');
+        $jenis_tes_id = $this->request->getPost('jenis_tes_id');
+        
         $instansi   = $this->request->getPost('instansi');
         $tanggal    = $this->request->getPost('tanggal');
         $sesi       = $this->request->getPost('sesi');
@@ -369,12 +461,40 @@ class FasilitasiCAT extends BaseController
         $memenuhi = $this->request->getPost('memenuhi');
         $tidak_memenuhi = $this->request->getPost('tidak_memenuhi');
     
-        if (!$tanggal || !$sesi) {
+        if (!$tanggal || !$sesi || !$seleksi_id || !$jenis_tes_id) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Data tidak lengkap. Semua kolom wajib diisi.'
+                'message' => 'Data tidak lengkap. Pastikan Event sudah dipilih.'
             ]);
         } 
+
+        // Resolve tilok_id numerik jika dikirim sebagai UID
+        $tilokBuilder = $this->apps->db->table('txn_cat_tilok')->select('id');
+        if (is_numeric($key)) {
+            $tilokBuilder->groupStart()->where('id', (int) $key)->orWhere('uid', $key)->groupEnd();
+        } else {
+            $tilokBuilder->where('uid', $key);
+        }
+        $tilokRow = $tilokBuilder->get()->getRowArray();
+        $realTilokId = $tilokRow ? (int) $tilokRow['id'] : (int) $key;
+
+        // Pastikan setiap instansi yang diisi terdaftar di txn_cat_tilok_instansi
+        if (!empty($instansi) && is_array($instansi)) {
+            $uniqueInstansi = array_unique(array_filter($instansi));
+            foreach ($uniqueInstansi as $insId) {
+                $existIns = $this->apps->db->table('txn_cat_tilok_instansi')
+                    ->where('tilok_id', $realTilokId)
+                    ->where('instansi_id', $insId)
+                    ->get()->getRow();
+                if (!$existIns) {
+                    $this->apps->db->table('txn_cat_tilok_instansi')->insert([
+                        'tilok_id'    => $realTilokId,
+                        'instansi_id' => $insId,
+                        'created_at'  => date('Y-m-d H:i:s')
+                    ]);
+                }
+            }
+        }
 
         $scema_group = bin2hex(random_bytes(8));
 
@@ -389,7 +509,9 @@ class FasilitasiCAT extends BaseController
 
             $dataBatch[] = [
                 'scema_group'   => $scema_group,
-                'tilok_id'      => $key,
+                'tilok_id'      => $realTilokId,
+                'seleksi_id'    => $seleksi_id,
+                'jenis_tes_id'  => $jenis_tes_id,
                 'instansi_id'   => $n,
                 'period_date'   => $tanggal[$i],
                 'sesi'          => $sesi[$i],
@@ -398,8 +520,8 @@ class FasilitasiCAT extends BaseController
                 'reschedule'    => $reschedule[$i],
                 'nilai_min'     => $nilai_min[$i],
                 'nilai_max'     => $nilai_max[$i],
-		'memenuhi '     => $memenuhi[$i],
-		'tidak_memenuhi'     => $tidak_memenuhi[$i],
+		'memenuhi'      => $memenuhi[$i],
+		'tidak_memenuhi'=> $tidak_memenuhi[$i],
                 'created_by'    => $sess['username'],
             ];
         }
@@ -431,7 +553,7 @@ class FasilitasiCAT extends BaseController
             ]);
         }
 
-        $this->apps->removeData($key,'txn_cat_tilok');
+        $this->catmodel->deleteTilokByKey($key);
         return $this->response->setJSON([
             'status'  => true,
             'message' => 'Data Berhasil di hapus',
@@ -451,6 +573,92 @@ class FasilitasiCAT extends BaseController
         return $this->response->setJSON([
             'status'  => true,
             'message' => 'Data Berhasil di hapus',
+        ]);
+    }
+
+    public function removeDataTilokInstansi()
+    {
+        $sess = session()->get();
+        $tilokInput  = trim((string) ($this->request->getPost('tilok_id') ?: $this->request->getPost('tilok_uid') ?: $this->request->getPost('key')));
+        $instansi_id = trim((string) $this->request->getPost('instansi_id'));
+
+        if ($tilokInput === '' || $instansi_id === '') {
+            return $this->response->setStatusCode(400)->setJSON([
+                'status'  => false,
+                'message' => 'Parameter tilok dan instansi tidak valid'
+            ]);
+        }
+
+        $tilokBuilder = $this->apps->db->table('txn_cat_tilok')->select('id');
+        if (is_numeric($tilokInput)) {
+            $tilokBuilder->groupStart()->where('id', (int) $tilokInput)->orWhere('uid', $tilokInput)->groupEnd();
+        } else {
+            $tilokBuilder->where('uid', $tilokInput);
+        }
+        $tilok = $tilokBuilder->get()->getRowArray();
+
+        if (!$tilok) {
+            return $this->response->setStatusCode(404)->setJSON([
+                'status'  => false,
+                'message' => 'Titik lokasi tidak ditemukan'
+            ]);
+        }
+
+        $tilokId = (int) $tilok['id'];
+
+        // Hapus data dari txn_cat_tilok_instansi
+        $this->apps->db->table('txn_cat_tilok_instansi')
+            ->where('tilok_id', $tilokId)
+            ->where('instansi_id', $instansi_id)
+            ->delete();
+
+        // Hapus juga rekap hasil sesi instansi ini pada tilok terkait
+        $this->apps->db->table('txn_cat_hasil')
+            ->where('tilok_id', $tilokId)
+            ->where('instansi_id', $instansi_id)
+            ->delete();
+
+        $this->apps->storeData(
+            [
+                'layanan_id' => 28,
+                'tanggal'    => date('Y-m-d'),
+                'created_by' => $sess['username'] ?? 'system'
+            ],
+            'activity_daily_logs'
+        );
+
+        return $this->response->setJSON([
+            'status'  => true,
+            'message' => 'Instansi dan data rekap terkait berhasil dihapus dari titik lokasi.',
+        ]);
+    }
+
+    public function getSeleksiOptions()
+    {
+        $search = trim((string) ($this->request->getGet('search') ?? $this->request->getPost('search') ?? ''));
+        $jenis_tes_id = trim((string) ($this->request->getGet('jenis_tes_id') ?? $this->request->getPost('jenis_tes_id') ?? ''));
+        
+        $builder = $this->apps->db->table('txn_cat_seleksi s')
+            ->select('s.id, s.uid, s.nama_seleksi, s.periode, jt.kode as jenis_tes_kode')
+            ->join('data_support_jenis_tes jt', 'jt.id = s.jenis_tes_id', 'left');
+            
+        if ($search !== '') {
+            $builder->like('s.nama_seleksi', $search);
+        }
+        
+        if ($jenis_tes_id !== '') {
+            $builder->where('s.jenis_tes_id', $jenis_tes_id);
+        }
+        
+        $builder->orderBy('s.periode', 'DESC');
+        $builder->orderBy('s.nama_seleksi', 'ASC');
+        $builder->limit(50);
+        
+        $rows = $builder->get()->getResultArray();
+        
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data'   => $rows,
         ]);
     }
 
@@ -489,7 +697,7 @@ class FasilitasiCAT extends BaseController
                 'message' => 'Kunci data tidak valid',
             ]);
         }
-        $this->apps->removeDataByField('uid', $key, 'txn_cat_seleksi');
+        $this->catmodel->deleteJenisPeriodeByUid($key);
         return $this->response->setJSON([
             'status'  => true,
             'message' => 'Data Berhasil di hapus',
@@ -497,11 +705,15 @@ class FasilitasiCAT extends BaseController
     }
 
     public function getDataTilok(){
-        $sess = session()->get();
-        $seleksi_uid = $this->request->getPost('seleksi_uid');
+        $sess             = session()->get();
+        $jenis_periode_id = $this->request->getPost('jenis_periode_id');
+        $jenis_tes_id     = $this->request->getPost('jenis_tes_id');
+        $periode          = $this->request->getPost('periode') ?? $this->request->getPost('period');
 
         $builder = $this->catmodel->getBuilder('recap-tilok', [
-            'seleksi_uid' => $seleksi_uid
+            'jenis_periode_id' => $jenis_periode_id,
+            'jenis_tes_id'     => $jenis_tes_id,
+            'period'           => $periode
         ]);
 
         $columns = [
@@ -566,7 +778,37 @@ class FasilitasiCAT extends BaseController
                 'order' => false,
             ],
             [
+                'data' => 'total_instansi',
+                'search' => false,
+                'order' => false,
+            ],
+            [
+                'data' => 'total_event',
+                'search' => false,
+                'order' => false,
+            ],
+            [
                 'data' => 'total_rekap',
+                'search' => false,
+                'order' => false,
+            ],
+            [
+                'data' => 'total_peserta',
+                'search' => false,
+                'order' => false,
+            ],
+            [
+                'data' => 'total_hadir',
+                'search' => false,
+                'order' => false,
+            ],
+            [
+                'data' => 'last_rekap_date',
+                'search' => false,
+                'order' => false,
+            ],
+            [
+                'data' => 'last_rekap_updated',
                 'search' => false,
                 'order' => false,
             ],
@@ -578,7 +820,7 @@ class FasilitasiCAT extends BaseController
     public function getDataDetailTilok(){
         $sess = session()->get();
         $bulan = $this->request->getPost('bulan');        
-        $key   = trim((string) $this->request->getPost('key'));
+        $key = trim((string) ($this->request->getPost('key') ?? $this->request->getGet('key') ?? ''));
 
         if ($key === '') {
             return $this->response->setStatusCode(400)->setJSON([
@@ -603,7 +845,18 @@ class FasilitasiCAT extends BaseController
         $instansi_id = $this->request->getPost('instansi_id');
         $filter_instansi = !empty($instansi_id) ? [$instansi_id] : [];
 
-        $builder    = $this->catmodel->getBuilder('recap-hasil', ['id' => $key,'bulan' => $bulan, 'instansi_id' => $filter_instansi]);
+        $seleksi_id = $this->request->getPost('seleksi_id');
+        $tanggal    = trim((string)$this->request->getPost('tanggal'));
+        $sesi       = trim((string)$this->request->getPost('sesi'));
+
+        $builder    = $this->catmodel->getBuilder('recap-hasil', [
+            'id'          => $key,
+            'bulan'       => $bulan,
+            'instansi_id' => $filter_instansi,
+            'seleksi_id'  => $seleksi_id,
+            'tanggal'     => $tanggal,
+            'sesi'        => $sesi,
+        ]);
         $columns = [
             [
                 'data' => 'id',
@@ -671,6 +924,16 @@ class FasilitasiCAT extends BaseController
                 'order' => 'a.reschedule',
             ],
             [
+                'data' => 'memenuhi',
+                'search' => false,
+                'order' => 'a.memenuhi',
+            ],
+            [
+                'data' => 'tidak_memenuhi',
+                'search' => false,
+                'order' => 'a.tidak_memenuhi',
+            ],
+            [
                 'data' => 'created_by',
                 'search' => 'a.created_by',
                 'order' => 'a.created_by',
@@ -696,7 +959,11 @@ class FasilitasiCAT extends BaseController
                 'order' => false,
             ],
         ];
-        $result     = $this->dataTables->render($builder, $columns);
+
+        $lastUpdateVal = $this->catmodel->getInstansiLastUpdate($key, $filter_instansi, $seleksi_id);
+
+        $result = $this->dataTables->render($builder, $columns);
+        $result['last_update'] = $lastUpdateVal;
         return $this->response->setJSON($result);   
     }
 
@@ -755,11 +1022,11 @@ class FasilitasiCAT extends BaseController
 
     public function getSummaryTilok()
     {
-        $seleksi_uid = $this->request->getPost('seleksi_uid');
+        $jenis_tes_id = $this->request->getPost('jenis_tes_id');
 
         return $this->response->setJSON([
             'status' => true,
-            'summary' => $this->catmodel->getSummaryTilok($seleksi_uid),
+            'summary' => $this->catmodel->getSummaryTilok($jenis_tes_id),
         ]);
     }
 
@@ -795,6 +1062,129 @@ class FasilitasiCAT extends BaseController
         return $this->response->setJSON([
             'status' => true,
             'data'   => $data,
+        ]);
+    }
+
+    public function getEventsByInstansi()
+    {
+        $tilokUid = trim((string) $this->request->getPost('tilok_uid'));
+        $instansiId = trim((string) $this->request->getPost('instansi_id'));
+
+        if ($tilokUid === '' || $instansiId === '') {
+            return $this->response->setStatusCode(400)->setJSON([
+                'status'  => false,
+                'message' => 'Parameter tidak lengkap'
+            ]);
+        }
+
+        $builder = $this->catmodel->db->table('txn_cat_hasil a');
+        $builder->select('
+            s.id AS seleksi_id, 
+            s.uid AS seleksi_uid, 
+            s.nama_seleksi, 
+            s.periode, 
+            jt.kode AS jenis_tes,
+            COUNT(a.id) AS total_sesi,
+            MAX(COALESCE(a.updated_at, a.created_at)) AS last_update
+        ');
+        $builder->join('txn_cat_tilok b', 'b.id = a.tilok_id', 'inner');
+        $builder->join('txn_cat_seleksi s', 's.id = a.seleksi_id', 'inner');
+        $builder->join('data_support_jenis_tes jt', 'jt.id = a.jenis_tes_id', 'left');
+        $builder->where('b.uid', $tilokUid);
+        $builder->where('a.instansi_id', $instansiId);
+        $builder->groupBy('s.id, s.uid, s.nama_seleksi, s.periode, jt.kode');
+        $builder->orderBy('last_update', 'DESC');
+
+        $events = $builder->get()->getResultArray();
+
+        return $this->response->setJSON([
+            'status' => true,
+            'data'   => $events
+        ]);
+    }
+
+    public function updateEventSeleksi()
+    {
+        $sess = session()->get();
+        $tilokInput     = trim((string) ($this->request->getPost('tilok_uid') ?: $this->request->getPost('tilok_id')));
+        $instansiId     = trim((string) $this->request->getPost('instansi_id'));
+        $oldSeleksiId   = (int) $this->request->getPost('old_seleksi_id');
+        $newSeleksiId   = (int) $this->request->getPost('new_seleksi_id');
+
+        if ($tilokInput === '' || $instansiId === '' || $oldSeleksiId <= 0 || $newSeleksiId <= 0) {
+            return $this->response->setStatusCode(422)->setJSON([
+                'status'  => 'error',
+                'message' => 'Parameter tidak lengkap untuk mengubah event seleksi.'
+            ]);
+        }
+
+        if ($oldSeleksiId === $newSeleksiId) {
+            return $this->response->setJSON([
+                'status'  => 'success',
+                'message' => 'Tidak ada perubahan pada event seleksi.'
+            ]);
+        }
+
+        // Resolve tilok_id
+        $tilokBuilder = $this->apps->db->table('txn_cat_tilok')->select('id');
+        if (is_numeric($tilokInput)) {
+            $tilokBuilder->groupStart()->where('id', (int) $tilokInput)->orWhere('uid', $tilokInput)->groupEnd();
+        } else {
+            $tilokBuilder->where('uid', $tilokInput);
+        }
+        $tilok = $tilokBuilder->get()->getRowArray();
+
+        if (!$tilok) {
+            return $this->response->setStatusCode(404)->setJSON([
+                'status'  => 'error',
+                'message' => 'Titik lokasi tidak ditemukan.'
+            ]);
+        }
+
+        $tilokId = (int) $tilok['id'];
+
+        // Ambil data event seleksi baru
+        $newSeleksi = $this->apps->db->table('txn_cat_seleksi')
+            ->where('id', $newSeleksiId)
+            ->get()->getRowArray();
+
+        if (!$newSeleksi) {
+            return $this->response->setStatusCode(404)->setJSON([
+                'status'  => 'error',
+                'message' => 'Event seleksi tujuan tidak ditemukan.'
+            ]);
+        }
+
+        $newJenisTesId = !empty($newSeleksi['jenis_tes_id']) ? (int) $newSeleksi['jenis_tes_id'] : null;
+
+        // Update data rekap hasil sesi pada tilok dan instansi terkait
+        $updateData = [
+            'seleksi_id' => $newSeleksiId,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        if ($newJenisTesId !== null) {
+            $updateData['jenis_tes_id'] = $newJenisTesId;
+        }
+
+        $affected = $this->apps->db->table('txn_cat_hasil')
+            ->where('tilok_id', $tilokId)
+            ->where('instansi_id', $instansiId)
+            ->where('seleksi_id', $oldSeleksiId)
+            ->update($updateData);
+
+        $this->apps->storeData(
+            [
+                'layanan_id' => 28,
+                'tanggal'    => date('Y-m-d'),
+                'created_by' => $sess['username'] ?? 'system'
+            ],
+            'activity_daily_logs'
+        );
+
+        return $this->response->setJSON([
+            'status'   => 'success',
+            'message'  => 'Event seleksi berhasil diperbarui.',
+            'affected' => $affected
         ]);
     }
 }

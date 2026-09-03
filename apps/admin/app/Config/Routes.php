@@ -345,6 +345,8 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/fetch/data-seleksi-cat', 'Apps\Services\FasilitasiCAT::getDataSeleksi');
     $routes->post('/kill/data-seleksi-cat', 'Apps\Services\FasilitasiCAT::removeDataSeleksi');
     $routes->post('/store/save-data-tilok-cat', 'Apps\Services\FasilitasiCAT::storeDataTilok');    
+    $routes->post('/store/save-data-tilok-instansi', 'Apps\Services\FasilitasiCAT::storeDataInstansi');
+    $routes->post('/FasilitasiCAT/storeDataInstansi', 'Apps\Services\FasilitasiCAT::storeDataInstansi');
     $routes->post('/store/save-data-tilok-rekap', 'Apps\Services\FasilitasiCAT::storeDataRekap');    
     $routes->post('/store/update-data-hasil-cat', 'Apps\Services\FasilitasiCAT::updateDataHasil');    
     $routes->post('/fetch/data-tilok-cat', 'Apps\Services\FasilitasiCAT::getDataTilok');  
@@ -353,7 +355,17 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/fetch/instansi-tilok-cat', 'Apps\Services\FasilitasiCAT::getInstansiTilok');           
     $routes->post('/fetch/meta-tilok-detail', 'Apps\Services\FasilitasiCAT::getMetaDetailTilok');
     $routes->post('/fetch/summary-tilok-detail', 'Apps\Services\FasilitasiCAT::getSummaryDetailTilok');
+    $routes->post('/store/update-event-cat', 'Apps\Services\FasilitasiCAT::updateEventSeleksi');
+    $routes->post('/FasilitasiCAT/updateEventSeleksi', 'Apps\Services\FasilitasiCAT::updateEventSeleksi');
+    $routes->post('/fetch/events-by-instansi-cat', 'Apps\Services\FasilitasiCAT::getEventsByInstansi');
+    $routes->post('/FasilitasiCAT/getEventsByInstansi', 'Apps\Services\FasilitasiCAT::getEventsByInstansi');
+    $routes->get('/fetch/seleksi-options-cat', 'Apps\Services\FasilitasiCAT::getSeleksiOptions');
+    $routes->post('/fetch/seleksi-options-cat', 'Apps\Services\FasilitasiCAT::getSeleksiOptions');
+    $routes->get('/FasilitasiCAT/getSeleksiOptions', 'Apps\Services\FasilitasiCAT::getSeleksiOptions');
+    $routes->post('/FasilitasiCAT/getSeleksiOptions', 'Apps\Services\FasilitasiCAT::getSeleksiOptions');
     $routes->post('/kill/data-tilok-cat', 'Apps\Services\FasilitasiCAT::removeDataTilok');    
+    $routes->post('/kill/data-tilok-instansi', 'Apps\Services\FasilitasiCAT::removeDataTilokInstansi');
+    $routes->post('/FasilitasiCAT/removeDataTilokInstansi', 'Apps\Services\FasilitasiCAT::removeDataTilokInstansi');
     $routes->post('/kill/data-tilok-rekap', 'Apps\Services\FasilitasiCAT::removeDataRekap');    
     // ----------------------------------------------------------------
     // Layanan Barang Hilang & Ditemukan

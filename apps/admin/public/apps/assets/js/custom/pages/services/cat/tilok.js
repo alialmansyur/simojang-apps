@@ -87,13 +87,19 @@ function resetCatEventForm() {
 }
 
 function resetCatTilokForm() {
-    const form = $('#form-usulan');
+    const form = $('#form-usulan, #formAction');
     if (!form.length || !form[0]) return;
 
     form[0].reset();
     form.find('[name="key"]').val('');
     form.find('[name="action"]').val('create');
-    $('#DataModalLabel').text('Tambah Data');
+    $('#staticBackdropLabel, #DataModalLabel').text('Tambah Titik Lokasi');
+    if (typeof PERIODE_TAHUN !== 'undefined' && PERIODE_TAHUN) {
+        form.find('[name="period"]').val(PERIODE_TAHUN);
+    }
+    if (typeof JENIS_TES_ID !== 'undefined' && JENIS_TES_ID) {
+        form.find('[name="jenis_tes_id"]').val(JENIS_TES_ID);
+    }
     $('#catJenisPicker').val('').trigger('change');
     isCatTilokEditMode = false;
 }
@@ -246,10 +252,10 @@ $(document).ready(function () {
     loadCatEventRows();
 
     $(document).on('click', '.sbmt', function () {
-        $('#form-usulan').submit();
+        $('#form-usulan, #formAction').submit();
     });
 
-    $('#form-usulan').on('submit', function (e) {
+    $('#form-usulan, #formAction').on('submit', function (e) {
         e.preventDefault();
         $('#DataModal').modal('hide');
         swlwaitProsessing();
@@ -372,7 +378,7 @@ let allTilokData = [];
 let tilokState = {
     keyword: '',
     filter: 'all',
-    sort: 'name_asc',
+    sort: 'updated_desc',
     currentPage: 1,
     itemsPerPage: 10
 };
@@ -380,8 +386,8 @@ let tilokState = {
 function updateFilterCounts(list = []) {
     const counts = {
         all: list.length,
-        updated: list.filter(item => Boolean(item.updated_at)).length,
-        pending: list.filter(item => !item.updated_at).length
+        updated: list.filter(item => Number(item.total_rekap || 0) > 0 || Boolean(item.last_rekap_updated)).length,
+        pending: list.filter(item => !(Number(item.total_rekap || 0) > 0 || Boolean(item.last_rekap_updated))).length
     };
 
     $('.tws-filter-chip').each(function () {
@@ -409,21 +415,25 @@ function processAndRenderTilok() {
 
     // Filter by status
     rendered = rendered.filter(row => {
-        if (tilokState.filter === 'updated') return Boolean(row.updated_at);
-        if (tilokState.filter === 'pending') return !row.updated_at;
+        const hasRekap = Number(row.total_rekap || 0) > 0 || Boolean(row.last_rekap_updated);
+        if (tilokState.filter === 'updated') return hasRekap;
+        if (tilokState.filter === 'pending') return !hasRekap;
         return true;
     });
 
     // Sorting
     rendered.sort((a, b) => {
         if (tilokState.sort === 'updated_desc') {
-            const tA = a.updated_at ? Date.parse(a.updated_at) || 0 : 0;
-            const tB = b.updated_at ? Date.parse(b.updated_at) || 0 : 0;
-            return tB - tA;
+            const tA = a.last_rekap_updated ? Date.parse(a.last_rekap_updated) || 0 : (a.last_rekap_date ? Date.parse(a.last_rekap_date) || 0 : 0);
+            const tB = b.last_rekap_updated ? Date.parse(b.last_rekap_updated) || 0 : (b.last_rekap_date ? Date.parse(b.last_rekap_date) || 0 : 0);
+            if (tB !== tA) return tB - tA;
+            const nameA = String(a.nama_tilok || '').toLowerCase();
+            const nameB = String(b.nama_tilok || '').toLowerCase();
+            return nameA.localeCompare(nameB, 'id');
         }
         if (tilokState.sort === 'pending_first') {
-            const hasA = Boolean(a.updated_at);
-            const hasB = Boolean(b.updated_at);
+            const hasA = Number(a.total_rekap || 0) > 0 || Boolean(a.last_rekap_updated);
+            const hasB = Number(b.total_rekap || 0) > 0 || Boolean(b.last_rekap_updated);
             if (hasA === hasB) {
                 const nameA = String(a.nama_tilok || '').toLowerCase();
                 const nameB = String(b.nama_tilok || '').toLowerCase();
@@ -500,7 +510,9 @@ function loadTilokData() {
         url: AppConfig.initGlobal + 'fetch/data-tilok-cat',
         type: 'POST',
         data: {
-            seleksi_uid: typeof SELEKSI_UID !== 'undefined' ? SELEKSI_UID : '',
+            jenis_periode_id: typeof JENIS_PERIODE_ID !== 'undefined' ? JENIS_PERIODE_ID : '',
+            jenis_tes_id: typeof JENIS_TES_ID !== 'undefined' ? JENIS_TES_ID : '',
+            periode: typeof PERIODE_TAHUN !== 'undefined' ? PERIODE_TAHUN : '',
             draw: 1, length: 1000, start: 0
         },
         success: function(res) {
@@ -523,9 +535,9 @@ function renderTilokCards(data) {
         container.html(`
             <div class="col-12" id="noSearchInfo">
                 <div class="d-flex flex-column align-items-center justify-content-center text-center mt-5 mb-5 pb-4 tw-animate-entry">
-                    <img src="${AppConfig.initGlobal}apps/assets/images/empty-content-profile.png" alt="Tidak Ditemukan" style="max-width: 320px; margin-bottom: 2rem;">
-                    <h5 class="fw-bold" style="color: #1a202c; font-size: 1.35rem;">Pencarian Tidak Ditemukan</h5>
-                    <p class="text-muted mb-0" style="font-size: 1.05rem; max-width: 450px; margin: 0 auto; line-height: 1.6;">Tidak ada data seleksi yang cocok dengan pencarian Anda.</p>
+                    <img src="${AppConfig.initGlobal}apps/assets/images/empty-content-profile.png" alt="Tidak Ditemukan" class="cat-empty-img">
+                    <h5 class="fw-bold cat-empty-title">Pencarian Tidak Ditemukan</h5>
+                    <p class="text-muted mb-0 cat-empty-desc">Tidak ada data seleksi yang cocok dengan pencarian Anda.</p>
                 </div>
             </div>
         `);
@@ -534,46 +546,100 @@ function renderTilokCards(data) {
 
     let html = '';
     data.forEach((row, index) => {
-        const toneClass = 'twx-tone-' + ((index % 5) + 1);
-        const start = row.startdate || '-';
-        const end = row.enddate || '-';
-        const cap = row.capacity || '0';
+        const start = row.startdate || row.period_start_date || '-';
+        const end = row.enddate || row.period_end_date || '-';
+        const capNum = Number(row.kapasitas || row.capacity || 0);
+        const instansiNum = Number(row.total_instansi || 0);
+        const eventNum = Number(row.total_event || 0);
+        const rekapNum = Number(row.total_rekap || 0);
+        const pesertaNum = Number(row.total_peserta || 0);
+        const lastUpdated = row.last_rekap_updated || null;
+        const lastDate = row.last_rekap_date || null;
         const nama = escapeHtml(row.tilok || row.nama_tilok || row.nama || '-');
-        const isUpdated = Boolean(row.updated_at);
-        const ringClass = isUpdated ? 'tws-ring-high' : 'tws-ring-low';
+
+        let metaBadges = `
+            <span class="cat-card-meta-badge cat-meta-instansi" title="Total Instansi Terdaftar">
+                <i class="bi bi-building"></i> ${instansiNum > 0 ? instansiNum.toLocaleString('id-ID') + ' Instansi' : '0 Instansi'}
+            </span>
+        `;
+
+        if (eventNum > 0) {
+            metaBadges += `
+                <span class="cat-card-meta-badge cat-meta-event" title="Total Event Seleksi">
+                    <i class="bi bi-bookmark-check"></i> ${eventNum.toLocaleString('id-ID')} Event
+                </span>
+            `;
+        }
+
+        metaBadges += `
+            <span class="cat-card-meta-badge cat-meta-tilok" title="Total Sesi Rekapitulasi">
+                <i class="bi bi-card-checklist"></i> ${rekapNum > 0 ? rekapNum.toLocaleString('id-ID') + ' Rekap' : 'Belum Ada Rekap'}
+            </span>
+        `;
+
+        if (pesertaNum > 0) {
+            metaBadges += `
+                <span class="cat-card-meta-badge cat-meta-peserta" title="Total Peserta Terealisasi">
+                    <i class="bi bi-people-fill"></i> ${pesertaNum.toLocaleString('id-ID')} Peserta
+                </span>
+            `;
+        }
+
+        metaBadges += `
+            <span class="cat-card-meta-badge cat-meta-kapasitas" title="Kapasitas PC Per Sesi">
+                <i class="bi bi-display"></i> ${capNum > 0 ? capNum.toLocaleString('id-ID') + ' PC' : 'Belum Diatur'}
+            </span>
+        `;
+
+        if (lastUpdated) {
+            metaBadges += `
+                <span class="cat-card-meta-badge cat-meta-rekap" title="Waktu Rekap / Update Terakhir">
+                    <i class="bi bi-clock-history"></i> Update: ${escapeHtml(lastUpdated)}
+                </span>
+            `;
+        } else if (lastDate) {
+            metaBadges += `
+                <span class="cat-card-meta-badge cat-meta-rekap" title="Tanggal Rekap Terakhir">
+                    <i class="bi bi-clock-history"></i> ${escapeHtml(lastDate)}
+                </span>
+            `;
+        } else if (start !== '-' && end !== '-') {
+            metaBadges += `
+                <span class="cat-card-meta-badge cat-meta-rekap" title="Rentang Tanggal Pelaksanaan">
+                    <i class="bi bi-calendar3"></i> ${escapeHtml(start)} s/d ${escapeHtml(end)}
+                </span>
+            `;
+        }
 
         html += `
-        <div class="col-12 tws-col-list tw-animate-entry mb-2" style="--animation-order: ${index};">
-            <div class="card h-100 p-2 rounded-3 border tws-service-card tws-card-soft tws-anim-card overflow-hidden position-relative tws-tone-${(index % 4) + 1}" style="cursor: pointer;" data-url="${AppConfig.initGlobal}apps-cat-detail/${row.uid}">
-                <div class="position-absolute tws-bg-icon-wrapper" style="opacity: 0.05;">
+        <div class="col-12 tws-col-list tw-animate-entry mb-2">
+            <div class="card h-100 p-2 rounded-3 border tws-service-card tws-card-soft tws-anim-card overflow-hidden position-relative tilok-card-wrapper tws-tone-${(index % 4) + 1}" data-url="${AppConfig.initGlobal}apps-cat-detail/${row.uid}">
+                <div class="position-absolute tws-bg-icon-wrapper tilok-card-bg-opacity">
                     <div class="tws-bg-icon-svg">
                         <svg viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                     </div>
                 </div>
-                <div class="card-body p-0 d-flex flex-column flex-md-row align-items-md-center justify-content-between" style="position: relative; z-index: 1;">
+                <div class="card-body p-0 d-flex flex-column flex-md-row align-items-md-center justify-content-between tilok-card-body-pos">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="flex-shrink-0 d-flex align-items-center justify-content-center bg-primary-subtle text-primary" style="width: 48px; height: 48px; border-radius: 12px; transform: none !important;">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <div class="flex-shrink-0 d-flex align-items-center justify-content-center bg-primary-subtle text-primary tilok-card-icon-container">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="tilok-card-icon-svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                         </div>
                         <div class="text-start">
-                            <h6 class="fw-bold mb-1" style="font-size: 1.05rem; color: #1e293b;">${nama}</h6>
-                            <div class="d-flex flex-wrap gap-2 align-items-center mt-1">
-                                <span class="text-primary fw-semibold" style="font-size: 0.8rem;">Total Rekap: ${row.total_rekap || 0}</span>
-                                <span class="text-success fw-semibold" style="font-size: 0.8rem;">Kapasitas: ${cap} PC</span>
-                                <span class="text-danger fw-semibold" style="font-size: 0.8rem;">${escapeHtml(row.jenis_tes || '-')}</span>
-                                <span class="text-secondary fw-semibold" style="font-size: 0.8rem;">${escapeHtml(row.period || (start + ' s/d ' + end))}</span>
+                            <h6 class="fw-bold mb-1 tilok-card-name">${nama}</h6>
+                            <div class="d-flex flex-wrap gap-1 align-items-center mt-1 cat-card-meta-row">
+                                ${metaBadges}
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center gap-3 mt-3 mt-md-0 px-2 px-md-0 h-100">
-                        <button type="button" class="btn p-1 border-0 btn-update" data-id="${row.id}" title="Edit Data" style="color: #64748b;">
-                            <i class="bi bi-pencil-square fs-5"></i>
+                    <div class="d-flex align-items-center gap-2 mt-3 mt-md-0 px-2 px-md-0 h-100">
+                        <button type="button" class="btn btn-outline-secondary p-0 d-flex align-items-center justify-content-center btn-update tilok-btn-edit" data-id="${row.id}" title="Edit Data">
+                            <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button type="button" class="btn p-1 border-0 btn-remove" data-id="${row.id}" title="Hapus Data" style="color: #ef4444;">
-                            <i class="bi bi-trash fs-5"></i>
+                        <button type="button" class="btn btn-outline-danger p-0 d-flex align-items-center justify-content-center btn-remove tilok-btn-delete" data-id="${row.id}" title="Hapus Data">
+                            <i class="bi bi-trash"></i>
                         </button>
-                        <button type="button" class="btn btn-primary p-0 ms-2 d-flex align-items-center justify-content-center text-white shadow-sm tws-access-btn" title="Detail" style="width: 32px; height: 32px; border-radius: 50% !important; min-width: 32px;">
-                            <i class="bi bi-arrow-right d-flex align-items-center justify-content-center" style="font-size: 1.15rem; line-height: 0;"></i>
+                        <button type="button" class="btn btn-primary p-0 d-flex align-items-center justify-content-center text-white shadow-sm tws-access-btn tilok-btn-detail" title="Detail">
+                            <i class="bi bi-arrow-right d-flex align-items-center justify-content-center tilok-btn-detail-icon"></i>
                         </button>
                     </div>
                 </div>
@@ -641,22 +707,20 @@ $(document).ready(function() {
         const row = allTilokData.find(r => String(r.id) === String(id));
         if (!row) return;
 
-        const form = $('#form-usulan');
+        const form = $('#form-usulan, #formAction');
         isCatTilokEditMode = true;
 
         form.find('[name="key"]').val(row.id || '');
         form.find('[name="action"]').val('update');
-        form.find('[name="tilok"]').val(row.nama_tilok || row.tilok || '');
-        form.find('[name="startdate"]').val(row.period_start_date || '');
-        form.find('[name="enddate"]').val(row.period_end_date || '');
-        form.find('[name="capacity"]').val(row.kapasitas || '');
-        
-        const catId = row.jenis_tes_id;
-        if(typeof window.setCatJenisPickerValue === 'function') {
-             window.setCatJenisPickerValue(catId, row.jenis_tes);
-        }
+        form.find('[name="nama_tilok"], [name="tilok"]').val(row.nama_tilok || row.tilok || '');
+        form.find('[name="period"]').val(row.period || (typeof PERIODE_TAHUN !== 'undefined' ? PERIODE_TAHUN : ''));
+        form.find('[name="startdate"], [name="period_start_date"]').val(row.period_start_date || '');
+        form.find('[name="enddate"], [name="period_end_date"]').val(row.period_end_date || '');
+        form.find('[name="kapasitas"], [name="capacity"]').val(row.kapasitas || '');
+        form.find('[name="jenis_periode_id"]').val(row.jenis_periode_id || (typeof JENIS_PERIODE_ID !== 'undefined' ? JENIS_PERIODE_ID : ''));
+        form.find('[name="jenis_tes_id"]').val(row.jenis_tes_id || (typeof JENIS_TES_ID !== 'undefined' ? JENIS_TES_ID : ''));
 
-        $('#DataModalLabel').text('Edit Data');
+        $('#staticBackdropLabel, #DataModalLabel').text('Edit Titik Lokasi');
         $('#DataModal').modal('show');
     });
 
@@ -690,5 +754,23 @@ $(document).ready(function() {
 
     $('.js-service-reload').on('click', function() {
         loadTilokData();
+    });
+
+    // Card Tilok Click -> Navigate to Detail with Bold Spinner
+    $('#loaded').on('click', '.tilok-card-wrapper', function (e) {
+        if ($(e.target).closest('button, a').length && !$(e.target).closest('.tws-access-btn').length) return;
+
+        const card = $(this);
+        const url = card.data('url');
+        if (!url) return;
+
+        const arrowBtn = card.find('.tws-access-btn');
+        const originalContent = arrowBtn.html();
+
+        arrowBtn.html('<span class="spinner-border spinner-border-sm cat-spinner-bold" role="status" aria-hidden="true"></span>');
+
+        setTimeout(function () {
+            window.location.href = url;
+        }, 120);
     });
 });
