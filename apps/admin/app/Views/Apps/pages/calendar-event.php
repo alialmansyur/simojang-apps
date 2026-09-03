@@ -1,20 +1,23 @@
 <?= $this->extend('Apps/layouts/main_layout_with_navbar_v2'); ?>
 <?= $this->section('style'); ?>
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css') ?>">
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=99') ?>">
-<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/activity-gallery.css?v=99') ?>">
-<?= $this->endSection(); ?>
-<?= $this->section('content'); ?>
-<!-- FullCalendar CSS -->
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork-common.css?v=' . time()) ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/teamwork.css?v=' . time()) ?>">
+<link rel="stylesheet" href="<?= asset_url('apps/assets/css/pages/activity-gallery.css?v=' . time()) ?>">
+
+<!-- FullCalendar & Custom Page CSS -->
 <style>
     /* KPI Cards Styling (Adopted from apps-cat) */
     .twx-card-container {
         background-color: #ffffff;
         border: 1px solid #e2e8f0 !important;
-        border-radius: 12px;
+        border-radius: 14px;
         transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s ease !important;
         cursor: pointer;
         overflow: hidden;
+        min-height: 108px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     .twx-card-container:hover {
         transform: translateY(-4px) !important;
@@ -39,14 +42,15 @@
         opacity: 0.08 !important;
     }
     .twx-main-icon-container {
-        width: 54px;
-        height: 54px;
-        border-radius: 12px;
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
         background: var(--twx-bg);
         color: var(--twx-text);
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
     }
     .twx-main-icon-svg-wrapper {
         width: 28px;
@@ -64,32 +68,22 @@
         transform: scale(1.15) rotate(-10deg);
     }
     .kpi-title {
-        font-size: 0.85rem;
+        font-size: 0.78rem;
         color: #64748b;
         font-weight: 700;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.35rem;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    .kpi-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #1e293b;
+        letter-spacing: 0.06em;
         line-height: 1.2;
     }
-    .kpi-title {
-        font-size: 0.9rem;
-        color: #64748b;
-        font-weight: 600;
-        margin-bottom: 0.25rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
     .kpi-value {
-        font-size: 2rem;
+        font-size: 2.35rem;
         font-weight: 800;
-        color: #1e293b;
-        line-height: 1.2;
+        color: #0f172a;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        display: flex;
+        align-items: center;
     }
     
     /* Calendar Container */
@@ -229,18 +223,6 @@
         line-height: 1.1;
         margin-bottom: 0.5rem;
     }
-    .agenda-hl-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-    .agenda-hl-location {
-        font-size: 0.85rem;
-        opacity: 0.9;
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-    }
     
     /* Timeline List */
     .agenda-timeline {
@@ -326,44 +308,44 @@
         transform: scale(1.05) rotate(2deg);
     }
     
-    /* Modal Detail Styling */
-    .detail-row {
-        margin-bottom: 1rem;
-    }
-    .detail-label {
-        font-size: 0.85rem;
-        color: #64748b;
-        font-weight: 600;
-        text-transform: uppercase;
-        margin-bottom: 0.25rem;
-    }
-    .detail-value {
-        font-size: 1rem;
-        color: #1e293b;
-        font-weight: 500;
-    }
-    
-    #modalEventDetail .text-end {
-        word-break: break-word;
-        text-align: right;
-    }
-    
     /* Toolbar Filters */
     .filter-toolbar {
         margin-bottom: 1.5rem;
     }
     
-    /* Force Modal Event Detail Styling & Fix Dark Mode Overrides */
+    /* Force Modal Event Detail Rounded Styling */
+    #modalEventDetail,
+    #modalEventDetail .modal-dialog,
+    #modalEventDetail .modal-content,
+    #modalEventDetail.modal .modal-content,
+    #modalEventDetail.modal-force-rounded .modal-content {
+        border-radius: 1.25em !important;
+        -webkit-border-radius: 1.25em !important;
+        -moz-border-radius: 1.25em !important;
+        --bs-modal-border-radius: 1.25em !important;
+        --bs-modal-inner-border-radius: 1.25em !important;
+    }
     #modalEventDetail .modal-content {
-        border-radius: 12px !important;
-        border: none !important;
+        border-radius: 1.25em !important;
+        -webkit-border-radius: 1.25em !important;
+        -moz-border-radius: 1.25em !important;
+        border: 1px solid #e2e8f0 !important;
         overflow: hidden !important;
         background-color: #ffffff !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
     }
-    #modalEventDetail .modal-header,
-    #modalEventDetail .modal-body,
+    #modalEventDetail .modal-header {
+        border-top-left-radius: 1.25em !important;
+        border-top-right-radius: 1.25em !important;
+        background-color: #ffffff !important;
+    }
+    #modalEventDetail .modal-body {
+        background-color: #ffffff !important;
+    }
     #modalEventDetail .modal-footer {
-        background-color: transparent !important;
+        border-bottom-left-radius: 1.25em !important;
+        border-bottom-right-radius: 1.25em !important;
+        background-color: #ffffff !important;
     }
     #modalEventDetail .text-dark {
         color: #1e293b !important;
@@ -374,83 +356,59 @@
     #modalEventDetail .text-muted {
         color: #94a3b8 !important;
     }
-    /* Responsive Fixes */
-    .page-content {
-        max-width: 100vw;
-        overflow-x: hidden;
-    }
-    .tw-wrap {
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow-x: hidden;
-    }
-    .tw-title, .tw-subtitle {
-        word-wrap: break-word;
-        white-space: normal !important;
-    }
-    .tw-head .form-select {
-        max-width: 100%;
-    }
-    @media (max-width: 576px) {
-        .tw-head {
-            flex-direction: column !important;
-            align-items: stretch !important;
-        }
-        .tw-head .d-flex {
-            flex-direction: column !important;
-            align-items: stretch !important;
-            width: 100%;
-        }
-        .tw-head select {
-            width: 100% !important;
-        }
-    }
 </style>
 <?= $this->endSection(); ?>
 
 <?= $this->section('content'); ?>
-<main class="page-content" aria-labelledby="calendarPageTitle" style="overflow-x: hidden;">
-    <div class="text-start tw-wrap container-fluid">
+<main class="page-content" aria-labelledby="calendarPageTitle">
+    <div class="text-start tw-wrap">
         
-        <!-- Header -->
-        <div class="row align-items-center mt-4 mb-3" role="banner">
-            <div class="col-12 col-md-8 text-start">
-                <h1 class="tw-title lh-1" id="calendarPageTitle" style="color: #1a202c; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; white-space: normal;">
-                    Kalender Kegiatan
-                </h1>
-                <p class="tw-subtitle text-secondary mb-0" style="font-size: 1rem; font-weight: 400; white-space: normal;">
-                    Pantau dan kelola seluruh jadwal kegiatan instansi secara menyeluruh.
-                </p>
-            </div>
-            <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0">
-                <a href="<?= base_url('timkerja-layanan') ?>" class="btn btn-primary">
-                    <i class="bi bi-chevron-left fs-6"></i> Kembali
-                </a>
+        <!-- Welcome Header matching /activity-gallery & /timkerja -->
+        <div class="tw-welcome text-start mt-3 mb-2" role="banner">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                <div>
+                    <h1 class="tw-title lh-1" id="calendarPageTitle" style="color: #1a202c; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem;">
+                        Kalender Kegiatan
+                    </h1>
+                    <div style="max-width: 580px; margin: 0; line-height: 1.6;">
+                        <p class="tw-subtitle text-secondary mb-0" style="font-size: 1.05rem; font-weight: 500;">
+                            <strong>Pantau dan kelola seluruh jadwal kegiatan instansi.</strong> Jelajahi agenda, rapat, sosialisasi, dan kegiatan lainnya.
+                        </p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                    <a href="<?= base_url('timkerja') ?>" class="btn btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-3" style="height: 42px; border-radius: 8px;">
+                        <i class="bi bi-chevron-left" style="display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; line-height: 1;"></i>
+                        <span class="fw-bold" style="font-size: 0.95rem; line-height: 1;">Kembali</span>
+                    </a>
+                </div>
             </div>
         </div>
 
-        <!-- Filter Toolbar -->
-        <div class="tw-head d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4" role="toolbar">
-            <div class="flex-grow-1" style="max-width: 450px; width: 100%;">
-                <div class="position-relative">
-                    <i class="bi bi-search position-absolute text-muted" style="left: 1.2rem; top: 50%; transform: translateY(-50%); margin-top: -1px; line-height: 1; pointer-events: none;"></i>
-                    <input type="text" id="searchEvent" class="form-control tw-search-input" placeholder="Cari kegiatan, lokasi..." style="padding-left: 2.8rem; padding-top: 0.65rem; padding-bottom: 0.65rem;">
+        <!-- Toolbar -->
+        <div class="tw-head row align-items-center mt-4 mb-3" role="toolbar" aria-label="Aksi kalender kegiatan">
+            <div class="col-12 d-flex flex-column flex-md-row align-items-stretch align-items-md-center justify-content-between gap-3">
+                <div class="flex-grow-1" style="max-width: 420px;">
+                    <div class="position-relative">
+                        <i class="bi bi-search position-absolute text-muted" style="left: 1.2rem; top: 50%; transform: translateY(-50%); margin-top: -1px; line-height: 1; pointer-events: none;"></i>
+                        <input type="text" id="searchEvent" class="form-control tw-search-input" placeholder="Cari kegiatan, lokasi..." style="padding-left: 2.8rem; padding-top: 0.65rem; padding-bottom: 0.65rem;">
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex flex-wrap align-items-center gap-2">
-                <select id="filterCategory" class="form-select fw-bold" style="width: auto !important; height: 42px; color: #1a202c !important; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
-                    <option value="">Semua Kategori</option>
-                    <option value="Rapat">Rapat</option>
-                    <option value="Sosialisasi">Sosialisasi</option>
-                    <option value="Bimtek">Bimtek</option>
-                    <option value="Lainnya">Lainnya</option>
-                </select>
-                <select id="filterStatus" class="form-select fw-bold" style="width: auto !important; height: 42px; color: #1a202c !important; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
-                    <option value="">Semua Status</option>
-                    <option value="Belum Mulai">Belum Mulai</option>
-                    <option value="Berlangsung">Berlangsung</option>
-                    <option value="Selesai">Selesai</option>
-                </select>
+                <div class="d-flex flex-column flex-sm-row flex-wrap align-items-stretch align-items-sm-center gap-2">
+                    <select id="filterCategory" class="form-select fw-bold flex-grow-1 flex-sm-grow-0" style="width: auto; height: 42px; color: #1a202c !important; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+                        <option value="">Semua Kategori</option>
+                        <option value="Rapat">Rapat</option>
+                        <option value="Sosialisasi">Sosialisasi</option>
+                        <option value="Bimtek">Bimtek</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                    <select id="filterStatus" class="form-select fw-bold flex-grow-1 flex-sm-grow-0" style="width: auto; height: 42px; color: #1a202c !important; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+                        <option value="">Semua Status</option>
+                        <option value="Belum Mulai">Belum Mulai</option>
+                        <option value="Berlangsung">Berlangsung</option>
+                        <option value="Selesai">Selesai</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -458,12 +416,12 @@
         <div class="row g-3 mb-4" id="kpiCardsContainer">
             <!-- Total Kegiatan -->
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card shadow-sm position-relative twx-card-container h-100 p-3" style="--twx-bg: #e0f2fe; --twx-text: #0284c7; --twx-border: #bae6fd;">
+                <div class="card shadow-sm position-relative twx-card-container h-100 p-3 px-3 px-xl-4" style="--twx-bg: #e0f2fe; --twx-text: #0284c7; --twx-border: #bae6fd;">
                     <div class="twx-bg-icon-wrapper">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="twx-bg-icon-svg"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center position-relative" style="z-index: 1;">
-                        <div>
+                    <div class="d-flex justify-content-between align-items-center position-relative my-auto" style="z-index: 1;">
+                        <div class="d-flex flex-column justify-content-center">
                             <div class="kpi-title">Total Kegiatan</div>
                             <div class="kpi-value" id="kpiTotal">-</div>
                         </div>
@@ -477,12 +435,12 @@
             </div>
             <!-- Kegiatan Selesai -->
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card shadow-sm position-relative twx-card-container h-100 p-3" style="--twx-bg: #dcfce7; --twx-text: #16a34a; --twx-border: #bbf7d0;">
+                <div class="card shadow-sm position-relative twx-card-container h-100 p-3 px-3 px-xl-4" style="--twx-bg: #dcfce7; --twx-text: #16a34a; --twx-border: #bbf7d0;">
                     <div class="twx-bg-icon-wrapper">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="twx-bg-icon-svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center position-relative" style="z-index: 1;">
-                        <div>
+                    <div class="d-flex justify-content-between align-items-center position-relative my-auto" style="z-index: 1;">
+                        <div class="d-flex flex-column justify-content-center">
                             <div class="kpi-title">Kegiatan Selesai</div>
                             <div class="kpi-value" id="kpiCompleted">-</div>
                         </div>
@@ -496,12 +454,12 @@
             </div>
             <!-- Akan Datang -->
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card shadow-sm position-relative twx-card-container h-100 p-3" style="--twx-bg: #fef9c3; --twx-text: #ca8a04; --twx-border: #fef08a;">
+                <div class="card shadow-sm position-relative twx-card-container h-100 p-3 px-3 px-xl-4" style="--twx-bg: #fef9c3; --twx-text: #ca8a04; --twx-border: #fef08a;">
                     <div class="twx-bg-icon-wrapper">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="twx-bg-icon-svg"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center position-relative" style="z-index: 1;">
-                        <div>
+                    <div class="d-flex justify-content-between align-items-center position-relative my-auto" style="z-index: 1;">
+                        <div class="d-flex flex-column justify-content-center">
                             <div class="kpi-title">Akan Datang</div>
                             <div class="kpi-value" id="kpiUpcoming">-</div>
                         </div>
@@ -515,12 +473,12 @@
             </div>
             <!-- Kegiatan Hari Ini -->
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card shadow-sm position-relative twx-card-container h-100 p-3" style="--twx-bg: #fee2e2; --twx-text: #dc2626; --twx-border: #fecaca;">
+                <div class="card shadow-sm position-relative twx-card-container h-100 p-3 px-3 px-xl-4" style="--twx-bg: #fee2e2; --twx-text: #dc2626; --twx-border: #fecaca;">
                     <div class="twx-bg-icon-wrapper">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="twx-bg-icon-svg"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center position-relative" style="z-index: 1;">
-                        <div>
+                    <div class="d-flex justify-content-between align-items-center position-relative my-auto" style="z-index: 1;">
+                        <div class="d-flex flex-column justify-content-center">
                             <div class="kpi-title">Kegiatan Hari Ini</div>
                             <div class="kpi-value" id="kpiToday">-</div>
                         </div>
@@ -570,17 +528,17 @@
 </main>
 
 <!-- Modal Event Detail -->
-<div class="modal fade" id="modalEventDetail" tabindex="-1" aria-labelledby="modalEventDetailLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content flat-modal" style="border-radius: 12px !important; border: none !important; overflow: hidden !important; background-color: #ffffff !important; box-shadow: 0 4px 24px rgba(0,0,0,0.06) !important;">
-            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 align-items-center" style="background-color: transparent !important;">
+<div class="modal fade modal-force-rounded" id="modalEventDetail" tabindex="-1" aria-labelledby="modalEventDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="border-radius: 1.25em !important;">
+        <div class="modal-content" style="border-radius: 1.25em !important; -webkit-border-radius: 1.25em !important; -moz-border-radius: 1.25em !important; border: 1px solid #e2e8f0 !important; overflow: hidden !important; background-color: #ffffff !important; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25) !important;">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 align-items-center" style="border-top-left-radius: 1.25em !important; border-top-right-radius: 1.25em !important; background-color: #ffffff !important;">
                 <div class="w-100 pe-4">
                     <div class="text-uppercase fw-bold text-muted mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">DETAIL AGENDA</div>
                     <h5 class="modal-title fw-bold" id="detailEventTitle" style="color: #1a202c; font-size: 1.25rem;">Judul Kegiatan</h5>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body px-4 pt-3 pb-4" style="background-color: transparent !important;">
+            <div class="modal-body px-4 pt-3 pb-4" style="background-color: #ffffff !important;">
                 <div class="row gy-3">
                     <!-- Row: Deskripsi -->
                     <div class="col-12 d-flex justify-content-between align-items-start border-bottom pb-2">
@@ -641,9 +599,9 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-top-0 pt-0 pb-4 px-4 justify-content-end" style="background-color: transparent !important;">
-                <button type="button" class="btn btn-light fw-bold px-4 flat-btn-light" data-bs-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-primary fw-bold px-4 flat-btn-primary" style="background-color: #059669; border-color: #059669;">
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4 justify-content-end" style="border-bottom-left-radius: 1.25em !important; border-bottom-right-radius: 1.25em !important; background-color: #ffffff !important;">
+                <button type="button" class="btn btn-light fw-bold px-4 flat-btn-light" style="border-radius: 10px !important;" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary fw-bold px-4 flat-btn-primary" style="background-color: #059669; border-color: #059669; border-radius: 10px !important;">
                     <i class="bi bi-calendar-plus me-1"></i> Simpan (.ics)
                 </button>
             </div>

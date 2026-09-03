@@ -57,10 +57,21 @@ document.addEventListener('DOMContentLoaded', function() {
     function fetchData() {
         if (typeof showLoading === 'function') showLoading('Memproses data...');
 
-        Promise.all([
-            fetch(AppConfig.initGlobal + 'api/calendar-event/kpi').then(res => res.json()),
-            fetch(AppConfig.initGlobal + 'api/calendar-event/events').then(res => res.json())
-        ])
+        const fetchKpi = fetch(AppConfig.initGlobal + 'api/calendar-event/kpi')
+            .then(res => res.ok ? res.json() : Promise.reject('Failed to fetch KPI'))
+            .catch(err => {
+                console.warn('KPI fetch fallback:', err);
+                return { status: 'error', data: null };
+            });
+
+        const fetchEvents = fetch(AppConfig.initGlobal + 'api/calendar-event/events')
+            .then(res => res.ok ? res.json() : Promise.reject('Failed to fetch events'))
+            .catch(err => {
+                console.error('Events fetch error:', err);
+                return { status: 'error', data: [] };
+            });
+
+        Promise.all([fetchKpi, fetchEvents])
         .then(([kpiData, eventsData]) => {
             if (typeof hideLoading === 'function') hideLoading();
             
@@ -68,7 +79,32 @@ document.addEventListener('DOMContentLoaded', function() {
             renderKPI(kpiData);
 
             // Save events and render
-            if (eventsData && eventsData.data) {
+            if (eventsData && eventsData.data && Array.isArray(eventsData.data)) {
+                // Populate category options dynamically
+                const categories = new Set();
+                eventsData.data.forEach(ev => {
+                    if (ev.category && ev.category !== 'Lainnya') {
+                        categories.add(ev.category);
+                    }
+                });
+
+                if (categories.size > 0 && categorySelect) {
+                    const currentVal = categorySelect.value;
+                    categorySelect.innerHTML = '<option value="">Semua Kategori</option>';
+                    Array.from(categories).sort().forEach(cat => {
+                        const opt = document.createElement('option');
+                        opt.value = cat;
+                        opt.textContent = cat;
+                        if (cat === currentVal) opt.selected = true;
+                        categorySelect.appendChild(opt);
+                    });
+                    const optLainnya = document.createElement('option');
+                    optLainnya.value = 'Lainnya';
+                    optLainnya.textContent = 'Lainnya';
+                    if (currentVal === 'Lainnya') optLainnya.selected = true;
+                    categorySelect.appendChild(optLainnya);
+                }
+
                 // Map API data to FullCalendar event format
                 allEvents = eventsData.data.map(ev => {
                     // Determine color based on status or category
@@ -111,10 +147,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderKPI(data) {
         if (data && data.data) {
-            document.getElementById('kpiTotal').textContent = data.data.total_kegiatan || 0;
-            document.getElementById('kpiCompleted').textContent = data.data.kegiatan_selesai || 0;
-            document.getElementById('kpiUpcoming').textContent = data.data.akan_datang || 0;
-            document.getElementById('kpiToday').textContent = data.data.hari_ini || 0;
+            document.getElementById('kpiTotal').textContent = data.data.total_kegiatan ?? 0;
+            document.getElementById('kpiCompleted').textContent = data.data.kegiatan_selesai ?? 0;
+            document.getElementById('kpiUpcoming').textContent = data.data.akan_datang ?? 0;
+            document.getElementById('kpiToday').textContent = data.data.hari_ini ?? 0;
         }
     }
 
@@ -153,14 +189,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         container.innerHTML = '';
         
-        // Find events active today
-        const todayStr = new Date().toISOString().split('T')[0];
+        // Find events active today using local client date
+        const nowObj = new Date();
+        const todayStr = `${nowObj.getFullYear()}-${String(nowObj.getMonth() + 1).padStart(2, '0')}-${String(nowObj.getDate()).padStart(2, '0')}`;
         
         const todayEvents = events.filter(ev => {
             if (!ev.start) return false;
             // An event is active today if start is today or before, and end is today or after
-            const startStr = ev.start.split(' ')[0].split('T')[0];
-            const endStr = ev.end ? ev.end.split(' ')[0].split('T')[0] : startStr;
+            const startStr = ev.start.split('T')[0].split(' ')[0];
+            const endStr = ev.end ? ev.end.split('T')[0].split(' ')[0] : startStr;
             return todayStr >= startStr && todayStr <= endStr;
         });
 
@@ -305,22 +342,35 @@ document.addEventListener('DOMContentLoaded', function() {
         if (staffContainer) {
             staffContainer.innerHTML = '';
             if (props.staff && Array.isArray(props.staff) && props.staff.length > 0) {
-                if (props.staff.length > 3) {
-                     staffContainer.innerHTML = `<span class="badge rounded-pill px-3 py-2" style="background-color: #eff6ff; color: #1040c1; font-weight: 600; border: 1px solid #bfdbfe;">Semua Pegawai</span>`;
+                const firstItem = typeof props.staff[0] === 'object' ? (props.staff[0].nama || props.staff[0].name || '') : String(props.staff[0]);
+                if (firstItem.toLowerCase().includes('semua pegawai')) {
+                    staffContainer.innerHTML = `<span class="badge rounded-pill px-3 py-2" style="background-color: #eff6ff; color: #1040c1; font-weight: 600; border: 1px solid #bfdbfe;">Semua Pegawai</span>`;
                 } else {
-                     staffContainer.innerHTML = props.staff.map(s => s.nama || s).join(', ');
+                    staffContainer.innerHTML = props.staff.map(s => {
+                        const nameText = typeof s === 'object' ? (s.nama || s.name || '-') : s;
+                        return `<span class="badge bg-light text-dark border me-1 mb-1 p-2">${nameText}</span>`;
+                    }).join(' ');
                 }
             } else {
                 staffContainer.innerHTML = `<span class="badge rounded-pill px-3 py-2" style="background-color: #f1f5f9; color: #475569; font-weight: 600; border: 1px solid #e2e8f0;">Tidak ada</span>`;
             }
         }
 
-        // Show Modal
+        // Show Modal with guaranteed rounded corners
+        const modalEl = document.getElementById('modalEventDetail');
+        if (modalEl) {
+            const contentEl = modalEl.querySelector('.modal-content');
+            if (contentEl) {
+                contentEl.style.setProperty('border-radius', '1.25em', 'important');
+                contentEl.style.setProperty('-webkit-border-radius', '1.25em', 'important');
+                contentEl.style.setProperty('overflow', 'hidden', 'important');
+            }
+        }
         if (typeof bootstrap !== 'undefined') {
-            const modal = new bootstrap.Modal(document.getElementById('modalEventDetail'));
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
             modal.show();
         } else {
-            $('#modalEventDetail').modal('show'); // Fallback for older bootstrap/jquery
+            $('#modalEventDetail').modal('show');
         }
     }
 });

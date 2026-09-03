@@ -16,13 +16,13 @@
 /* Page Content & Main Container */
 .dash-split-container {
     width: 100%;
-    min-height: calc(100vh - 120px);
+    min-height: calc(100vh - 140px);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: 1.5rem 2rem;
-    max-width: 1400px;
+    padding: 1.5rem 0;
+    max-width: 100%;
     margin: 0 auto;
     isolation: isolate;
 }

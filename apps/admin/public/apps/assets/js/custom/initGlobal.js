@@ -218,12 +218,14 @@ function scheduleSessionExpiryAlert() {
 
 function isDetailModalElement(modalEl) {
     if (!modalEl) return false;
+    if (modalEl.classList.contains('modal-force-rounded')) return false;
     const modalId = String(modalEl.id || '').toLowerCase();
-    return modalId.includes('detail') || modalId === 'filedetailmodal';
+    return modalId === 'filedetailmodal' || modalId.includes('detailmodal');
 }
 
 function isFullscreenModalElement(modalEl) {
     if (!modalEl) return false;
+    if (modalEl.classList.contains('modal-force-rounded')) return false;
     const dialogEl = modalEl.querySelector('.modal-dialog');
     if (!dialogEl) return false;
     return /\bmodal-fullscreen(?:-[a-z]+-down)?\b/.test(String(dialogEl.className || ''));
@@ -233,8 +235,13 @@ function applyModalRadius(modalEl) {
     if (!modalEl) return;
 
     const forceRounded = modalEl.classList.contains('modal-force-rounded');
+    if (forceRounded) {
+        // Do not override or strip border-radius on explicitly rounded modals
+        return;
+    }
+
     const isDetailModal = isDetailModalElement(modalEl);
-    const isFullscreenModal = !forceRounded && isFullscreenModalElement(modalEl);
+    const isFullscreenModal = isFullscreenModalElement(modalEl);
     const radius = (isDetailModal || isFullscreenModal) ? '0' : '1.25rem';
     const contentEl = modalEl.querySelector('.modal-content');
     const bodyEl = modalEl.querySelector('.modal-body');

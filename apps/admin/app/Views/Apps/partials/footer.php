@@ -23,6 +23,6 @@ window.APP_SESSION = Object.assign({}, window.APP_SESSION || {}, {
     loginUrl: <?= json_encode(base_url('/login')) ?>
 });
 </script>
-<script src="<?= asset_url('apps/assets/js/custom/initGlobal.js') ?>"></script>
+<script src="<?= asset_url('apps/assets/js/custom/initGlobal.js?v=' . time()) ?>"></script>
 </body>
 </html>
