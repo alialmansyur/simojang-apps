@@ -22,10 +22,14 @@ $(document).ready(function () {
                     dataType: 'json',
                     delay: 300,
                     data: function (params) {
-                        return {
+                        let query = {
                             search: params.term || '',
                             source: source
                         };
+                        if (source === 'data_pegawai_jabatan') {
+                            query.unit_sk = el.closest('form').find('[name="unit_sk"]').val() || '';
+                        }
+                        return query;
                     },
                     processResults: function (data) {
                         return { results: data };
@@ -37,9 +41,16 @@ $(document).ready(function () {
 
     });
 
+    $(document).on('change', '#form-unit-sk', function (e) {
+        if (e.originalEvent) {
+            $('#form-jabatan').val(null).trigger('change');
+        }
+    });
+
     $('#btnTambahPegawai').on('click', function() {
         const form = $('#form-usulan');
         form.find('[name="key"]').val('');
+        form.find('[name="nip"]').prop('readonly', false);
         form[0].reset();
         $('#DataModalLabel').text('Tambah Data Pegawai');
         form.find('.select2-dynamic').each(function () {

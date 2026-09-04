@@ -2,12 +2,25 @@ $(document).ready(function () {
 
     let masterTable;
     let currentType = null;
+    let currentJabatanStatus = '';
     const emptyState = (window.ServiceTableUI && ServiceTableUI.createEmptyState)
         ? ServiceTableUI.createEmptyState('Belum ada data master untuk kategori ini.')
         : '<div class="text-center text-muted py-5">Tidak ada data.</div>';
     const processingState = (window.ServiceTableUI && ServiceTableUI.createProcessingState)
         ? ServiceTableUI.createProcessingState('Memuat data master...')
         : '<div class="text-center text-muted py-4">Memuat data...</div>';
+
+    // ========================
+    // FILTER JABATAN (KRG / UPT)
+    // ========================
+    $('#masterJabatanFilter').on('click', 'button', function () {
+        $('#masterJabatanFilter button').removeClass('active');
+        $(this).addClass('active');
+        currentJabatanStatus = $(this).data('status') || '';
+        if (currentType === 'data_pegawai_jabatan' && masterTable) {
+            masterTable.ajax.reload(null, true);
+        }
+    });
 
     const masterConfig = {
         data_pegawai_pendidikan: {
@@ -42,14 +55,47 @@ $(document).ready(function () {
             title: 'Master Data Jabatan',
             url: AppConfig.initGlobal + 'fetch/master-jabatan',
             columns: [
-                { title: 'Jabatan', data: 'nama' },
-                { title: 'Kelas Jabatan', data: 'kelas_jabatan' },
-                { title: 'Kebutuhan', data: 'kebutuhan' },
+                { 
+                    title: 'No', 
+                    data: null,
+                    className: 'text-center align-middle',
+                    render: function (data, type, row, meta) {
+                        return (meta.row + (meta.settings._iDisplayStart || 0) + 1);
+                    }
+                },
+                { title: 'Nama Jabatan', data: 'nama', className: 'align-middle' },
+                { title: 'Kelas Jabatan', data: 'kelas_jabatan', className: 'text-center align-middle', defaultContent: '-' },
+                { title: 'Formasi', data: 'formasi', className: 'text-center align-middle', defaultContent: '0' },
+                { title: 'Bezzeting', data: 'bezzeting', className: 'text-center align-middle', defaultContent: '0' },
+                { title: 'Lowongan', data: 'lowongan', className: 'text-center align-middle', defaultContent: '0' },
+                { 
+                    title: 'Keterangan', 
+                    data: 'keterangan',
+                    className: 'text-center align-middle',
+                    render: function (data) {
+                        if (data === 'Memenuhi') {
+                            return '<span class="badge bg-light-success text-success fw-bold">Memenuhi</span>';
+                        } else if (data === 'Kelebihan') {
+                            return '<span class="badge bg-light-danger text-danger fw-bold">Kelebihan</span>';
+                        } else {
+                            return '<span class="badge bg-light-warning text-warning fw-bold">Kekurangan</span>';
+                        }
+                    }
+                }
             ],
             // Define extra fields for the form (beyond 'nama')
             fields: [
                 { name: 'kelas_jabatan', label: 'Kelas Jabatan', type: 'number' },
-                { name: 'kebutuhan', label: 'Kebutuhan', type: 'number' }
+                { name: 'kebutuhan', label: 'Formasi (Kebutuhan)', type: 'number' },
+                { 
+                    name: 'is_status', 
+                    label: 'Unit / Grouping', 
+                    type: 'select',
+                    options: [
+                        { value: 'KRG', text: 'Kantor Regional III BKN (KRG)' },
+                        { value: 'UPT', text: 'UPSCPKP ASN Serang (UPT)' }
+                    ]
+                }
             ]
         },
         data_pegawai_jenis_pegawai: {
@@ -90,6 +136,16 @@ $(document).ready(function () {
         const config = masterConfig[type];
         if (!config) return;
 
+        if (type === 'data_pegawai_jabatan') {
+            $('#masterJabatanFilterWrapper').show();
+            $('#masterJabatanFilter button').removeClass('active');
+            $('#masterJabatanFilter button[data-status=""]').addClass('active');
+            currentJabatanStatus = '';
+        } else {
+            $('#masterJabatanFilterWrapper').hide();
+            currentJabatanStatus = '';
+        }
+
         $('#masterModalLabel').text(config.title);
         $('#masterModal').modal('show');
 
@@ -124,6 +180,11 @@ $(document).ready(function () {
             ajax: {
                 url: config.url,
                 type: 'GET',
+                data: function (d) {
+                    if (type === 'data_pegawai_jabatan' && currentJabatanStatus) {
+                        d.is_status = currentJabatanStatus;
+                    }
+                },
                 dataSrc: ''
             },
             columns: [
@@ -153,10 +214,11 @@ $(document).ready(function () {
             ],
             processing: true,
             responsive: false,
-            searching: false,
-            paging: false,
+            searching: true,
+            paging: true,
+            pageLength: 10,
             ordering: false,
-            info: false,
+            info: true,
             autoWidth: false,
             language: {
                 emptyTable: (window.ServiceTableUI ? ServiceTableUI.createEmptyState() : 'Tidak ada data'),
@@ -185,13 +247,25 @@ $(document).ready(function () {
         // Add extra fields if defined
         if (config && config.fields) {
             config.fields.forEach(function (field) {
-                const inputType = field.type || 'text';
-                html += `
-                    <div class="mb-2">
-                        <label class="form-label">${field.label}</label>
-                        <input type="${inputType}" class="form-control" name="${field.name}" id="master_${field.name}">
-                    </div>
-                `;
+                if (field.type === 'select') {
+                    const opts = (field.options || []).map(opt => `<option value="${opt.value}">${opt.text}</option>`).join('');
+                    html += `
+                        <div class="mb-2">
+                            <label class="form-label">${field.label}</label>
+                            <select class="form-select" name="${field.name}" id="master_${field.name}">
+                                ${opts}
+                            </select>
+                        </div>
+                    `;
+                } else {
+                    const inputType = field.type || 'text';
+                    html += `
+                        <div class="mb-2">
+                            <label class="form-label">${field.label}</label>
+                            <input type="${inputType}" class="form-control" name="${field.name}" id="master_${field.name}">
+                        </div>
+                    `;
+                }
             });
         }
 
@@ -226,7 +300,11 @@ $(document).ready(function () {
         const config = masterConfig[currentType];
         if (config && config.fields) {
             config.fields.forEach(function (field) {
-                $('#master_' + field.name).val(rowData[field.name] || '');
+                let val = rowData[field.name];
+                if (field.name === 'kebutuhan' && (val === undefined || val === null)) {
+                    val = rowData.formasi;
+                }
+                $('#master_' + field.name).val(val !== undefined && val !== null ? val : '');
             });
         }
 

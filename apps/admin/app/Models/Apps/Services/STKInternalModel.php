@@ -249,19 +249,46 @@ class STKInternalModel extends Model
             ->getRowArray();
     }
 
-public function getMasterData(string $table)
-{
-    $builder = $this->db->table($table)->select('*');
+    public function getMasterData(string $table, array $filters = [])
+    {
+        if ($table === 'data_pegawai_jabatan') {
+            $builder = $this->db->table('data_pegawai_jabatan j')
+                ->select("
+                    j.*,
+                    COALESCE(j.kebutuhan, 0) AS formasi,
+                    COALESCE(agg.k, 0) AS bezzeting,
+                    (COALESCE(j.kebutuhan, 0) - COALESCE(agg.k, 0)) AS lowongan,
+                    CASE 
+                        WHEN (COALESCE(j.kebutuhan, 0) - COALESCE(agg.k, 0)) = 0 THEN 'Memenuhi'
+                        WHEN (COALESCE(j.kebutuhan, 0) - COALESCE(agg.k, 0)) < 0 THEN 'Kelebihan'
+                        ELSE 'Kekurangan'
+                    END AS keterangan
+                ")
+                ->join("(
+                    SELECT p.jabatan_id, COUNT(p.id) AS k
+                    FROM data_pegawai p
+                    WHERE p.is_status = 1 
+                    GROUP BY p.jabatan_id
+                ) agg", 'agg.jabatan_id = j.id', 'left');
 
-    if ($table == 'data_pegawai_jabatan') {
-        $builder->orderBy('is_order', 'DESC')
-                ->orderBy('nama', 'ASC');
-    } else {
-        $builder->orderBy('nama', 'ASC');
+            if (!empty($filters['is_status'])) {
+                $builder->where('j.is_status', $filters['is_status']);
+            }
+
+            return $builder->orderBy('CASE WHEN j.is_order IS NULL OR j.is_order = 0 THEN 999999 ELSE j.is_order END', 'ASC', false)
+                ->orderBy('j.nama', 'ASC')
+                ->get()
+                ->getResultArray();
+        }
+
+        $builder = $this->db->table($table)->select('*');
+
+        if (!empty($filters['is_status']) && $this->db->fieldExists('is_status', $table)) {
+            $builder->where('is_status', $filters['is_status']);
+        }
+
+        return $builder->orderBy('nama', 'ASC')->get()->getResultArray();
     }
-
-    return $builder->get()->getResultArray();
-}
 
     public function isDuplicateIntegrasi($nip)
     {

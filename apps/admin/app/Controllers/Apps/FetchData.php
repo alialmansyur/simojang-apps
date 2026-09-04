@@ -210,14 +210,25 @@ class FetchData extends BaseController
 
     public function getSelect2List()
     {
-        $search = trim($this->request->getPost('search'));
+        $search = trim((string) $this->request->getPost('search'));
         $source = $this->request->getPost('source');
+        $unitSk = $this->request->getPost('unit_sk');
+        $isStatus = $this->request->getPost('is_status');
 
         if (!$source) {
             return $this->response->setJSON([]);
         }
 
-        $data = $this->apps->getSelect2Data($source, $search);
+        $extra = [];
+        if ($source === 'data_pegawai_jabatan') {
+            if (!empty($isStatus)) {
+                $extra['is_status'] = $isStatus;
+            } elseif (!empty($unitSk)) {
+                $extra['is_status'] = ((string)$unitSk === '10') ? 'UPT' : 'KRG';
+            }
+        }
+
+        $data = $this->apps->getSelect2Data($source, $search, $extra);
 
         $options = [];
         foreach ($data as $row) {
@@ -229,5 +240,4 @@ class FetchData extends BaseController
 
         return $this->response->setJSON($options);
     }
-
 }

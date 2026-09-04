@@ -38,7 +38,7 @@ class StatistikInternal extends BaseController
     {
         $sess = session()->get();
         $key = $this->request->getPost('key');
-        $nip = $this->request->getPost('nip');
+        $nip = trim((string) $this->request->getPost('nip'));
 
         $rules = [
             'nama' => 'required|min_length[3]',
@@ -50,6 +50,10 @@ class StatistikInternal extends BaseController
             'email' => 'permit_empty|valid_email'
         ];
 
+        if (empty($key)) {
+            $rules['nip'] = 'required|min_length[8]';
+        }
+
         if (!$this->validate($rules)) {
             return $this->response->setJSON([
                 'status' => 'error',
@@ -58,8 +62,19 @@ class StatistikInternal extends BaseController
             ]);
         }
 
-        $dataInsert = [
-            'nip' => $nip,
+        $jabatanId = $this->request->getPost('jabatan');
+        $jabatanNama = null;
+        if (!empty($jabatanId)) {
+            $jRow = $this->simodel->getMasterData('data_pegawai_jabatan');
+            foreach ($jRow as $j) {
+                if ((string)$j['id'] === (string)$jabatanId) {
+                    $jabatanNama = $j['nama'];
+                    break;
+                }
+            }
+        }
+
+        $dataSave = [
             'nama' => $this->request->getPost('nama'),
             'gender' => $this->request->getPost('gender'),
             'tgl_lahir' => $this->request->getPost('tgl_lahir'),
@@ -67,21 +82,25 @@ class StatistikInternal extends BaseController
             'status_pegawai_id' => $this->request->getPost('status_pegawai'),
             'agama_id' => $this->request->getPost('agama'),
             'pendidikan_id' => $this->request->getPost('pendidikan'),
-            'jabatan_id' => $this->request->getPost('jabatan'),
+            'jabatan_id' => $jabatanId ?: null,
+            'jabatan' => $jabatanNama,
             'gol_id' => $this->request->getPost('golongan'),
             'pangkat_id' => $this->request->getPost('pangkat'),
-            'tmt_gol' => $this->request->getPost('tmt_gol'),
+            'tmt_gol' => $this->request->getPost('tmt_gol') ?: null,
             'unit_kerja_id' => is_array($this->request->getPost('unit_kerja')) ? implode(',', $this->request->getPost('unit_kerja')) : $this->request->getPost('unit_kerja'),
             'unit_sk_id' => $this->request->getPost('unit_sk'),
             'jenis_jabatan_id' => $this->request->getPost('jenis_jabatan'),
             'phone' => $this->request->getPost('phone'),
-            'email' => $this->request->getPost('email')
+            'email' => $this->request->getPost('email'),
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         if (!empty($key)) {
-            $this->apps->updateData($dataInsert, $key, 'data_pegawai');
+            $this->apps->updateData($dataSave, $key, 'data_pegawai');
         } else {
-            $dataInsert['is_status'] = 1;
+            $dataSave['nip'] = $nip;
+            $dataSave['is_status'] = 1;
+            $dataSave['created_at'] = date('Y-m-d H:i:s');
 
             if ($this->simodel->isDuplicateIntegrasi($nip) > 0) {
                 return $this->response->setJSON([
@@ -90,12 +109,12 @@ class StatistikInternal extends BaseController
                 ]);
             }
 
-            $this->apps->storeData($dataInsert, 'data_pegawai');
+            $this->apps->storeData($dataSave, 'data_pegawai');
             $this->apps->storeData(
                 [
                     'layanan_id' => 35,
                     'tanggal' => date('Y-m-d'),
-                    'created_by' => $sess['username']
+                    'created_by' => $sess['username'] ?? 'system'
                 ],
                 'activity_daily_logs'
             );
@@ -238,7 +257,17 @@ class StatistikInternal extends BaseController
 
     public function getMasterJabatan()
     {
-        $data = $this->simodel->getMasterData('data_pegawai_jabatan');
+        $isStatus = $this->request->getGet('is_status') ?? $this->request->getPost('is_status');
+        $unitSk = $this->request->getGet('unit_sk') ?? $this->request->getPost('unit_sk');
+
+        $filters = [];
+        if (!empty($isStatus)) {
+            $filters['is_status'] = $isStatus;
+        } elseif (!empty($unitSk)) {
+            $filters['is_status'] = ((string)$unitSk === '10') ? 'UPT' : 'KRG';
+        }
+
+        $data = $this->simodel->getMasterData('data_pegawai_jabatan', $filters);
         return $this->response->setJSON($data);
     }
 
@@ -271,6 +300,7 @@ class StatistikInternal extends BaseController
         if ($type === 'data_pegawai_jabatan') {
             $data['kelas_jabatan'] = $this->request->getPost('kelas_jabatan');
             $data['kebutuhan'] = $this->request->getPost('kebutuhan');
+            $data['is_status'] = $this->request->getPost('is_status') ?: 'KRG';
         }
 
         if ($id) {

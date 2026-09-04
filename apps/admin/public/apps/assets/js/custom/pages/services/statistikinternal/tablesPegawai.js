@@ -283,14 +283,11 @@ $('#dataTable tbody').on('click', '.btn-update', function () {
     // SET VALUE INPUT
     // ========================
     form.find('[name="key"]').val(row.id);
-    form.find('[name="nip"]').val(row.nip);
+    form.find('[name="nip"]').val(row.nip).prop('readonly', true);
     form.find('[name="nama"]').val(row.nama);
     form.find('[name="gender"]').val(row.gender);
     form.find('[name="tgl_lahir"]').val(row.tgl_lahir);
     form.find('[name="menikah"]').val(row.menikah);
-    form.find('[name="jabatan"]').val(row.jabatan);
-    form.find('[name="gol"]').val(row.gol);
-    form.find('[name="pangkat"]').val(row.pangkat);
     form.find('[name="tmt_gol"]').val(row.tmt_gol);
     form.find('[name="phone"]').val(row.phone);
     form.find('[name="email"]').val(row.email);
@@ -303,31 +300,32 @@ $('#dataTable tbody').on('click', '.btn-update', function () {
     $('#DataModal').one('shown.bs.modal', function () {
 
         const mapSelect = (selectEl, value, text) => {
-            if (!value) return;
+            if (!value || value === '0' || value === 0) return;
             selectEl.empty();
             if (value.toString().includes(',')) {
                 const vals = value.toString().split(',');
-                const txts = text.toString().split(',');
+                const txts = (text || '').toString().split(',');
                 for (let i = 0; i < vals.length; i++) {
-                    const option = new Option(txts[i].trim(), vals[i].trim(), true, true);
+                    const t = txts[i] ? txts[i].trim() : vals[i].trim();
+                    const option = new Option(t, vals[i].trim(), true, true);
                     selectEl.append(option);
                 }
                 selectEl.trigger('change');
             } else {
-                const option = new Option(text, value, true, true);
+                const option = new Option(text || value, value, true, true);
                 selectEl.append(option).trigger('change');
             }
         };
 
-        mapSelect(form.find('[name="agama"]'), row.agama_id || '', row.agama || '');
-        mapSelect(form.find('[name="pendidikan"]'), row.pendidikan_id || '', row.pendidikan || '');
-        mapSelect(form.find('[name="status_pegawai"]'), row.status_pegawai_id || '', row.status_pegawai || '');
-        mapSelect(form.find('[name="unit_kerja[]"]'), row.unit_kerja_id || '', row.unit_kerja || '');
-        mapSelect(form.find('[name="unit_sk"]'), row.unit_sk_id || '', row.unit_sk || '');
-        mapSelect(form.find('[name="jenis_jabatan"]'), row.jenis_jabatan_id || '', row.jenis_jabatan || '');
-        mapSelect(form.find('[name="jabatan"]'), row.jabatan_id || '', row.jabatan || '');
-        mapSelect(form.find('[name="golongan"]'), row.gol_id || '', row.golongan || '');
-        mapSelect(form.find('[name="pangkat"]'), row.pangkat_id || '', row.pangkat || '');
+        mapSelect(form.find('[name="agama"]'), row.agama_id, row.agama);
+        mapSelect(form.find('[name="pendidikan"]'), row.pendidikan_id, row.pendidikan);
+        mapSelect(form.find('[name="status_pegawai"]'), row.status_pegawai_id, row.status_pegawai);
+        mapSelect(form.find('[name="unit_kerja[]"]'), row.unit_kerja_id, row.unit_kerja);
+        mapSelect(form.find('[name="unit_sk"]'), row.unit_sk_id, row.unit_sk);
+        mapSelect(form.find('[name="jenis_jabatan"]'), row.jenis_jabatan_id, row.jenis_jabatan);
+        mapSelect(form.find('[name="jabatan"]'), row.jabatan_id, row.jabatan);
+        mapSelect(form.find('[name="golongan"]'), row.gol_id, row.golongan);
+        mapSelect(form.find('[name="pangkat"]'), row.pangkat_id, row.pangkat);
 
     });
 

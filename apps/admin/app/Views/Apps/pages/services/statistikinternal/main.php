@@ -373,15 +373,15 @@
                         <div class="modal-body">
                             <div class="row g-3">
 
-                                <!-- ROW 1 -->
+                                <!-- ROW 1: IDENTITAS POKOK -->
                                 <div class="col-lg-3 col-md-6">
                                     <label class="form-label">NIP</label>
-                                    <input type="text" name="nip" class="form-control">
+                                    <input type="text" name="nip" id="form-nip" class="form-control" placeholder="NIP Pegawai">
                                 </div>
 
                                 <div class="col-lg-3 col-md-6">
                                     <label class="form-label">Nama</label>
-                                    <input type="text" name="nama" class="form-control" required>
+                                    <input type="text" name="nama" class="form-control" required placeholder="Nama Lengkap">
                                 </div>
 
                                 <div class="col-lg-3 col-md-6">
@@ -398,6 +398,7 @@
                                     <input type="date" name="tgl_lahir" class="form-control">
                                 </div>
 
+                                <!-- ROW 2: STATUS & PROFIL -->
                                 <div class="col-lg-3 col-md-6">
                                     <label class="form-label">Pernikahan</label>
                                     <select name="menikah" class="form-select">
@@ -434,12 +435,47 @@
                                     </select>
                                 </div>
 
-                                <!-- ROW 4 -->
-                                <div class="col-lg-3 col-md-6">
-                                    <label class="form-label">Jabatan</label>
-                                    <input type="text" name="jabatan" class="form-control">
+                                <!-- ROW 3: UNIT & PENEMPATAN -->
+                                <div class="col-lg-6 col-md-6">
+                                    <label class="form-label">Unit Kerja</label>
+                                    <select name="unit_kerja[]"
+                                            class="form-select rounded select2-dynamic"
+                                            data-source="data_pegawai_unit_kerja" multiple="multiple">
+                                    </select>
                                 </div>
-                                <div class="col-lg-3 col-md-6">
+
+                                <div class="col-lg-6 col-md-6">
+                                    <label class="form-label">Unit SK</label>
+                                    <select name="unit_sk"
+                                            id="form-unit-sk"
+                                            class="form-select rounded select2-dynamic"
+                                            data-source="data_pegawai_unit_sk">
+                                        <option value="">- Pilih -</option>
+                                    </select>
+                                </div>
+
+                                <!-- ROW 4: SATU KESATUAN: JENIS JABATAN -> JABATAN -->
+                                <div class="col-lg-6 col-md-6">
+                                    <label class="form-label fw-semibold">Jenis Jabatan</label>
+                                    <select name="jenis_jabatan"
+                                            class="form-select rounded select2-dynamic"
+                                            data-source="data_pegawai_jenis_jabatan">
+                                        <option value="">- Pilih -</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-6 col-md-6">
+                                    <label class="form-label fw-semibold">Jabatan</label>
+                                    <select name="jabatan"
+                                            id="form-jabatan"
+                                            class="form-select rounded select2-dynamic"
+                                            data-source="data_pegawai_jabatan">
+                                        <option value="">- Pilih -</option>
+                                    </select>
+                                </div>
+
+                                <!-- ROW 5: GOLONGAN & PANGKAT -->
+                                <div class="col-lg-4 col-md-6">
                                     <label class="form-label">Golongan</label>
                                     <select name="golongan"
                                             class="form-select rounded select2-dynamic"
@@ -448,7 +484,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-lg-3 col-md-6">
+                                <div class="col-lg-4 col-md-6">
                                     <label class="form-label">Pangkat</label>
                                     <select name="pangkat"
                                             class="form-select rounded select2-dynamic"
@@ -457,47 +493,21 @@
                                     </select>
                                 </div>
 
-                                <div class="col-lg-3 col-md-6">
+                                <div class="col-lg-4 col-md-6">
                                     <label class="form-label">TMT Gol</label>
                                     <input type="date" name="tmt_gol" class="form-control">
                                 </div>
 
-                                <div class="col-lg-4 col-md-6">
-                                    <label class="form-label">Unit Kerja</label>
-                                    <select name="unit_kerja[]"
-                                            class="form-select rounded select2-dynamic"
-                                            data-source="data_pegawai_unit_kerja" multiple="multiple">
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-4 col-md-6">
-                                    <label class="form-label">Unit SK</label>
-                                       <select name="unit_sk"
-                                            class="form-select rounded select2-dynamic"
-                                            data-source="data_pegawai_unit_sk">
-                                        <option value="">- Pilih -</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-4 col-md-6">
-                                    <label class="form-label">Jenis Jabatan</label>
-                                    <select name="jenis_jabatan"
-                                            class="form-select rounded select2-dynamic"
-                                            data-source="data_pegawai_jenis_jabatan">
-                                        <option value="">- Pilih -</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-3 col-md-6">
+                                <!-- ROW 6: KONTAK -->
+                                <div class="col-lg-6 col-md-6">
                                     <label class="form-label">Telp / HP</label>
                                     <input type="text" name="phone" class="form-control">
                                 </div>
 
-                                <div class="col-lg-3 col-md-6">
+                                <div class="col-lg-6 col-md-6">
                                     <label class="form-label">Email</label>
                                     <input type="email" name="email" class="form-control">
                                 </div>
-
                             </div>
                         </div>
 
@@ -517,25 +527,46 @@
         </div>
 
         <!-- Master Data Modal -->
-        <div class="modal fade" id="masterModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
+        <div class="modal fade modal-force-rounded" id="masterModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-fullscreen-lg-down modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content rounded-4">
 
                     <div class="modal-header">
-                        <h5 class="modal-title" id="masterModalLabel">Master Data</h5>
+                        <h5 class="modal-title fw-bold" id="masterModalLabel">Master Data</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
                     <div class="modal-body">
 
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary btn-sm" id="btnAddMaster">
-                                + Tambah Data
-                            </button>
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                            <div id="masterJabatanFilterWrapper" style="display: none;">
+                                <ul class="nav nav-pills gap-1" id="masterJabatanFilter">
+                                    <li class="nav-item">
+                                        <button class="nav-link active btn-sm px-3 rounded-pill" data-status="">
+                                            Semua Unit
+                                        </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link btn-sm px-3 rounded-pill" data-status="KRG">
+                                            Kantor Regional III BKN (KRG)
+                                        </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link btn-sm px-3 rounded-pill" data-status="UPT">
+                                            UPSCPKP ASN Serang (UPT)
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="ms-auto">
+                                <button class="btn btn-primary btn-sm px-3 rounded-3" id="btnAddMaster">
+                                    + Tambah Data
+                                </button>
+                            </div>
                         </div>
 
                         <div class="table-responsive">
-                            <table id="masterTable" class="table table-bordered table-hover nowrap">
+                            <table id="masterTable" class="table table-bordered table-hover nowrap w-100">
                                 <thead id="masterTableHead"></thead>
                                 <tbody></tbody>
                             </table>
@@ -546,12 +577,12 @@
             </div>
         </div>
 
-        <div class="modal fade" id="formMasterModal" tabindex="-1">
-            <div class="modal-dialog modal-sm modal-dialog-centered">
-                <div class="modal-content">
+        <div class="modal fade modal-force-rounded" id="formMasterModal" tabindex="-1">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+                <div class="modal-content rounded-4">
 
                     <div class="modal-header">
-                        <h6 class="modal-title" id="formMasterTitle">Tambah Data</h6>
+                        <h6 class="modal-title fw-bold" id="formMasterTitle">Tambah Data</h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
@@ -566,7 +597,8 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                            <button type="button" class="btn btn-light btn-sm rounded-3" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary btn-sm px-3 rounded-3">Simpan</button>
                         </div>
                     </form>
 

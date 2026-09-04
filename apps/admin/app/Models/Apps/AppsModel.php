@@ -560,20 +560,32 @@ class AppsModel extends Model
         ")->getResultArray();        
     }
 
-    public function getSelect2Data($source, $search = '')
+    public function getSelect2Data($source, $search = '', $extra = [])
     {
         $builder = $this->db->table($source)
                 ->select('id, nama');
 
-            if (!empty($search)) {
-                $builder->like('nama', $search);
-            }
+        if (!empty($search)) {
+            $builder->like('nama', $search);
+        }
 
+        if ($source === 'data_pegawai_jabatan') {
+            if (!empty($extra['is_status'])) {
+                $builder->where('is_status', $extra['is_status']);
+            }
             return $builder
+                ->orderBy('CASE WHEN is_order IS NULL OR is_order = 0 THEN 999999 ELSE is_order END', 'ASC', false)
                 ->orderBy('nama', 'ASC')
-                ->limit(20)
+                ->limit(50)
                 ->get()
                 ->getResultArray();
+        }
+
+        return $builder
+            ->orderBy('nama', 'ASC')
+            ->limit(50)
+            ->get()
+            ->getResultArray();
     }
 
     public function getNPSKData(){
