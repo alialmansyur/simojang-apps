@@ -34,6 +34,7 @@ $(document).ready(function() {
         var photoHtml = '';
         if (d.file_name && d.file_path) {
             var imgUrl = AppConfig.initGlobal + d.file_path + '/' + d.file_name;
+            var photoTitle = d.title ? $('<div>').text(d.title).html() : 'Dokumentasi Progres Proyek';
             photoHtml = `
                 <div class="col-md-4 mb-2 mb-md-0">
                     <div class="child-detail-label">Dokumentasi / Foto Kegiatan</div>
@@ -41,7 +42,7 @@ $(document).ready(function() {
                         <img src="${imgUrl}" alt="Dokumentasi" class="img-fluid rounded flat-border view-progress-photo-btn" 
                             style="max-height: 140px; cursor: pointer; object-fit: cover; border: 1px solid #cbd5e1;"
                             data-img="${imgUrl}" 
-                            data-title="Dokumentasi Progres Proyek"
+                            data-title="${photoTitle}"
                             data-date="${formatDateIndo(d.log_date)}"
                             data-actual="${d.actual_percentage}%"
                             data-period="${fullPeriod}"
@@ -50,7 +51,7 @@ $(document).ready(function() {
                             <button type="button" class="btn btn-sm btn-outline-primary py-1 px-2 view-progress-photo-btn" 
                                 style="font-size: 0.8rem;"
                                 data-img="${imgUrl}" 
-                                data-title="Dokumentasi Progres Proyek"
+                                data-title="${photoTitle}"
                                 data-date="${formatDateIndo(d.log_date)}"
                                 data-actual="${d.actual_percentage}%"
                                 data-period="${fullPeriod}"
@@ -77,6 +78,12 @@ $(document).ready(function() {
                 <div class="row g-3">
                     ${photoHtml}
                     <div class="col-md-8">
+                        ${d.title ? `
+                        <div class="mb-2">
+                            <div class="child-detail-label">Judul / Nama Kegiatan</div>
+                            <div class="child-detail-value" style="font-size: 1rem; color: #111827 !important;">${$('<div>').text(d.title).html()}</div>
+                        </div>
+                        ` : ''}
                         <div class="row g-2 mb-2">
                             <div class="col-sm-6">
                                 <div class="child-detail-label">Tanggal Log Update</div>
@@ -273,10 +280,11 @@ $(document).ready(function() {
                         var imgUrl = AppConfig.initGlobal + row.file_path + '/' + data;
                         var periodText = (row.start_date ? formatDateIndo(row.start_date) : '-') + ' s.d ' + (row.end_date ? formatDateIndo(row.end_date) : '-');
                         var notesSafe = $('<div>').text(row.notes || '').html();
+                        var photoTitle = row.title ? $('<div>').text(row.title).html() : 'Dokumentasi Progres Proyek';
                         return `
                             <img src="${imgUrl}" alt="Dokumentasi" class="img-doc-thumb flat-border view-progress-photo-btn" 
                                 data-img="${imgUrl}" 
-                                data-title="Dokumentasi Progres Proyek"
+                                data-title="${photoTitle}"
                                 data-date="${formatDateIndo(row.log_date)}"
                                 data-actual="${row.actual_percentage}%"
                                 data-period="${periodText}"
@@ -292,10 +300,10 @@ $(document).ready(function() {
                 name: 'notes',
                 className: 'align-middle text-wrap-normal',
                 width: '23%',
-                render: function(data) {
-                    if (!data) return '<span style="color: #64748b !important; font-size: 0.85rem;">-</span>';
-                    var safe = $('<div>').text(data).html();
-                    return `<div class="text-wrap-normal" style="font-size: 0.88rem; line-height: 1.4; color: #111827 !important; font-weight: 500;">${safe}</div>`;
+                render: function(data, type, row) {
+                    var titleHtml = row.title ? `<div class="fw-bold mb-1" style="font-size: 0.9rem; color: #111827 !important;">${$('<div>').text(row.title).html()}</div>` : '';
+                    var notesHtml = data ? `<div style="font-size: 0.85rem; line-height: 1.4; color: #374151 !important;">${$('<div>').text(data).html()}</div>` : (row.title ? '' : '<span style="color: #64748b !important; font-size: 0.85rem;">-</span>');
+                    return `<div class="text-wrap-normal">${titleHtml}${notesHtml}</div>`;
                 }
             },
             {
@@ -621,6 +629,7 @@ $(document).ready(function() {
     function resetProgressModal() {
         $('#formProgress')[0].reset();
         $('#progress_id').val('');
+        $('#progress_title').val('');
         $('#progress_start_date').val('');
         $('#progress_end_date').val('');
         $('#btnRemoveProgressPhoto').click();
@@ -786,6 +795,7 @@ $(document).ready(function() {
         var endDate = rowData.end_date ? rowData.end_date.substring(0, 10) : '';
 
         $('#progress_id').val(rowData.id);
+        $('#progress_title').val(rowData.title || '');
         $('#formProgress [name="log_date"]').val(logDate);
         $('#progress_start_date').val(startDate);
         $('#progress_end_date').val(endDate);

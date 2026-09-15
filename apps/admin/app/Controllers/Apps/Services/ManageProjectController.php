@@ -171,6 +171,7 @@ class ManageProjectController extends BaseController
     {
         $sess       = session()->get();
         $projectUid = $this->request->getPost('project_uid');
+        $title      = $this->request->getPost('title');
         $logDate    = $this->request->getPost('log_date');
         $startDate  = $this->request->getPost('start_date');
         $endDate    = $this->request->getPost('end_date');
@@ -181,6 +182,7 @@ class ManageProjectController extends BaseController
 
         $rules = [
             'project_uid'       => 'required',
+            'title'             => 'permit_empty|max_length[255]',
             'log_date'          => 'required|valid_date',
             'start_date'        => 'permit_empty|valid_date',
             'end_date'          => 'permit_empty|valid_date',
@@ -208,6 +210,7 @@ class ManageProjectController extends BaseController
 
         $dataLog = [
             'project_id'        => $project['id'],
+            'title'             => !empty($title) ? trim($title) : null,
             'log_date'          => $logDate,
             'start_date'        => !empty($startDate) ? $startDate : null,
             'end_date'          => !empty($endDate) ? $endDate : null,

@@ -628,6 +628,11 @@
                 <input type="hidden" name="id" id="progress_id" value="">
                 <div class="modal-body" style="padding: 1.5rem 1.75rem; background-color: #fcfdfd;">
                     <div class="row gy-3">
+                        <div class="col-12">
+                            <label class="form-label d-block fw-bold" style="font-size: 0.9rem; color: #1a202c; margin-bottom: 0.4rem;">Judul / Nama Progres Kegiatan</label>
+                            <input type="text" name="title" id="progress_title" class="form-control flat-input" placeholder="Contoh: Pemasangan Jaringan Tahap 1 / Rapat Evaluasi Proyek">
+                        </div>
+
                         <div class="col-md-4">
                             <label class="form-label d-block fw-bold" style="font-size: 0.9rem; color: #1a202c; margin-bottom: 0.4rem;">Tanggal Update <span class="text-danger">*</span></label>
                             <input type="date" name="log_date" class="form-control flat-input" required value="<?= date('Y-m-d') ?>">
