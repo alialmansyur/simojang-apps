@@ -114,4 +114,33 @@ class ManageProjectModel extends Model
             ]);
     }
 
+    public function getProgressLogById($id)
+    {
+        return $this->db->table('data_project_progress_logs')
+            ->where('id', $id)
+            ->get()
+            ->getRowArray();
+    }
+
+    public function saveProgressLog($data, $id = null)
+    {
+        if (!empty($id)) {
+            $this->db->table('data_project_progress_logs')
+                ->where('id', $id)
+                ->update($data);
+            return $id;
+        } else {
+            $this->db->table('data_project_progress_logs')
+                ->insert($data);
+            return $this->db->insertID();
+        }
+    }
+
+    public function deleteProgressLog($id)
+    {
+        return $this->db->table('data_project_progress_logs')
+            ->where('id', $id)
+            ->delete();
+    }
+
 }

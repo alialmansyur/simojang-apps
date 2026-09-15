@@ -18,7 +18,8 @@ class ManageProjectController extends BaseController
     public function __construct(){
         $this->apps          = new AppsModel();
         $this->manageProject = new ManageProjectModel();
-        $this->dataTables    = new DataTablesLib();        
+        $this->dataTables    = new DataTablesLib();
+        helper(['form', 'url', 'filesystem']);
     }
 
     public function index(){
@@ -171,21 +172,32 @@ class ManageProjectController extends BaseController
         $sess       = session()->get();
         $projectUid = $this->request->getPost('project_uid');
         $logDate    = $this->request->getPost('log_date');
+        $startDate  = $this->request->getPost('start_date');
+        $endDate    = $this->request->getPost('end_date');
         $target     = $this->request->getPost('target_percentage');
         $actual     = $this->request->getPost('actual_percentage');
         $notes      = $this->request->getPost('notes');
+        $id         = $this->request->getPost('id');
 
         $rules = [
             'project_uid'       => 'required',
             'log_date'          => 'required|valid_date',
+            'start_date'        => 'permit_empty|valid_date',
+            'end_date'          => 'permit_empty|valid_date',
             'actual_percentage' => 'required|numeric'
         ];
 
+        $file = $this->request->getFile('foto');
+        if ($file && $file->isValid()) {
+            $rules['foto'] = 'max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png,image/webp]';
+        }
+
         if (!$this->validate($rules)) {
             $errorsArray = $this->validator->getErrors();
+            $firstError = reset($errorsArray);
             return $this->response->setJSON([
                 'status'  => 'error',
-                'message' => implode(', ', $errorsArray)
+                'message' => $firstError ?: implode(', ', $errorsArray)
             ]);
         }
 
@@ -194,23 +206,65 @@ class ManageProjectController extends BaseController
             return $this->response->setJSON(['status' => 'error', 'message' => 'Project not found']);
         }
 
-        $id         = $this->request->getPost('id');
-
         $dataLog = [
             'project_id'        => $project['id'],
             'log_date'          => $logDate,
+            'start_date'        => !empty($startDate) ? $startDate : null,
+            'end_date'          => !empty($endDate) ? $endDate : null,
             'target_percentage' => (float) $target,
             'actual_percentage' => (float) $actual,
             'notes'             => $notes,
             'created_by'        => $sess['username']
         ];
 
+        // Handle Photo Upload
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $uploadPath = FCPATH . 'apps/assets/uploads/projects/progress/';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            $originalName      = $file->getClientName();
+            $newName           = $file->getRandomName();
+            $newNameWithoutExt = pathinfo($newName, PATHINFO_FILENAME);
+            $webpName          = $newNameWithoutExt . '.webp';
+
+            try {
+                \Config\Services::image()
+                    ->withFile($file->getTempName())
+                    ->convert(IMAGETYPE_WEBP)
+                    ->save($uploadPath . $webpName, 80);
+
+                $dataLog['file_name']          = $webpName;
+                $dataLog['file_original_name'] = $originalName;
+                $dataLog['file_size']          = filesize($uploadPath . $webpName);
+                $dataLog['file_ext']           = '.webp';
+                $dataLog['file_path']          = 'apps/assets/uploads/projects/progress';
+
+                // Delete old file if updating
+                if (!empty($id)) {
+                    $oldData = $this->manageProject->getProgressLogById($id);
+                    if ($oldData && !empty($oldData['file_name'])) {
+                        $oldPath = FCPATH . $oldData['file_path'] . '/' . $oldData['file_name'];
+                        if (file_exists($oldPath)) {
+                            unlink($oldPath);
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                return $this->response->setJSON([
+                    'status'  => 'error',
+                    'message' => 'Gagal mengonversi gambar ke WebP: ' . $e->getMessage()
+                ]);
+            }
+        }
+
         if (!empty($id)) {
-            $this->apps->updateData($dataLog, $id, 'data_project_progress_logs');
+            $this->manageProject->saveProgressLog($dataLog, $id);
             $msg = 'Progres berhasil diperbarui';
         } else {
             $dataLog['created_at'] = date('Y-m-d H:i:s');
-            $this->apps->storeData($dataLog, 'data_project_progress_logs');
+            $this->manageProject->saveProgressLog($dataLog);
             $msg = 'Progres berhasil disimpan';
         }
 
@@ -305,7 +359,7 @@ class ManageProjectController extends BaseController
 
     public function removeProgress()
     {
-        $id = $this->request->getPost('id');
+        $id         = $this->request->getPost('id');
         $projectUid = $this->request->getPost('project_uid');
 
         if (empty($id)) {
@@ -317,7 +371,16 @@ class ManageProjectController extends BaseController
             return $this->response->setJSON(['status' => false, 'message' => 'Project not found']);
         }
 
-        $this->apps->removeData($id, 'data_project_progress_logs');
+        // Delete photo file if exists
+        $oldData = $this->manageProject->getProgressLogById($id);
+        if ($oldData && !empty($oldData['file_name'])) {
+            $oldPath = FCPATH . $oldData['file_path'] . '/' . $oldData['file_name'];
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+        }
+
+        $this->manageProject->deleteProgressLog($id);
         $this->manageProject->updateProjectProgress($project['id']);
 
         return $this->response->setJSON(['status' => true, 'message' => 'Progres berhasil dihapus']);

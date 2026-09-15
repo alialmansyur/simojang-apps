@@ -21,6 +21,32 @@
         background-color: #1040c1;
         transition: width 0.5s ease;
     }
+    /* Flat Upload & Dropzone styling matching activity-gallery */
+    .flat-upload {
+        background-color: #f8fafc;
+        border: 2px dashed #cbd5e1 !important;
+        border-radius: 8px;
+        transition: border-color 0.2s, background-color 0.2s;
+    }
+    .flat-upload:hover, .flat-upload.drag-over {
+        border-color: var(--bs-primary) !important;
+        background-color: #f0f7ff;
+    }
+    .flat-border {
+        border: 1px solid #e2e8f0;
+    }
+    .img-doc-thumb {
+        width: 44px;
+        height: 44px;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .img-doc-thumb:hover {
+        transform: scale(1.08);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
 </style>
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
@@ -216,40 +242,155 @@
             </section>
 
         <style>
-            /* Nav interactions */
-            .custom-sidebar-nav .nav-link {
+            /* Horizontal Nav Tabs styling */
+            .custom-horizontal-nav {
+                border-bottom: none !important;
+                gap: 0.5rem;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scrollbar-width: thin;
+            }
+            .custom-horizontal-nav .nav-link {
                 color: #64748b;
-                border-radius: 8px;
-                padding-left: 1.5rem !important;
                 background: transparent !important;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                position: relative;
-                overflow: hidden;
+                border: none !important;
+                border-bottom: 3px solid transparent !important;
+                border-radius: 0 !important;
+                padding: 0.85rem 1.25rem !important;
+                transition: all 0.2s ease;
+                white-space: nowrap;
+                font-size: 0.95rem;
             }
-            .custom-sidebar-nav .nav-link::before {
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 4px;
-                height: 0%;
-                background-color: #1040c1;
-                border-radius: 0 4px 4px 0;
-                transition: height 0.3s ease;
+            .custom-horizontal-nav .nav-link:hover {
+                color: #1040c1;
+                border-bottom-color: #cbd5e1 !important;
             }
-            .custom-sidebar-nav .nav-link:hover {
-                color: #1a202c;
-                background: transparent !important;
-                padding-left: 1.8rem !important;
-            }
-            .custom-sidebar-nav .nav-link.active {
+            .custom-horizontal-nav .nav-link.active {
                 color: #1040c1 !important;
                 background: transparent !important;
+                border-bottom: 3px solid #1040c1 !important;
                 font-weight: 800 !important;
             }
-            .custom-sidebar-nav .nav-link.active::before {
-                height: 60%;
+
+            /* Child row and expand (+) styling */
+            .btn-dt-expand {
+                background: #f1f5f9;
+                border: 1px solid #cbd5e1;
+                border-radius: 4px;
+                padding: 1px 7px;
+                cursor: pointer;
+                line-height: 1.2;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 0.85rem;
+                color: #334155;
+                transition: all 0.15s ease;
+            }
+            .btn-dt-expand:hover {
+                background: #e2e8f0;
+                color: #0f172a;
+            }
+            .child-detail-card {
+                background-color: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 1.25rem;
+                box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            }
+            .child-detail-label {
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: #475569 !important;
+                font-weight: 700;
+                margin-bottom: 0.25rem;
+            }
+            .child-detail-value {
+                font-size: 0.925rem;
+                color: #0f172a !important;
+                font-weight: 600;
+            }
+            .table-compact td, .table-compact th {
+                padding: 0.65rem 0.6rem !important;
+                vertical-align: middle;
+            }
+            .text-wrap-normal {
+                white-space: normal !important;
+                word-break: normal !important;
+                overflow-wrap: break-word !important;
+            }
+
+            /* Table Layout and Dark Font Styles */
+            #progressTable, #budgetTable {
+                width: 100% !important;
+                table-layout: fixed !important;
+                border-collapse: collapse !important;
+            }
+
+            #progressTable th, #budgetTable th,
+            #progressTable td, #budgetTable td {
+                color: #111827 !important;
+                vertical-align: middle !important;
+            }
+
+            #progressTable thead th, #budgetTable thead th,
+            #progressTable tfoot th, #budgetTable tfoot th {
+                color: #0f172a !important;
+                font-weight: 700 !important;
+                background-color: #f1f5f9 !important;
+                border-color: #cbd5e1 !important;
+                white-space: normal !important;
+                word-break: normal !important;
+            }
+
+            #progressTable tbody td, #budgetTable tbody td {
+                color: #111827 !important;
+                border-color: #e2e8f0 !important;
+                word-break: break-word !important;
+            }
+
+            #progressTable tbody td span, #budgetTable tbody td span,
+            #progressTable tbody td small, #budgetTable tbody td small,
+            #progressTable tbody td div, #budgetTable tbody td div {
+                color: #111827;
+            }
+
+            #progressTable .text-primary, #budgetTable .text-primary {
+                color: #1d4ed8 !important;
+            }
+
+            #progressTable .text-success, #budgetTable .text-success {
+                color: #15803d !important;
+            }
+
+            #progressTable .text-danger, #budgetTable .text-danger {
+                color: #b91c1c !important;
+            }
+
+            #progressTable .text-muted, #budgetTable .text-muted {
+                color: #64748b !important;
+            }
+
+            #progressTable .btn-primary, #budgetTable .btn-primary,
+            #progressTable .btn-primary *, #budgetTable .btn-primary * {
+                color: #ffffff !important;
+            }
+
+            #progressTable .btn-danger, #budgetTable .btn-danger,
+            #progressTable .btn-danger *, #budgetTable .btn-danger * {
+                color: #ffffff !important;
+            }
+
+            .dataTables_wrapper .dataTables_info,
+            .dataTables_wrapper .dataTables_length,
+            .dataTables_wrapper .dataTables_length label,
+            .dataTables_wrapper .dataTables_filter,
+            .dataTables_wrapper .dataTables_filter label,
+            .dataTables_wrapper .dataTables_paginate {
+                color: #111827 !important;
             }
 
             /* Info Box interactions */
@@ -286,138 +427,144 @@
             .table-hover tbody tr:hover {
                 background-color: #f8fafc !important;
             }
-
-            /* Clickable Columns */
-            td.inline-editable {
-                cursor: pointer;
-            }
-            td.inline-editable:hover {
-                background-color: #e2e8f0 !important;
-            }
         </style>
         
-        <!-- Sidebar and Content Layout -->
+        <!-- Horizontal Nav & Content Card Layout -->
         <div class="row mb-5" style="margin-top: -1rem;">
-            <div class="col-md-12">
+            <div class="col-12">
                 <div class="card shadow-sm w-100" style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #ffffff;">
-                    <div class="row g-0" style="min-height: 500px;">
-                <!-- Left Sidebar Nav -->
-                <div class="col-md-2 border-end" style="border-color: #e2e8f0 !important; padding: 1.5rem 0; background: #ffffff;">
-                    <ul class="nav nav-pills flex-column custom-sidebar-nav" id="projectTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active w-100 text-start fw-bold py-3" id="progress-tab" data-bs-toggle="pill" data-bs-target="#progress" type="button" role="tab" aria-controls="progress" aria-selected="true" style="font-size: 0.95rem;">
-                                Riwayat Progres
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link w-100 text-start fw-bold py-3" id="budget-tab" data-bs-toggle="pill" data-bs-target="#budget" type="button" role="tab" aria-controls="budget" aria-selected="false" style="font-size: 0.95rem;">
-                                Realisasi Anggaran
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Right Content -->
-                <div class="col-md-10 p-3 p-md-4">
-                    <div class="tab-content" id="projectTabContent">
                     
-                    <!-- Tab Progres -->
-                    <div class="tab-pane fade show active" id="progress" role="tabpanel" aria-labelledby="progress-tab">
-                        <div class="service-ui-topbar service-ui-static-topbar mb-3">
-                            <div class="d-flex align-items-center flex-nowrap gap-2">
-                                <h5 class="fw-bold mb-0" style="color: #1a202c;">Log Perkembangan Proyek</h5>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-end gap-2 flex-nowrap">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ProgressModal">
-                                    <i class="bi bi-plus-lg me-1"></i> Tambah Progres
+                    <!-- Horizontal Nav Header (No Icons) -->
+                    <div class="card-header border-bottom bg-white p-0">
+                        <ul class="nav nav-tabs custom-horizontal-nav px-3 pt-2" id="projectTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active fw-bold px-4 py-3" id="progress-tab" data-bs-toggle="pill" data-bs-target="#progress" type="button" role="tab" aria-controls="progress" aria-selected="true">
+                                    Riwayat Progres
                                 </button>
-                            </div>
-                        </div>
-                            <input type="hidden" id="project_uid" value="<?= esc($project['uid']) ?>">
-                            <div class="table-responsive">
-                                <table id="progressTable" class="table table-bordered table-hover nowrap w-100">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th></th>
-                                        <th><strong>No</strong></th>
-                                        <th><strong>Tanggal Log</strong></th>
-                                        <th><strong>Target (%)</strong></th>
-                                        <th><strong>Realisasi Aktual (%)</strong></th>
-                                        <th><strong>Catatan</strong></th>
-                                        <th><strong>Waktu Entry</strong></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th></th>
-                                        <th><strong>No</strong></th>
-                                        <th><strong>Tanggal Log</strong></th>
-                                        <th><strong>Target (%)</strong></th>
-                                        <th><strong>Realisasi Aktual (%)</strong></th>
-                                        <th><strong>Catatan</strong></th>
-                                        <th><strong>Waktu Entry</strong></th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                            </div>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold px-4 py-3" id="budget-tab" data-bs-toggle="pill" data-bs-target="#budget" type="button" role="tab" aria-controls="budget" aria-selected="false">
+                                    Realisasi Anggaran
+                                </button>
+                            </li>
+                        </ul>
                     </div>
 
-                    <!-- Tab Anggaran -->
-                    <div class="tab-pane fade" id="budget" role="tabpanel" aria-labelledby="budget-tab">
-                        <div class="service-ui-topbar service-ui-static-topbar mb-3">
-                            <div class="d-flex align-items-center flex-nowrap gap-2">
-                                <h5 class="fw-bold mb-0" style="color: #1a202c;">Riwayat Realisasi Anggaran</h5>
+                    <!-- Content Body -->
+                    <div class="card-body p-3 p-md-4">
+                        <div class="tab-content" id="projectTabContent">
+                            
+                            <!-- Tab Progres -->
+                            <div class="tab-pane fade show active" id="progress" role="tabpanel" aria-labelledby="progress-tab">
+                                <div class="service-ui-topbar service-ui-static-topbar mb-3">
+                                    <div class="d-flex align-items-center flex-nowrap gap-2">
+                                        <h5 class="fw-bold mb-0" style="color: #1a202c;">Log Perkembangan Proyek</h5>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-end gap-2 flex-nowrap">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ProgressModal">
+                                            <i class="bi bi-plus-lg me-1"></i> Tambah Progres
+                                        </button>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="project_uid" value="<?= esc($project['uid']) ?>">
+                                <div class="table-responsive">
+                                    <table id="progressTable" class="table table-bordered table-hover w-100 table-compact">
+                                        <colgroup>
+                                            <col style="width: 4%;">
+                                            <col style="width: 5%;">
+                                            <col style="width: 12%;">
+                                            <col style="width: 18%;">
+                                            <col style="width: 9%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 9%;">
+                                            <col style="width: 23%;">
+                                            <col style="width: 10%;">
+                                        </colgroup>
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"><strong>No</strong></th>
+                                                <th><strong>Tanggal Log</strong></th>
+                                                <th><strong>Periode</strong></th>
+                                                <th class="text-end"><strong>Target (%)</strong></th>
+                                                <th class="text-end"><strong>Realisasi (%)</strong></th>
+                                                <th class="text-center"><strong>Dokumentasi</strong></th>
+                                                <th><strong>Catatan</strong></th>
+                                                <th class="text-center"><strong>Aksi</strong></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"><strong>No</strong></th>
+                                                <th><strong>Tanggal Log</strong></th>
+                                                <th><strong>Periode</strong></th>
+                                                <th class="text-end"><strong>Target (%)</strong></th>
+                                                <th class="text-end"><strong>Realisasi (%)</strong></th>
+                                                <th class="text-center"><strong>Dokumentasi</strong></th>
+                                                <th><strong>Catatan</strong></th>
+                                                <th class="text-center"><strong>Aksi</strong></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-end gap-2 flex-nowrap">
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#BudgetModal">
-                                    <i class="bi bi-plus-lg me-1"></i> Tambah Realisasi
-                                </button>
+
+                            <!-- Tab Anggaran -->
+                            <div class="tab-pane fade" id="budget" role="tabpanel" aria-labelledby="budget-tab">
+                                <div class="service-ui-topbar service-ui-static-topbar mb-3">
+                                    <div class="d-flex align-items-center flex-nowrap gap-2">
+                                        <h5 class="fw-bold mb-0" style="color: #1a202c;">Riwayat Realisasi Anggaran</h5>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-end gap-2 flex-nowrap">
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#BudgetModal">
+                                            <i class="bi bi-plus-lg me-1"></i> Tambah Realisasi
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="budgetTable" class="table table-bordered table-hover w-100 table-compact">
+                                        <colgroup>
+                                            <col style="width: 4%;">
+                                            <col style="width: 5%;">
+                                            <col style="width: 16%;">
+                                            <col style="width: 18%;">
+                                            <col style="width: 47%;">
+                                            <col style="width: 10%;">
+                                        </colgroup>
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"><strong>No</strong></th>
+                                                <th><strong>Tanggal Realisasi</strong></th>
+                                                <th class="text-end"><strong>Jumlah (Rp)</strong></th>
+                                                <th><strong>Keterangan / Deskripsi</strong></th>
+                                                <th class="text-center"><strong>Aksi</strong></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"><strong>No</strong></th>
+                                                <th><strong>Tanggal Realisasi</strong></th>
+                                                <th class="text-end"><strong>Jumlah (Rp)</strong></th>
+                                                <th><strong>Keterangan / Deskripsi</strong></th>
+                                                <th class="text-center"><strong>Aksi</strong></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table id="budgetTable" class="table table-bordered table-hover nowrap w-100">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th></th>
-                                        <th><strong>No</strong></th>
-                                        <th><strong>Tanggal Realisasi</strong></th>
-                                        <th><strong>Jumlah (Rp)</strong></th>
-                                        <th><strong>Keterangan / Deskripsi</strong></th>
-                                        <th><strong>Waktu Entry</strong></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th></th>
-                                        <th><strong>No</strong></th>
-                                        <th><strong>Tanggal Realisasi</strong></th>
-                                        <th><strong>Jumlah (Rp)</strong></th>
-                                        <th><strong>Keterangan / Deskripsi</strong></th>
-                                        <th><strong>Waktu Entry</strong></th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
 
-                </div>
-            </div>
-
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-    </div>
-</div>
 
 <!-- Modal Edit Proyek -->
 <div class="modal fade" id="EditProjectModal" tabindex="-1" aria-labelledby="EditProjectModalLabel" aria-hidden="true">
@@ -468,43 +615,101 @@
     </div>
 </div>
 
-<!-- Modal Tambah Progres -->
+<!-- Modal Tambah / Update Progres -->
 <div class="modal fade" id="ProgressModal" tabindex="-1" aria-labelledby="ProgressModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="ProgressModalLabel">Update Progres Pekerjaan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border: none; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden;">
+            <div class="modal-header align-items-center" style="border-bottom: 1px solid #f1f5f9; padding: 1.25rem 1.75rem; background-color: #ffffff;">
+                <h5 class="modal-title fw-bold mb-0" id="ProgressModalLabel" style="font-size: 1.2rem; color: #1a202c !important;">Update Progres Pekerjaan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 0.8rem;"></button>
             </div>
-            <form id="formProgress" method="post" autocomplete="off">
+            <form id="formProgress" method="post" enctype="multipart/form-data" autocomplete="off">
                 <input type="hidden" name="project_uid" value="<?= esc($project['uid']) ?>">
                 <input type="hidden" name="id" id="progress_id" value="">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Tanggal Update</label>
-                        <input type="date" name="log_date" class="form-control" required value="<?= date('Y-m-d') ?>">
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <label class="form-label fw-bold">Target (%)</label>
-                            <input type="number" step="0.01" min="0" max="100" name="target_percentage" class="form-control" placeholder="0.00">
+                <div class="modal-body" style="padding: 1.5rem 1.75rem; background-color: #fcfdfd;">
+                    <div class="row gy-3">
+                        <div class="col-md-4">
+                            <label class="form-label d-block fw-bold" style="font-size: 0.9rem; color: #1a202c; margin-bottom: 0.4rem;">Tanggal Update <span class="text-danger">*</span></label>
+                            <input type="date" name="log_date" class="form-control flat-input" required value="<?= date('Y-m-d') ?>">
                         </div>
-                        <div class="col-6">
-                            <label class="form-label fw-bold">Realisasi Aktual (%) <span class="text-danger">*</span></label>
-                            <input type="number" step="0.01" min="0" max="100" name="actual_percentage" class="form-control" required placeholder="0.00">
-                            <small class="text-muted d-block mt-1">Total progres saat ini</small>
+                        <div class="col-md-4">
+                            <label class="form-label d-block fw-bold" style="font-size: 0.9rem; color: #1a202c; margin-bottom: 0.4rem;">Periode Awal</label>
+                            <input type="date" name="start_date" id="progress_start_date" class="form-control flat-input">
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Catatan Kendala/Kegiatan</label>
-                        <textarea name="notes" class="form-control" rows="3" placeholder="Tulis catatan jika ada..."></textarea>
+                        <div class="col-md-4">
+                            <label class="form-label d-block fw-bold" style="font-size: 0.9rem; color: #1a202c; margin-bottom: 0.4rem;">Periode Akhir</label>
+                            <input type="date" name="end_date" id="progress_end_date" class="form-control flat-input">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label d-block fw-bold" style="font-size: 0.9rem; color: #1a202c; margin-bottom: 0.4rem;">Target (%)</label>
+                            <input type="number" step="0.01" min="0" max="100" name="target_percentage" class="form-control flat-input" placeholder="0.00">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label d-block fw-bold" style="font-size: 0.9rem; color: #1a202c; margin-bottom: 0.4rem;">Realisasi Aktual (%) <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" min="0" max="100" name="actual_percentage" class="form-control flat-input" required placeholder="0.00">
+                            <small class="text-muted d-block mt-1" style="font-size: 0.78rem;">Akumulasi progres fisik saat ini</small>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label d-block fw-bold" style="font-size: 0.9rem; color: #1a202c; margin-bottom: 0.4rem;">Catatan Kendala / Uraian Kegiatan</label>
+                            <textarea name="notes" class="form-control flat-input" rows="2" placeholder="Tuliskan catatan kendala atau progres rincian jika ada..."></textarea>
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <div class="d-flex justify-content-between align-items-end mb-1">
+                                <label class="form-label d-block fw-bold mb-0" style="font-size: 0.9rem; color: #1a202c;">Dokumentasi / Foto Kegiatan</label>
+                                <span class="text-muted" style="font-size: 0.75rem;">Maksimal 2 MB (.jpg, .png, .webp)</span>
+                            </div>
+                            <div class="upload-area text-center p-3 position-relative flat-upload d-flex flex-column align-items-center justify-content-center" id="progressUploadArea" style="min-height: 160px;">
+                                <input type="file" id="inputProgressFoto" name="foto" class="position-absolute w-100 h-100 top-0 start-0 opacity-0" style="cursor: pointer; z-index: 5;" accept="image/png, image/jpeg, image/jpg, image/webp">
+                                <div id="progressUploadPlaceholder" class="d-flex flex-column align-items-center justify-content-center w-100 py-2">
+                                    <i class="bi bi-cloud-arrow-up text-secondary mb-2 d-block" style="font-size: 2.25rem; line-height: 1;"></i>
+                                    <span class="d-block fw-bold text-dark" style="font-size: 0.9rem;">Klik atau seret foto ke sini</span>
+                                    <span class="d-block text-muted small mt-1">Maksimal 2MB (JPG, PNG, WebP)</span>
+                                </div>
+                                <div id="progressUploadPreview" class="d-none position-relative" style="z-index: 6;">
+                                    <img src="" alt="Preview" class="img-fluid rounded flat-border" style="max-height: 180px; object-fit: contain;">
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-sm btn-light fw-bold px-3" style="border: 1px solid #e2e8f0; position: relative; z-index: 10;" id="btnRemoveProgressPhoto">Ganti Foto</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary" id="btnSaveProgress">Simpan Progres</button>
+                <div class="modal-footer d-flex justify-content-between align-items-center" style="border-top: 1px solid #f1f5f9; padding: 1.15rem 1.75rem; background-color: #ffffff;">
+                    <button type="button" class="btn btn-light px-4 py-2 fw-bold flat-btn-light" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary px-4 py-2 fw-bold" id="btnSaveProgress" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.2);">
+                        Simpan Progres
+                    </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal View Progress Photo (Lightbox) -->
+<div class="modal fade" id="modalViewProgressPhoto" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content flat-modal p-0 overflow-hidden" style="border: none; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+            <div class="modal-header border-0 pb-2 px-4 pt-3 d-flex justify-content-between align-items-center bg-white">
+                <h5 class="modal-title fw-bold text-dark m-0" id="viewProgressTitle" style="font-size: 1.15rem;">Dokumentasi Progres</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 d-flex flex-column">
+                <div class="w-100 bg-light d-flex align-items-center justify-content-center" style="min-height: 35vh; max-height: 65vh; overflow: hidden;">
+                    <img src="" id="viewProgressImg" class="img-fluid w-100 h-100" style="object-fit: contain;" alt="Dokumentasi Progres">
+                </div>
+                <div class="p-3 bg-white border-top">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                        <span class="badge bg-primary px-2 py-1" id="viewProgressBadge">0%</span>
+                        <span class="badge bg-light text-dark border px-2 py-1" id="viewProgressPeriod"><i class="bi bi-calendar-range me-1"></i> Periode</span>
+                        <span class="text-muted small fw-medium ms-auto" id="viewProgressDate"><i class="bi bi-calendar3 me-1"></i> Tanggal</span>
+                    </div>
+                    <p class="text-secondary mb-0 mt-1" id="viewProgressNotes" style="line-height: 1.5; font-size: 0.9rem;">-</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
