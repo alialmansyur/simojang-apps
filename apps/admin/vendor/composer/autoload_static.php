@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
+class ComposerStaticInit4e1c8d38b1a3a9809e9d480da0109427
 {
     public static $files = array (
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
@@ -12,15 +12,15 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
     );
 
     public static $prefixLengthsPsr4 = array (
-        's' =>
+        's' => 
         array (
             'setasign\\Fpdi\\' => 14,
         ),
-        'Z' =>
+        'Z' => 
         array (
             'ZipStream\\' => 10,
         ),
-        'P' =>
+        'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
@@ -28,7 +28,7 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
             'Psr\\Http\\Client\\' => 16,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
         ),
-        'M' =>
+        'M' => 
         array (
             'Mpdf\\QrCode\\' => 12,
             'Mpdf\\PsrLogAwareTrait\\' => 22,
@@ -36,117 +36,116 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
             'Mpdf\\' => 5,
             'Matrix\\' => 7,
         ),
-        'L' =>
+        'L' => 
         array (
             'Laminas\\Escaper\\' => 16,
         ),
-        'F' =>
+        'F' => 
         array (
             'Firebase\\JWT\\' => 13,
         ),
-        'D' =>
+        'D' => 
         array (
             'DeepCopy\\' => 9,
         ),
-        'C' =>
+        'C' => 
         array (
             'Config\\' => 7,
             'Composer\\Pcre\\' => 14,
             'Complex\\' => 8,
             'CodeIgniter\\' => 12,
         ),
-        'A' =>
+        'A' => 
         array (
             'App\\' => 4,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'setasign\\Fpdi\\' =>
+        'setasign\\Fpdi\\' => 
         array (
             0 => __DIR__ . '/..' . '/setasign/fpdi/src',
         ),
-        'ZipStream\\' =>
+        'ZipStream\\' => 
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
         ),
-        'Psr\\SimpleCache\\' =>
+        'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
-        'Psr\\Log\\' =>
+        'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\Http\\Message\\' =>
+        'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-factory/src',
             1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Http\\Client\\' =>
+        'Psr\\Http\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
-        'PhpOffice\\PhpSpreadsheet\\' =>
+        'PhpOffice\\PhpSpreadsheet\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
-        'Mpdf\\QrCode\\' =>
+        'Mpdf\\QrCode\\' => 
         array (
             0 => __DIR__ . '/..' . '/mpdf/qrcode/src',
         ),
-        'Mpdf\\PsrLogAwareTrait\\' =>
+        'Mpdf\\PsrLogAwareTrait\\' => 
         array (
             0 => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src',
         ),
-        'Mpdf\\PsrHttpMessageShim\\' =>
+        'Mpdf\\PsrHttpMessageShim\\' => 
         array (
             0 => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src',
         ),
-        'Mpdf\\' =>
+        'Mpdf\\' => 
         array (
             0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
         ),
-        'Matrix\\' =>
+        'Matrix\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
         ),
-        'Laminas\\Escaper\\' =>
+        'Laminas\\Escaper\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-escaper/src',
         ),
-        'Firebase\\JWT\\' =>
+        'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
-        'DeepCopy\\' =>
+        'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Config\\' =>
+        'Config\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app/Config',
         ),
-        'Composer\\Pcre\\' =>
+        'Composer\\Pcre\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
-        'Complex\\' =>
+        'Complex\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
-        'CodeIgniter\\' =>
+        'CodeIgniter\\' => 
         array (
             0 => __DIR__ . '/..' . '/codeigniter4/framework/system',
         ),
-        'App\\' =>
+        'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
         ),
     );
 
     public static $classMap = array (
-        'App\\Commands\\TestPnbp' => __DIR__ . '/../..' . '/app/Commands/TestPnbp.php',
         'App\\Controllers\\Apps\\AccessManagerApiController' => __DIR__ . '/../..' . '/app/Controllers/Apps/AccessManagerApiController.php',
         'App\\Controllers\\Apps\\ActivityGalleryController' => __DIR__ . '/../..' . '/app/Controllers/Apps/ActivityGalleryController.php',
         'App\\Controllers\\Apps\\Agenda\\AgendaController' => __DIR__ . '/../..' . '/app/Controllers/Apps/Agenda/AgendaController.php',
@@ -193,6 +192,7 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
         'App\\Controllers\\Apps\\SettingManagerController' => __DIR__ . '/../..' . '/app/Controllers/Apps/SettingManagerController.php',
         'App\\Controllers\\Auth\\Auth' => __DIR__ . '/../..' . '/app/Controllers/Auth/Auth.php',
         'App\\Controllers\\BaseController' => __DIR__ . '/../..' . '/app/Controllers/BaseController.php',
+        'App\\Database\\Seeds\\PNBPDocTypeSeeder' => __DIR__ . '/../..' . '/app/Database/Seeds/PNBPDocTypeSeeder.php',
         'App\\Database\\Seeds\\PNBPSignerSeeder' => __DIR__ . '/../..' . '/app/Database/Seeds/PNBPSignerSeeder.php',
         'App\\Database\\Seeds\\ServicePermissionSeeder' => __DIR__ . '/../..' . '/app/Database/Seeds/ServicePermissionSeeder.php',
         'App\\Filters\\Auth' => __DIR__ . '/../..' . '/app/Filters/Auth.php',
@@ -228,6 +228,7 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
         'App\\Models\\Apps\\Services\\MeritModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/MeritModel.php',
         'App\\Models\\Apps\\Services\\NSPKModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/NSPKModel.php',
         'App\\Models\\Apps\\Services\\PDMModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PDMModel.php',
+        'App\\Models\\Apps\\Services\\PNBPDocTypeModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PNBPDocTypeModel.php',
         'App\\Models\\Apps\\Services\\PNBPDocumentModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PNBPDocumentModel.php',
         'App\\Models\\Apps\\Services\\PNBPItemModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PNBPItemModel.php',
         'App\\Models\\Apps\\Services\\PNBPPersonelModel' => __DIR__ . '/../..' . '/app/Models/Apps/Services/PNBPPersonelModel.php',
@@ -1640,9 +1641,9 @@ class ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd2791863e2fbbc998616d46bf4127e3b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4e1c8d38b1a3a9809e9d480da0109427::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4e1c8d38b1a3a9809e9d480da0109427::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit4e1c8d38b1a3a9809e9d480da0109427::$classMap;
 
         }, null, ClassLoader::class);
     }

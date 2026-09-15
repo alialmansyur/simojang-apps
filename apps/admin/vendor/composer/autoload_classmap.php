@@ -6,7 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'App\\Commands\\TestPnbp' => $baseDir . '/app/Commands/TestPnbp.php',
     'App\\Controllers\\Apps\\AccessManagerApiController' => $baseDir . '/app/Controllers/Apps/AccessManagerApiController.php',
     'App\\Controllers\\Apps\\ActivityGalleryController' => $baseDir . '/app/Controllers/Apps/ActivityGalleryController.php',
     'App\\Controllers\\Apps\\Agenda\\AgendaController' => $baseDir . '/app/Controllers/Apps/Agenda/AgendaController.php',
@@ -53,6 +52,7 @@ return array(
     'App\\Controllers\\Apps\\SettingManagerController' => $baseDir . '/app/Controllers/Apps/SettingManagerController.php',
     'App\\Controllers\\Auth\\Auth' => $baseDir . '/app/Controllers/Auth/Auth.php',
     'App\\Controllers\\BaseController' => $baseDir . '/app/Controllers/BaseController.php',
+    'App\\Database\\Seeds\\PNBPDocTypeSeeder' => $baseDir . '/app/Database/Seeds/PNBPDocTypeSeeder.php',
     'App\\Database\\Seeds\\PNBPSignerSeeder' => $baseDir . '/app/Database/Seeds/PNBPSignerSeeder.php',
     'App\\Database\\Seeds\\ServicePermissionSeeder' => $baseDir . '/app/Database/Seeds/ServicePermissionSeeder.php',
     'App\\Filters\\Auth' => $baseDir . '/app/Filters/Auth.php',
@@ -88,6 +88,7 @@ return array(
     'App\\Models\\Apps\\Services\\MeritModel' => $baseDir . '/app/Models/Apps/Services/MeritModel.php',
     'App\\Models\\Apps\\Services\\NSPKModel' => $baseDir . '/app/Models/Apps/Services/NSPKModel.php',
     'App\\Models\\Apps\\Services\\PDMModel' => $baseDir . '/app/Models/Apps/Services/PDMModel.php',
+    'App\\Models\\Apps\\Services\\PNBPDocTypeModel' => $baseDir . '/app/Models/Apps/Services/PNBPDocTypeModel.php',
     'App\\Models\\Apps\\Services\\PNBPDocumentModel' => $baseDir . '/app/Models/Apps/Services/PNBPDocumentModel.php',
     'App\\Models\\Apps\\Services\\PNBPItemModel' => $baseDir . '/app/Models/Apps/Services/PNBPItemModel.php',
     'App\\Models\\Apps\\Services\\PNBPPersonelModel' => $baseDir . '/app/Models/Apps/Services/PNBPPersonelModel.php',

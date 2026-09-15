@@ -1,0 +1,1374 @@
+[
+    {
+        "no_urut": 1,
+        "nama_sasaran": "Terselenggaranya pelayanan kepegawaian dan pembinaan manajemen ASN yang berintegritas dan terstandar",
+        "indikators": [
+            {
+                "no_urut": 1,
+                "nama_indikator": "Nilai Rata-Rata Indeks Kepuasan Masyarakat Seluruh Layanan dan Pembinaan Manajemen ASN Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "1 Dokumen",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Melakukan Evaluasi Terhadap Hasil IKM Layanan dan Pembinaan Manajemen ASN Kanreg III BKN Tahun 2025",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Menyebarkan Survei IKM Terhadap Layanan dan Pembinaan Manajemen ASN Kanreg III BKN (PTSP, Surat Dinas, Bimtek, Pendampingan, Sosialisasi)",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Responden",
+                        "target_volume": 1200
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Mengolah Data dan Menyusun Laporan Hasil Survei IKM Layanan dan Pembinaan Manajemen ASN Kanreg III BKN",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 4,
+                        "nama_kegiatan": "Melakukan Publikasi Hasil Survei IKM",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 5,
+                        "nama_kegiatan": "Melakukan Evaluasi Hasil Survei IKM dan Menyusun Rencana Tindak Lanjut",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 6,
+                        "nama_kegiatan": "Melaksanakan Tindak Lanjut Hasil Evaluasi Survey IKM",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 7,
+                        "nama_kegiatan": "Melakukan Rapat Evaluasi atas Perolehan IKM Layanan dan Pembinaan Manajemen ASN Kantor Regional III BKN",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            },
+            {
+                "no_urut": 2,
+                "nama_indikator": "Persentase Penyelesaian Penyelenggaraan Layanan Manajemen ASN Sesuai Standar di Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "13.624 Data",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Memverifikasi dan memvalidasi usulan kebutuhan pegawai ASN",
+                        "pengampu_ids": [
+                            1
+                        ],
+                        "satuan": "Data",
+                        "target_volume": 13624
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Menetapkan Persetujuan Teknis NIP CPNS dan NI PPPK Daerah",
+                        "pengampu_ids": [
+                            1
+                        ],
+                        "satuan": "Pertek",
+                        "target_volume": 13624
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Menetapkan Persetujuan Teknis Kenaikan Pangkat PNS",
+                        "pengampu_ids": [
+                            1
+                        ],
+                        "satuan": "Pertek",
+                        "target_volume": 46059
+                    },
+                    {
+                        "no_urut": 4,
+                        "nama_kegiatan": "Menetapkan Persetujuan Teknis Pencantuman Gelar ASN",
+                        "pengampu_ids": [
+                            1
+                        ],
+                        "satuan": "Pertek",
+                        "target_volume": 10738
+                    },
+                    {
+                        "no_urut": 5,
+                        "nama_kegiatan": "Menetapkan Pertimbangan Teknis / Keputusan Pindah Instansi bagi PNS",
+                        "pengampu_ids": [
+                            1
+                        ],
+                        "satuan": "Pertek / SK",
+                        "target_volume": 314
+                    },
+                    {
+                        "no_urut": 6,
+                        "nama_kegiatan": "Menetapkan Persetujuan Teknis Peninjauan Masa Kerja (PMK) PNS",
+                        "pengampu_ids": [
+                            1
+                        ],
+                        "satuan": "Pertek",
+                        "target_volume": 556
+                    },
+                    {
+                        "no_urut": 7,
+                        "nama_kegiatan": "Menetapkan Persetujuan Teknis Mutasi Lain-lain",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            5
+                        ],
+                        "satuan": "Pertek",
+                        "target_volume": 50
+                    },
+                    {
+                        "no_urut": 8,
+                        "nama_kegiatan": "Menetapkan Pertimbangan Peknis Pensiun PNS dan Janda/Duda PNS",
+                        "pengampu_ids": [
+                            2
+                        ],
+                        "satuan": "Pertek",
+                        "target_volume": 13624
+                    },
+                    {
+                        "no_urut": 9,
+                        "nama_kegiatan": "Menetapkan Keputusan Pensiun Janda/Duda Pensiunan PNS",
+                        "pengampu_ids": [
+                            2
+                        ],
+                        "satuan": "SK",
+                        "target_volume": 1200
+                    },
+                    {
+                        "no_urut": 10,
+                        "nama_kegiatan": "Menetapkan Persetujuan Teknis Mutasi Keluarga Pensiunan PNS",
+                        "pengampu_ids": [
+                            2
+                        ],
+                        "satuan": "Pertek",
+                        "target_volume": 900
+                    },
+                    {
+                        "no_urut": 11,
+                        "nama_kegiatan": "Menetapkan Pengesahan Salinan Sah SK Pensiun yang Hilang atau Rusak",
+                        "pengampu_ids": [
+                            2
+                        ],
+                        "satuan": "SK",
+                        "target_volume": 150
+                    },
+                    {
+                        "no_urut": 12,
+                        "nama_kegiatan": "Menetapkan Pertimbangan Teknis Cuti Diluar Tanggungan Negara (CLTN)",
+                        "pengampu_ids": [
+                            2
+                        ],
+                        "satuan": "Pertek",
+                        "target_volume": 75
+                    },
+                    {
+                        "no_urut": 13,
+                        "nama_kegiatan": "Menetapkan Pertimbangan Teknis Pengaktifan Kembali PNS",
+                        "pengampu_ids": [
+                            2
+                        ],
+                        "satuan": "Pertek",
+                        "target_volume": 10
+                    },
+                    {
+                        "no_urut": 14,
+                        "nama_kegiatan": "Menetapkan Rekomendasi Pengangkatan CPNS menjadi PNS Lebih dari 1 Tahun",
+                        "pengampu_ids": [
+                            2
+                        ],
+                        "satuan": "Rekomendasi",
+                        "target_volume": 5
+                    },
+                    {
+                        "no_urut": 15,
+                        "nama_kegiatan": "Memfasilitasi Pelaksanaan Seleksi baik Seleksi Calon PNS, seleksi PPPK, Seleksi Penerimaan Mahasiswa/Praja/Taruna Sekolah Kedinasan, Seleksi Pengembangan Karier Pegawai ASN, dan Seleksi Selain Pegawai ASN dengan Menggunakan Metode CAT BKN",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Laporan Kegiatan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 16,
+                        "nama_kegiatan": "Menyusun Laporan Penyelesaian dan Rencana Tindak Lanjut Layanan Manajemen ASN",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            5
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 3
+                    },
+                    {
+                        "no_urut": 17,
+                        "nama_kegiatan": "Melaksanakan Evaluasi atas Layanan Manajemen ASN yang terstandar",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            5
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            },
+            {
+                "no_urut": 3,
+                "nama_indikator": "Persentase Service Level Agreement (SLA) Jawaban Surat Maksimal 4 Hari di lingkungan Kantor Regional  III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "1 Kegiatan",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Menetapkan Tim Pengelolaan Persuratan",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melaksanakan Pengelolaan Persuratan sesuai SLA",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melaksanakan Rapat Evaluasi atas Pengelolaan Persuratan",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            },
+            {
+                "no_urut": 4,
+                "nama_indikator": "Persentase Service Level Agreement (SLA) I-Mut Maksimal 4 Hari di lingkungan Kantor Regional  III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "4 Laporan",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Melakukan Verval Usulan Pengangkatan dan Pemindahan Jabatan Fungsional dan Pelaksana melalui Aplikasi Integrated Mutasi (I-Mut)",
+                        "pengampu_ids": [
+                            4
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melaksanakan Evaluasi Verval Usulan Pengangkatan dan Pemindahan Jabatan Fungsional dan Pelaksana melalui Aplikasi Integrated Mutasi (I-Mut)",
+                        "pengampu_ids": [
+                            4
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            },
+            {
+                "no_urut": 5,
+                "nama_indikator": "Jumlah Paket Inovasi yang Mendukung Peningkatan Kualitas Layanan dan Pembinaan Manajemen ASN di Wilayah Kerja Kantor Regional  III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "1 Kegiatan",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Menetapkan Tim Inovasi",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melaksanakan Pengelolaan Inovasi Kanreg III BKN",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melakukan Rapat Evaluasi atas Pengelolaan Inovasi Kanreg III BKN",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "no_urut": 2,
+        "nama_sasaran": "Terwujudnya Manajemen Talenta dan Karier yang Andal",
+        "indikators": [
+            {
+                "no_urut": 6,
+                "nama_indikator": "Persentase Instansi Pemerintah yang Menerapkan Manajemen Talenta di Wilayah Kerja Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "2 kegiatan",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Melaksanakan kegiatan sosialisasi Manajemen Talenta, SIMATA BKN, Peraturan Menteri PAN-RB No 20 tahun 2025, dan Keputusan Kepala BKN No. 411 Tahun 2025 dalam Upaya Penguatan dan Pemahaman bagi Internal Tim Pembinaan MASN Kanreg III BKN",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melakukan Sosialisasi dan Koordinasi Manajemen Talenta serta Pendampingan dalam Penerapan SIMATA BKN bagi Instansi yang masih dalam proses peralihan atau masih menggunakan Sistem Aplikasi Mandiri.",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Instansi",
+                        "target_volume": 23
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melakukan Sosialisasi dan Koordinasi Manajemen Talenta dan SIMATA BKN serta Pendampingan Manajemen Talenta bagi Instansi yang belum Mendapatkan Rekomendasi Manajemen Talenta.",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Instansi",
+                        "target_volume": 18
+                    },
+                    {
+                        "no_urut": 4,
+                        "nama_kegiatan": "Melakukan Monitoring Penerapan Manajemen Talenta pada Instansi Daerah",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 5,
+                        "nama_kegiatan": "Melaksanakan Evaluasi dan Penyampaian Laporan Pelaksanaan Kegiatan",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "no_urut": 3,
+        "nama_sasaran": "Terselenggaranya penilaian potensi dan peta kompetensi ASN yang mendukung mobilitas talenta",
+        "indikators": [
+            {
+                "no_urut": 7,
+                "nama_indikator": "Persentase PNS yang Telah Dinilai Kompetensinya di Wilayah Kerja Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "2 Laporan",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Melakukan Identifikasi Instansi Daerah yang telah Melaksanakan Penilaian Potensi dan Kompetensi baik melalui CACT, Assesment Center, Integrasi Data Penilaian Potensi dan Kompetensi maupun ProASN.",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melakukan  sosialisasi/bimtek/pendampingan terkait Pemetaan Kompetensi dan Potensi",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 37
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melakukan Pendataan Fasilitas Penilaian Kompetensi dan Potensi di Instansi Daerah",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 4,
+                        "nama_kegiatan": "Melakukan Pendampingan kepada Instansi Daerah dengan Tim Puspenkom dan Tim SIDIGI MASN untuk Pengintegrasian Data Hasil Penilaian Kompetensi dan Potensi.",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 5,
+                        "nama_kegiatan": "Melaksanakan Fasilitasi bagi ASN yang akan Melaksanakan Penilaian Potensi dan Kompetensi melalui CACT/AC/ProASN BKN",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Peserta",
+                        "target_volume": 57824
+                    },
+                    {
+                        "no_urut": 6,
+                        "nama_kegiatan": "Melakukan Koordinasi/bimtek/pendampingan dengan Instansi untuk Pengembangan karir PNS melalui Ujian Dinas dan Ujian Penyesuaian Kenaikan Pangkat sesuai dengan Permohonan Instansi Daerah",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 37
+                    },
+                    {
+                        "no_urut": 7,
+                        "nama_kegiatan": "Melaksanakan Evaluasi dan Penyampaian Laporan Pelaksanaan Kegiatan",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "no_urut": 4,
+        "nama_sasaran": "Meningkatnya maturitas penyelenggaraan manajemen ASN secara elektronik",
+        "indikators": [
+            {
+                "no_urut": 8,
+                "nama_indikator": "Persentase Instansi Pemerintah dengan Indeks Kualitas Data ASN berpredikat Minimal Tinggi di Wilayah Kerja Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "37 instansi dengan predikat Tinggi",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Melakukan Pembinaan, Pengendalian kepada Seluruh Instansi Daerah terhadap Indeks Kualitas Data ASN",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Instansi",
+                        "target_volume": 37
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melakukan Monitoring dan Approval Usulan Peremajaan Data Berdasarkan Usul yang Masuk",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Data",
+                        "target_volume": 30000
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melakukan pembinaan Pembangunan dan Pengembangan Sistem yang Terintegrasi dengan SIASN melalui Koordinasi dengan PPSIASN",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Instansi",
+                        "target_volume": 19
+                    },
+                    {
+                        "no_urut": 4,
+                        "nama_kegiatan": "Pembinaan dan Pendampingan Penyelesaian Disparitas Data",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Instansi",
+                        "target_volume": 35
+                    },
+                    {
+                        "no_urut": 5,
+                        "nama_kegiatan": "Penyajian Statistik Data Kepegawaian secara Periodik",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Data Statistik",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 6,
+                        "nama_kegiatan": "Melakukan Pengelolaan dan Pemeliharaan Jaringan dan Basis Data Kepegawaian ASN di Kantor Regional III BKN dan UPT BKN Serang",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 7,
+                        "nama_kegiatan": "Pendampingan Pengintegrasian Riwayat Dokumen Arsip Kepegawaian yang Ada di Instansi Daerah dengan SIASN",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Riwayat dokumen",
+                        "target_volume": 54
+                    },
+                    {
+                        "no_urut": 8,
+                        "nama_kegiatan": "Melaksanakan evaluasi dan laporan pencapaian progres capaian kualitas data",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 9,
+                        "nama_kegiatan": "Pemeliharaan dan Pengembangan aplikasi internal berbasis data dari SIASN",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": null
+                    }
+                ]
+            },
+            {
+                "no_urut": 9,
+                "nama_indikator": "Persentase Skor Kelengkapan Arsip Kepegawaian ASN Digital Instansi Pemerintah dengan Kategori Minimal Tinggi di Wilayah Kerja Kantor Regional III BKN",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "5000 NIP",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Melaksanakan Pengelolaan Arsip Kepegawaian dalam Katalog Tata Naskah melalui Media Elektronik",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "NIP",
+                        "target_volume": 5000
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Pemeliharaan Arsip Kepegawaian dengan melakukan Penataan Arsip, Pembersihan Ruang Arsip, Lemari Arsip dan lain-lain",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melaksanakan Unggah dan Mapping Dokumen Arsip Kepegawaian ke Aplikasi DMS",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 350000
+                    },
+                    {
+                        "no_urut": 4,
+                        "nama_kegiatan": "Melaksanakan Pembinaan dan Pendampingan pada Instansi untuk Percepatan Digitalisasi Arsip Kepegawaian melalui DMS",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Instansi",
+                        "target_volume": 13
+                    },
+                    {
+                        "no_urut": 5,
+                        "nama_kegiatan": "Menyusun Laporan Pengelolaan Arsip Dinamis",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 6,
+                        "nama_kegiatan": "Alih Media Arsip Kepegawaian Fisik",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "NIP",
+                        "target_volume": 5000
+                    },
+                    {
+                        "no_urut": 7,
+                        "nama_kegiatan": "Melaksanakan evaluasi dan laporan pencapaian progres capaian DMS",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "no_urut": 5,
+        "nama_sasaran": "Terselenggaranya pengawasan dan penjaminan mutu atas manajemen ASN dan sistem merit",
+        "indikators": [
+            {
+                "no_urut": 10,
+                "nama_indikator": "Persentase Instansi Pemerintah yang Mendapatkan Pembinaan dalam Upaya Mencapai Kualitas Implementasi Manajemen ASN sesuai Prinsip Meritokrasi Minimal Berkategori Baik di Wilayah Kerja Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "4 Laporan",
+                "kegiatans": [
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melaksanakan Monitoring dan Evaluasi Implementasi Manajemen ASN sesuai prinsip Meritokrasi terhadap Instansi Pemerintah Daerah di wilayah kerja Kantor Regional III BKN",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Melaksanakan Sosialisasi, koordinasi, pendampingan, serta asistensi terkait Disiplin, Budaya Kerja, dan Citra Institusi ASN, Kode etik ASN, Ijin Perkawinan dan Perceraian ASN, serta Tindak pidana ASN dalam Upaya Penguatan Pemahaman bagi Instansi Daerah",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Instansi",
+                        "target_volume": 37
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melaksanakan Monitoring dan Evaluasi mengenai Disiplin, Budaya Kerja dan Citra Institusi ASN, Kode etik ASN, Ijin Perkawinan dan Perceraian ASN, serta Tindak pidana ASN di Instansi Daerah",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 3
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melaksanakan Sosialisasi dan koordinasi baik dengan instansi daerah di wilayah kerja Kantor Regional III BKN terkait Kinerja, Penerapan e-Kinerja harian dan Penghargaan ASN dalam Upaya Penguatan Pemahaman bagi Instansi Daerah",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Instansi",
+                        "target_volume": 19
+                    },
+                    {
+                        "no_urut": 4,
+                        "nama_kegiatan": "Melaksanakan Monitoring dan Evaluasi terkait Kinerja, Penerapan e-Kinerja harian dan Penghargaan ASN di Instansi Daerah",
+                        "pengampu_ids": [
+                            3
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 3
+                    },
+                    {
+                        "no_urut": 5,
+                        "nama_kegiatan": "Melaksanakan Pembinaan Indeks Sistem Merit/Indeks NSPK",
+                        "pengampu_ids": [
+                            4
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 6,
+                        "nama_kegiatan": "Melaksanakan Pembinaan layanan Integrated Mutasi (I-Mut)",
+                        "pengampu_ids": [
+                            4
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 7,
+                        "nama_kegiatan": "Melaksanakan Pembinaan layanan Pengawasan Penerapan Netralitas, Disiplin, Kode Etik dan Perilaku",
+                        "pengampu_ids": [
+                            4
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 8,
+                        "nama_kegiatan": "Melaksanakan Pembinaan Layanan Status dan Pemberhentian",
+                        "pengampu_ids": [
+                            2
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 9,
+                        "nama_kegiatan": "Melaksanakan Pembinaan Layanan Pengangkatan dan Mutasi",
+                        "pengampu_ids": [
+                            1
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 10,
+                        "nama_kegiatan": "Melaksanakan Layanan Peningkatan Kualitas Data ASN",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 11,
+                        "nama_kegiatan": "Melaksanakan Layanan Peningkatan Percepatan Penyelesaian DMS",
+                        "pengampu_ids": [
+                            5
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 12,
+                        "nama_kegiatan": "Melaksanakan Evaluasi dan Penyampaian Laporan Pelaksanaan Kegiatan",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            },
+            {
+                "no_urut": 11,
+                "nama_indikator": "Persentase Instansi Pemerintah yang Telah Menerapkan Implementasi Manajemen ASN sesuai Prinsip Meritokrasi Minimal Berkategori Baik di Wilayah Kerja Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "1 Laporan",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Melakukan Penilaian Indeks Sistem Merit terhadap Implementasi MASN sesuai Prinsip Meritokrasi",
+                        "pengampu_ids": [
+                            4
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melakukan Monitoring dan Evaluasi Indeks Sistem Merit terhadap Implementasi MASN",
+                        "pengampu_ids": [
+                            4
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            },
+            {
+                "no_urut": 12,
+                "nama_indikator": "Persentase Hasil Pengawasan dan Pengendalian yang Ditindaklanjuti Instansi Pemerintah Sesuai Kewenangan BKN di Wilayah Kerja Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "2 Laporan",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Menyusun Laporan hasil Wasdal (LHW)/Rekomendasi  Penyelesaian Permasalahan Kepegawaian yang Berkaitan dengan Pengaduan Masyarakat, melalui Pengaduan Langsung, Surat, atau Media Sosial",
+                        "pengampu_ids": [
+                            4
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melakukan Monitoring Evaluasi dan tindaklanjut Penyelesaian Permasalahan Kepegawaian",
+                        "pengampu_ids": [
+                            4
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "no_urut": 6,
+        "nama_sasaran": "Meningkatnya kualitas manajemen kinerja BKN",
+        "indikators": [
+            {
+                "no_urut": 13,
+                "nama_indikator": "Persentase Terlaksananya Rencana Aksi RB Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "1 Dokumen",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Melakukan Evaluasi terhadap Pelaksanaan RB Kanreg III BKN Tahun 2025, Menetapkan SK Tim RB Kanreg III BKN tahun 2026, dan Menyusun Rencana aksi RB Kanreg III BKN Tahun 2026",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Membangun / meningkatkan komitmen pelayanan dengan cara peningkatan kompetensi SDM",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Membentuk Agen Perubahan untuk Peningkatan Layanan dan Internalisasi Nilai-nilai ASN BerAKHLAK",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 4,
+                        "nama_kegiatan": "Melakukan Pemilihan Pegawai Teladan bagi Pegawai ASN yang Berprestasi",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 5,
+                        "nama_kegiatan": "Menyelenggarakan Lomba Kebersihan dan Kerapihan Ruangan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 6,
+                        "nama_kegiatan": "Melaksanakan Pengelolaan Aplikasi Layanan Pengaduan (e-Lapor) dan WBS",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 7,
+                        "nama_kegiatan": "Mengoptimalisasi Pemanfaatan Layanan UPG",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 8,
+                        "nama_kegiatan": "Memastikan Sarana dan Prasarana pada Layanan Umum Berfungsi dengan Baik",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 9,
+                        "nama_kegiatan": "Melaksanakan Layanan Kepegawaian (Kenaikan Pangkat, Kenaikan Gaji berkala, Pensiun, dll)",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 10,
+                        "nama_kegiatan": "Memastikan Kesehatan Jasmani dengan Melaksanakan Kegiatan Senam Pagi",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 11,
+                        "nama_kegiatan": "Melaksanakan Kegiatan Upacara Bendera, Apel Pagi, Mendengarkan Lagu Kebangsaan Indonesia Raya dan Pancasila, serta Membaca Doa Bersama Sebelum dan Sesudah Melakukan Pekerjaan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 12,
+                        "nama_kegiatan": "Memastikan Ketersediaan Fasilitasi Kesehatan dan Obat-obatan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 13,
+                        "nama_kegiatan": "Melakukan Publikasi secara Masif di Berbagai Media Sosial terhadap Kegiatan-kegiatan di Kanreg III BKN",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 14,
+                        "nama_kegiatan": "Menyelenggarakan Fasilitasi Layanan Konsultasi Kantor Regional III BKN",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 15,
+                        "nama_kegiatan": "Memperdengarkan dan/atau Menyiarkan Cerita Inspiratif",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 16,
+                        "nama_kegiatan": "Menyelenggarakan Pengelolaan Kearsipan Kanreg III BKN",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 17,
+                        "nama_kegiatan": "Menyelenggarakan Tata urusan dalam kantor regional III BKN (Administrasi Pimpinan, Kebersihan, keamanan dan Transportasi)",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 18,
+                        "nama_kegiatan": "Melakukan Rapat Evaluasi atas Pelaksanaan RB di Kantor Regional III BKN",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 19,
+                        "nama_kegiatan": "Menyusun Laporan Monitoring dan Evaluasi RB Kanreg III BKN",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 2
+                    }
+                ]
+            },
+            {
+                "no_urut": 14,
+                "nama_indikator": "Skor Evaluasi AKIP Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "1 Dokumen",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Melaksanakan Evaluasi Kinerja Tahun 2025",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melakukan Penyusunan Dokumen Perencanaan (Perjanjian Kinerja dan Rencana Aksi)",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melakukan Penyusunan Laporan Kinerja Triwulan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 4,
+                        "nama_kegiatan": "Melakukan evaluasi kinerja triwulan bersama seluruh pegawai Kanreg III BKN (seluruh tim kerja melaporkan evaluasi kinerja, kemudian diberikan review)",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 5,
+                        "nama_kegiatan": "Melakukan Coaching dan Review atas Dokumen SAKIP Kanreg III BKN (dilakukan bersama Rorenma)",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 2
+                    },
+                    {
+                        "no_urut": 6,
+                        "nama_kegiatan": "Menginput Hasil Kinerja Triwulan melalui Aplikasi untuk Menginput Hasil Kinerja (MAKO BKN)",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 7,
+                        "nama_kegiatan": "Melengkapi Dokumen Kebutuhan Audit Kinerja",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 8,
+                        "nama_kegiatan": "Melakukan Penyusunan Laporan Kinerja Tahun 2026",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 9,
+                        "nama_kegiatan": "Melakukan Rapat Evaluasi atas Penyusunan Dokumen SAKIP",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            },
+            {
+                "no_urut": 15,
+                "nama_indikator": "Persentase Pegawai yang Melaporkan Kinerja Harian pada Aplikasi e-kinerja di lingkungan Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "12 Laporan",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Menyusun Laporan Pelaporan Kinerja Harian Pegawai pada Aplikasi e-Kinerja",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melakukan Rapat Evaluasi atas Pelaporan Kinerja Harian Pegawai pada Aplikasi e-Kinerja",
+                        "pengampu_ids": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "no_urut": 7,
+        "nama_sasaran": "Meningkatnya kualitas pengelolaan keuangan, aset, dan kearsipan BKN",
+        "indikators": [
+            {
+                "no_urut": 16,
+                "nama_indikator": "Indeks Kualitas Pelaksanaan Anggaran (IKPA) Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "1 Dokumen",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Menetapkan Tim Pengendalian dan Monitoring Penilaian IKPA",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melakukan Pengendalian dan Monitoring Terhadap 8 Indikator Penilaian IKPA",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melakukan Rapat Evaluasi atas Perolehan Nilai IKPA",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            },
+            {
+                "no_urut": 17,
+                "nama_indikator": "Persentase Realisasi Penyerapan Anggaran Kantor Regional  III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "1 Kegiatan",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Menyusun Rencana Realisasi Penyerapan Anggaran",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melaksanakan Realisasi Penyerapan Anggaran sesuai Perencanaan yang telah Ditetapkan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melakukan Rapat Evaluasi atas Realisasi Penyerapan Anggaran",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            },
+            {
+                "no_urut": 18,
+                "nama_indikator": "Rasio Temuan Hasil Audit/Pemeriksaan oleh BPK/Inspektorat atas Kegiatan Tahun 2026 di lingkungan Kantor Regional III BKN Bandung",
+                "pengampu_ids": [],
+                "satuan": "",
+                "target_volume": "1 Dokumen",
+                "kegiatans": [
+                    {
+                        "no_urut": 1,
+                        "nama_kegiatan": "Menetapkan Petugas Pengelola Keuangan, BMN dan Barang Persediaan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 2,
+                        "nama_kegiatan": "Melakukan Pengelolaan Administasi Keuangan Sesuai Ketentuan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 3,
+                        "nama_kegiatan": "Melakukan Penatausahaan BMN Sesuai Ketentuan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 4,
+                        "nama_kegiatan": "Menyusun Laporan Keuangan yang Akuntabel",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 4
+                    },
+                    {
+                        "no_urut": 5,
+                        "nama_kegiatan": "Melakukan Pengelolaan Barang Persediaan sesuai Ketentuan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 6,
+                        "nama_kegiatan": "Melaksanakan Pengadaan Barang/Jasa sesuai Ketentuan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Laporan",
+                        "target_volume": 12
+                    },
+                    {
+                        "no_urut": 7,
+                        "nama_kegiatan": "Menindaklanjuti Temuan Audit BPK/Inspektorat",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Dokumen",
+                        "target_volume": 1
+                    },
+                    {
+                        "no_urut": 8,
+                        "nama_kegiatan": "Melakukan Rapat Evaluasi atas Pengelolaan Kegiatan",
+                        "pengampu_ids": [
+                            6
+                        ],
+                        "satuan": "Kegiatan",
+                        "target_volume": 12
+                    }
+                ]
+            }
+        ]
+    }
+]

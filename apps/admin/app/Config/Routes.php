@@ -421,6 +421,38 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/fetch/summary-ikm', 'Apps\Services\IKMController::getSummary');
     $routes->post('/kill/data-ikm', 'Apps\Services\IKMController::removeData');       
     // ----------------------------------------------------------------      
+    // Manajemen IKK
+    $routes->get('/apps-ikk', 'Apps\Services\IkkController::index');
+    // Data Master
+    $routes->post('/fetch/ikk-sasaran', 'Apps\Services\IkkController::getDataSasaran');
+    $routes->post('/store/ikk-sasaran', 'Apps\Services\IkkController::storeSasaran');
+    $routes->post('/kill/ikk-sasaran', 'Apps\Services\IkkController::deleteSasaran');
+
+    $routes->post('/fetch/ikk-indikator', 'Apps\Services\IkkController::getDataIndikator');
+    $routes->post('/store/ikk-indikator', 'Apps\Services\IkkController::storeIndikator');
+    $routes->post('/kill/ikk-indikator', 'Apps\Services\IkkController::deleteIndikator');
+
+    $routes->post('/fetch/ikk-kegiatan', 'Apps\Services\IkkController::getDataKegiatan');
+    $routes->post('/store/ikk-kegiatan', 'Apps\Services\IkkController::storeKegiatan');
+    $routes->post('/kill/ikk-kegiatan', 'Apps\Services\IkkController::deleteKegiatan');
+    
+    // Pengampu
+    $routes->post('/fetch/ikk-pengampu', 'Apps\Services\IkkController::getDataPengampu');
+    $routes->post('/store/ikk-pengampu', 'Apps\Services\IkkController::storePengampu');
+    $routes->post('/kill/ikk-pengampu', 'Apps\Services\IkkController::deletePengampu');
+    
+    // Transaksi Harian
+    $routes->post('/fetch/ikk-transaksi', 'Apps\Services\IkkController::getDataTransaksi');
+    $routes->post('/store/ikk-transaksi', 'Apps\Services\IkkController::storeTransaksi');
+    $routes->post('/kill/ikk-transaksi', 'Apps\Services\IkkController::deleteTransaksi');
+
+    // Options
+    $routes->post('/fetch/ikk-options-sasaran', 'Apps\Services\IkkController::getOptionsSasaran');
+    $routes->post('/fetch/ikk-options-indikator', 'Apps\Services\IkkController::getOptionsIndikator');
+    $routes->post('/fetch/ikk-options-kegiatan', 'Apps\Services\IkkController::getOptionsKegiatan');
+    $routes->post('/fetch/ikk-options-timkerja', 'Apps\Services\IkkController::getOptionsTimKerja');
+
+    // ----------------------------------------------------------------      
     // Layanan Persuratan
     $routes->get('/apps-surat', 'Apps\Services\SuratController::index');    
     $routes->post('/store/save-data-surat', 'Apps\Services\SuratController::storeData');    
