@@ -1083,11 +1083,11 @@
 
 <!-- 7. Modal Input / Update Realisasi Indikator -->
 <div class="modal fade" id="modal-realisasi-indikator" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <form id="form-realisasi-indikator" class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title fw-bold text-dark ikk-heading-dark">
-                    <i class="bi bi-speedometer2 text-primary me-2"></i>Pencatatan Realisasi Indikator Kinerja
+                    Pencatatan Realisasi Indikator Kinerja
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -1132,18 +1132,17 @@
                         </select>
                     </div>
 
-                    <!-- Smart Assist Notice & Button -->
+                    <!-- Smart Assist Notice & Button (Tanpa Icon) -->
                     <div class="col-12" id="smart-assist-box">
                         <div class="alert alert-info d-flex flex-column flex-sm-row align-items-sm-center justify-content-between p-3 border-0 bg-light-info rounded mb-0 gap-2">
-                            <div class="d-flex align-items-center me-2">
-                                <i class="bi bi-magic fs-4 text-primary me-2 flex-shrink-0"></i>
+                            <div class="me-2">
                                 <div class="small text-dark">
                                     <strong id="smart-assist-keg-count">Indikator memiliki kegiatan terdaftar.</strong>
                                     <div class="text-muted" id="smart-assist-sub">Anda dapat menarik estimasi capaian otomatis dari log kegiatan operasional.</div>
                                 </div>
                             </div>
                             <button type="button" class="btn btn-sm btn-primary fw-semibold text-nowrap" id="btn-tarik-kegiatan">
-                                <i class="bi bi-arrow-repeat me-1"></i> Tarik dari Log Kegiatan
+                                Tarik dari Log Kegiatan
                             </button>
                         </div>
                     </div>
@@ -1174,12 +1173,44 @@
                         <input type="text" class="form-control" name="bukti_dukung" id="realisasi_ind_bukti" placeholder="Tautan Google Drive dokumen laporan atau lokasi arsip fisik...">
                     </div>
                 </div>
+
+                <!-- Riwayat / Log Pengisian Realisasi Indikator -->
+                <div class="mt-4 pt-3 border-top">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h6 class="fw-bold text-dark mb-0">Riwayat / Log Realisasi Indikator</h6>
+                        <span class="badge bg-light text-dark border" id="realisasi_ind_log_count">0 Catatan</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered table-hover align-middle mb-0" id="table-log-realisasi-ind" style="font-size: 0.82rem;">
+                            <thead class="table-light text-center">
+                                <tr>
+                                    <th style="width: 14%;">Periode</th>
+                                    <th style="width: 18%;">Target</th>
+                                    <th style="width: 15%;">Realisasi</th>
+                                    <th style="width: 13%;">Capaian</th>
+                                    <th>Penjelasan &amp; Bukti</th>
+                                    <th style="width: 15%;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-log-realisasi-ind">
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-3">Memuat riwayat pengisian...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer bg-light">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary fw-semibold" id="btnSubmitRealisasiIndikator">
-                    <i class="bi bi-check-lg me-1"></i> Simpan Realisasi
+            <div class="modal-footer bg-light d-flex justify-content-between">
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="btnResetFormRealisasiInd">
+                    Reset Form Input
                 </button>
+                <div>
+                    <button type="button" class="btn btn-light me-1" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary fw-semibold" id="btnSubmitRealisasiIndikator">
+                        Simpan Realisasi
+                    </button>
+                </div>
             </div>
         </form>
     </div>

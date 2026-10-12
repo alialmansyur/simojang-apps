@@ -246,11 +246,24 @@ class IkkController extends BaseController
         $matrix = $this->ikk->getIndikatorMatrix($indikator_id, $tahun);
         $assist = $this->ikk->calcAggregatedKegiatanProgress($indikator_id, $tahun);
 
+        // Ambil riwayat log seluruh periode untuk indikator ini
+        $logs = $this->ikk->db->table('txn_ikk_indikator')
+            ->where('indikator_id', $indikator_id)
+            ->orderBy('tahun', 'DESC')
+            ->orderBy('triwulan', 'DESC')
+            ->get()->getResultArray();
+
+        // Info indikator dan pengampu terupdate
+        $builder = $this->ikk->getIndikatorBuilder();
+        $indikator = $builder->where('a.id', $indikator_id)->get()->getRowArray();
+
         return $this->response->setJSON([
-            'status' => 'success',
-            'matrix' => $matrix,
-            'assist' => $assist,
-            'tahun'  => $tahun,
+            'status'    => 'success',
+            'matrix'    => $matrix,
+            'assist'    => $assist,
+            'tahun'     => $tahun,
+            'logs'      => $logs,
+            'indikator' => $indikator,
         ]);
     }
 

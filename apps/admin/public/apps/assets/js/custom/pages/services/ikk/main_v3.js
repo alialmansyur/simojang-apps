@@ -1362,14 +1362,24 @@ $(document).ready(function () {
         let curYear = tahun || $('#filter-indikator-tahun').val() || $('#filter-global-tahun').val() || new Date().getFullYear();
         let curTw = triwulan || $('#filter-indikator-triwulan').val() || $('#filter-global-triwulan').val() || 1;
 
-        $('#form-realisasi-indikator')[0].reset();
         $('#realisasi_ind_id').val(indikatorId);
         $('#realisasi_ind_tahun').val(curYear);
         $('#realisasi_ind_triwulan').val(curTw);
 
-        // Fetch indikator data & existing realisasi
+        // Fetch indikator data, matriks, assist, dan seluruh log riwayat pengisian
         $.post(AppConfig.initGlobal + 'fetch/ikk-indikator-realisasi', { indikator_id: indikatorId, tahun: curYear }, function (res) {
             if (res.status === 'success') {
+                // Header Indikator Info
+                if (res.indikator) {
+                    $('#realisasi_ind_nama').text(res.indikator.nama_indikator || '-');
+                    $('#realisasi_ind_sasaran').text(res.indikator.nama_sasaran || '-');
+                    let teamsHtml = res.indikator.pengampu_list ? res.indikator.pengampu_list.split(',').map(t => `<span class="badge bg-light text-dark border me-1">${t.trim()}</span>`).join('') : '<span class="badge bg-light text-muted border">Belum Ada Pengampu</span>';
+                    $('#realisasi_ind_pengampu').html(teamsHtml);
+                    if (res.indikator.target_volume) {
+                        $('#realisasi_ind_target').attr('placeholder', `Target Induk: ${res.indikator.target_volume} ${res.indikator.satuan || ''}`);
+                    }
+                }
+
                 let matrix = res.matrix;
                 let activeTwData = (matrix && matrix[curTw] && matrix[curTw].has_data) ? matrix[curTw].data : null;
 
@@ -1395,6 +1405,61 @@ $(document).ready(function () {
                     $('#smart-assist-sub').text(`Estimasi capaian log kegiatan saat ini: ${assist.suggested_progres}%.`);
                 } else {
                     $('#smart-assist-box').hide();
+                }
+
+                // Render Riwayat / Log Pengisian
+                let logs = Array.isArray(res.logs) ? res.logs : [];
+                $('#realisasi_ind_log_count').text(`${logs.length} Catatan`);
+                let tbody = $('#tbody-log-realisasi-ind');
+
+                if (logs.length === 0) {
+                    tbody.html('<tr><td colspan="6" class="text-center text-muted py-3">Belum ada catatan realisasi untuk indikator ini.</td></tr>');
+                } else {
+                    let rowsHtml = '';
+                    logs.forEach(log => {
+                        let p = parseFloat(log.progres_capaian || 0);
+                        let pColor = p >= 100 ? 'bg-success text-white' : (p >= 50 ? 'bg-primary text-white' : 'bg-warning text-dark');
+                        let buktiLink = log.bukti_dukung ? `<div class="mt-1"><a href="${log.bukti_dukung}" target="_blank" class="small text-primary text-decoration-underline text-truncate d-inline-block" style="max-width: 200px;">Buka Bukti Dukung</a></div>` : '';
+                        let ketText = log.penjelasan_capaian ? `<div class="text-truncate small" style="max-width: 240px;" title="${log.penjelasan_capaian}">${log.penjelasan_capaian}</div>` : '<span class="text-muted small">-</span>';
+
+                        rowsHtml += `
+                            <tr>
+                                <td class="text-center fw-semibold text-nowrap">
+                                    <span class="badge bg-dark">TW ${log.triwulan} (${log.tahun})</span>
+                                </td>
+                                <td class="text-wrap small">${log.target_periode || '-'}</td>
+                                <td class="text-center text-nowrap">${log.jumlah_realisasi !== null ? log.jumlah_realisasi : '-'}</td>
+                                <td class="text-center">
+                                    <span class="badge ${pColor}">${p}%</span>
+                                </td>
+                                <td>
+                                    ${ketText}
+                                    ${buktiLink}
+                                </td>
+                                <td class="text-center text-nowrap">
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 btn-edit-realisasi-log"
+                                            data-id="${log.id}"
+                                            data-tw="${log.triwulan}"
+                                            data-tahun="${log.tahun}"
+                                            data-target="${encodeURIComponent(log.target_periode || '')}"
+                                            data-jumlah="${log.jumlah_realisasi !== null ? log.jumlah_realisasi : ''}"
+                                            data-progres="${log.progres_capaian || ''}"
+                                            data-penjelasan="${encodeURIComponent(log.penjelasan_capaian || '')}"
+                                            data-bukti="${encodeURIComponent(log.bukti_dukung || '')}">
+                                            Edit
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2 btn-delete-realisasi-log"
+                                            data-id="${log.id}"
+                                            data-periode="TW ${log.triwulan} Tahun ${log.tahun}">
+                                            Hapus
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    tbody.html(rowsHtml);
                 }
 
                 $('#modal-realisasi-indikator').modal('show');
@@ -1462,6 +1527,74 @@ $(document).ready(function () {
         }
     });
 
+    // Tombol Edit pada baris Riwayat / Log Pengisian Modal
+    $('#modal-realisasi-indikator').on('click', '.btn-edit-realisasi-log', function () {
+        let thn = $(this).data('tahun');
+        let tw = $(this).data('tw');
+        let target = decodeURIComponent($(this).data('target') || '');
+        let jumlah = $(this).data('jumlah');
+        let progres = $(this).data('progres');
+        let penjelasan = decodeURIComponent($(this).data('penjelasan') || '');
+        let bukti = decodeURIComponent($(this).data('bukti') || '');
+
+        $('#realisasi_ind_tahun').val(thn);
+        $('#realisasi_ind_triwulan').val(tw);
+        $('#realisasi_ind_target').val(target);
+        $('#realisasi_ind_jumlah').val(jumlah);
+        $('#realisasi_ind_progres').val(progres);
+        $('#realisasi_ind_penjelasan').val(penjelasan);
+        $('#realisasi_ind_bukti').val(bukti);
+
+        // Gulir ke atas modal dan fokuskan ke progres
+        $('#modal-realisasi-indikator .modal-body').animate({ scrollTop: 0 }, 250);
+        $('#realisasi_ind_progres').focus();
+    });
+
+    // Tombol Hapus pada baris Riwayat / Log Pengisian Modal
+    $('#modal-realisasi-indikator').on('click', '.btn-delete-realisasi-log', function () {
+        let logId = $(this).data('id');
+        let periode = $(this).data('periode');
+        let indId = $('#realisasi_ind_id').val();
+        let curThn = $('#realisasi_ind_tahun').val();
+        let curTw = $('#realisasi_ind_triwulan').val();
+
+        Swal.fire({
+            title: 'Hapus Realisasi?',
+            text: `Apakah Anda yakin ingin menghapus catatan realisasi ${periode}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            confirmButtonText: 'Ya, Hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.post(AppConfig.initGlobal + 'kill/ikk-indikator-realisasi', { id: logId }, function (res) {
+                    if (res.status === 'success') {
+                        Swal.fire({ icon: 'success', text: res.message, timer: 1500, showConfirmButton: false });
+                        openRealisasiIndikatorModal(indId, curThn, curTw);
+                        dtIndikator.ajax.reload(null, false);
+                        loadSummary();
+                        loadOptionsTahun();
+                    } else {
+                        Swal.fire({ icon: 'error', text: res.message || 'Gagal menghapus data realisasi.' });
+                    }
+                }).fail(function () {
+                    Swal.fire({ icon: 'error', text: 'Terjadi kesalahan sistem saat menghapus realisasi.' });
+                });
+            }
+        });
+    });
+
+    // Tombol Reset Form Input Realisasi
+    $('#btnResetFormRealisasiInd').on('click', function () {
+        $('#realisasi_ind_target').val('');
+        $('#realisasi_ind_jumlah').val('');
+        $('#realisasi_ind_progres').val('');
+        $('#realisasi_ind_penjelasan').val('');
+        $('#realisasi_ind_bukti').val('');
+        $('#realisasi_ind_target').focus();
+    });
+
     // Tombol Smart Assist "Tarik dari Log Kegiatan"
     $('#btn-tarik-kegiatan').on('click', function () {
         let indId = $('#realisasi_ind_id').val();
@@ -1506,15 +1639,19 @@ $(document).ready(function () {
         e.preventDefault();
         let btn = $('#btnSubmitRealisasiIndikator');
         btn.prop('disabled', true);
+        let indId = $('#realisasi_ind_id').val();
+        let curThn = $('#realisasi_ind_tahun').val();
+        let curTw = $('#realisasi_ind_triwulan').val();
 
         $.post(AppConfig.initGlobal + 'store/ikk-indikator-realisasi', $(this).serialize(), function (res) {
             btn.prop('disabled', false);
             if (res.status === 'success') {
-                Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1800, showConfirmButton: false });
-                $('#modal-realisasi-indikator').modal('hide');
+                Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false });
                 dtIndikator.ajax.reload(null, false);
                 loadSummary();
                 loadOptionsTahun();
+                // Perbarui tabel log di dalam modal tanpa perlu menutup modal
+                openRealisasiIndikatorModal(indId, curThn, curTw);
             } else {
                 Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
             }

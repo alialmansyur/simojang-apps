@@ -48,11 +48,17 @@ class IkkModel extends Model
              WHERE r.indikator_id = a.id {$subRealWhere} 
              ORDER BY r.tahun DESC, r.triwulan DESC LIMIT 1) AS realisasi_bukti,
             (SELECT COUNT(*) FROM txn_ikk_indikator r WHERE r.indikator_id = a.id) AS total_realisasi_periods,
-            (SELECT GROUP_CONCAT(t.nama ORDER BY t.nama SEPARATOR ', ') 
+            (SELECT GROUP_CONCAT(DISTINCT t.nama ORDER BY t.nama SEPARATOR ', ') 
+             FROM data_timkerja t 
+             JOIN data_ikk_pengampu p ON p.timkerja_id = t.id 
+             LEFT JOIN data_ikk_kegiatan k ON p.relasi_id = k.id AND p.tipe_relasi = 'kegiatan' 
+             WHERE (p.tipe_relasi = 'indikator' AND p.relasi_id = a.id) 
+                OR (p.tipe_relasi = 'kegiatan' AND k.indikator_id = a.id)) AS pengampu_list,
+            (SELECT COUNT(DISTINCT p.timkerja_id) 
              FROM data_ikk_pengampu p 
-             JOIN data_timkerja t ON p.timkerja_id = t.id 
-             WHERE p.tipe_relasi = 'indikator' AND p.relasi_id = a.id) AS pengampu_list,
-            (SELECT COUNT(*) FROM data_ikk_pengampu p WHERE p.tipe_relasi = 'indikator' AND p.relasi_id = a.id) AS total_pengampu
+             LEFT JOIN data_ikk_kegiatan k ON p.relasi_id = k.id AND p.tipe_relasi = 'kegiatan' 
+             WHERE (p.tipe_relasi = 'indikator' AND p.relasi_id = a.id) 
+                OR (p.tipe_relasi = 'kegiatan' AND k.indikator_id = a.id)) AS total_pengampu
         ";
 
         return $this->db->table('data_ikk_indikator a')
@@ -301,7 +307,19 @@ class IkkModel extends Model
             ->where('tipe_relasi', $tipe_relasi)
             ->where('relasi_id', $relasi_id)
             ->get()->getResultArray();
-        return array_map('intval', array_column($rows, 'timkerja_id'));
+        $ids = array_map('intval', array_column($rows, 'timkerja_id'));
+
+        // Jika level indikator belum di-assign spesifik, ambil daftar tim kerja dari kegiatan operasionalnya
+        if ($tipe_relasi === 'indikator' && empty($ids)) {
+            $kegRows = $this->db->table('data_ikk_pengampu p')
+                ->select('p.timkerja_id')
+                ->join('data_ikk_kegiatan k', 'p.relasi_id = k.id AND p.tipe_relasi = "kegiatan"')
+                ->where('k.indikator_id', $relasi_id)
+                ->get()->getResultArray();
+            $ids = array_unique(array_map('intval', array_column($kegRows, 'timkerja_id')));
+        }
+
+        return array_values($ids);
     }
 
     public function syncPengampu(string $tipe_relasi, int $relasi_id, array $timkerja_ids): bool
