@@ -537,15 +537,26 @@ $(document).ready(function () {
                 } 
             },
             {
-                data: 'pengampu_list',
+                data: 'total_pengampu',
+                className: 'text-center',
                 orderable: false,
                 searchable: false,
-                render: function (data) {
-                    if (data) {
-                        let teams = data.split(',').map(t => t.trim());
-                        return teams.map(t => `<span class="badge bg-light text-dark ikk-text-dark border me-1 mb-1">${t}</span>`).join('');
+                render: function (data, type, row) {
+                    let count = parseInt(data) || (row.pengampu_list ? row.pengampu_list.split(',').length : 0);
+                    if (count > 0) {
+                        return `
+                            <button type="button" class="btn btn-sm btn-outline-primary js-show-pengampu-modal px-2 py-1 shadow-none" 
+                                data-id="${row.id}" 
+                                data-tipe="indikator"
+                                data-nama="${encodeURIComponent(row.nama_indikator || '')}"
+                                data-sub="${encodeURIComponent(row.nama_sasaran ? 'Sasaran: ' + row.nama_sasaran : '')}"
+                                data-pengampu="${encodeURIComponent(row.pengampu_list || '')}"
+                                title="Klik untuk melihat rincian ${count} Tim Kerja Pengampu">
+                                ${count} Tim Pengampu
+                            </button>
+                        `;
                     }
-                    return `<span class="badge bg-light text-secondary border">Belum Ada Pengampu</span>`;
+                    return `<span class="badge bg-light text-secondary border">0 Pengampu</span>`;
                 }
             },
             {
@@ -750,7 +761,7 @@ $(document).ready(function () {
             },
             {
                 data: 'pengampu_list',
-                render: function (data) {
+                render: function (data, type, row) {
                     if (!data || data.trim() === '') {
                         return `<span class="badge bg-danger-subtle text-danger border border-danger-subtle">Belum Ada</span>`;
                     }
@@ -760,7 +771,15 @@ $(document).ready(function () {
                     } else {
                         return `
                             <span class="badge bg-light text-dark ikk-text-dark border text-wrap text-start">${teams[0].trim()}</span>
-                            <span class="badge bg-primary rounded-pill ms-1" title="${data}">+${teams.length - 1} tim</span>
+                            <button type="button" class="btn btn-sm btn-outline-primary py-0 px-1 rounded-pill ms-1 js-show-pengampu-modal shadow-none" 
+                                data-id="${row.id}" 
+                                data-tipe="kegiatan" 
+                                data-nama="${encodeURIComponent(row.nama_kegiatan || '')}" 
+                                data-sub="${encodeURIComponent(row.nama_indikator ? 'Indikator: ' + row.nama_indikator : '')}"
+                                data-pengampu="${encodeURIComponent(data || '')}" 
+                                title="Lihat semua tim pengampu" style="font-size: 0.72rem;">
+                                +${teams.length - 1} tim
+                            </button>
                         `;
                     }
                 }
@@ -1352,6 +1371,69 @@ $(document).ready(function () {
             } else {
                 Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
             }
+        });
+    });
+
+    // -------------------------------------------------------------------------
+    // 11.A POPUP DETAIL TIM KERJA PENGAMPU
+    // -------------------------------------------------------------------------
+    let currentDetailPengampuContext = null;
+
+    $(document).on('click', '.js-show-pengampu-modal', function () {
+        let id = $(this).data('id');
+        let tipe = $(this).data('tipe') || 'indikator';
+        let nama = decodeURIComponent($(this).data('nama') || '');
+        let sub = decodeURIComponent($(this).data('sub') || '');
+        let pengampuRaw = decodeURIComponent($(this).data('pengampu') || '');
+
+        currentDetailPengampuContext = { id: id, tipe: tipe, nama: nama };
+
+        $('#detail_pengampu_tipe_label').text(tipe === 'indikator' ? 'Indikator Kinerja:' : 'Kegiatan Operasional:');
+        $('#detail_pengampu_nama').text(nama || '-');
+        $('#detail_pengampu_sub').text(sub || '-');
+
+        let teams = pengampuRaw ? pengampuRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+        $('#detail_pengampu_count').text(`${teams.length} Tim Kerja`);
+
+        let listHtml = '';
+        if (teams.length === 0) {
+            listHtml = '<li class="list-group-item text-center text-muted py-3">Belum ada tim kerja pengampu yang terdaftar.</li>';
+        } else {
+            teams.forEach((t, idx) => {
+                listHtml += `
+                    <li class="list-group-item d-flex align-items-center justify-content-between py-2 px-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-dark rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 0.72rem;">${idx + 1}</span>
+                            <span class="fw-semibold text-dark">${t}</span>
+                        </div>
+                        <span class="badge bg-light text-primary border">Pengampu</span>
+                    </li>
+                `;
+            });
+        }
+        $('#detail_pengampu_list').html(listHtml);
+        $('#modal-detail-pengampu').modal('show');
+    });
+
+    // Tombol "Atur Pengampu" di dalam modal detail pengampu
+    $('#btnAturPengampuFromDetail').on('click', function () {
+        if (!currentDetailPengampuContext) return;
+        $('#modal-detail-pengampu').modal('hide');
+
+        let ctx = currentDetailPengampuContext;
+        $('#pengampu_relasi_id').val(ctx.id);
+        $('#pengampu_tipe_relasi').val(ctx.tipe);
+        $('#pengampu_label_info').text(ctx.tipe === 'indikator' ? 'Indikator Kinerja:' : 'Kegiatan Operasional:');
+        $('#pengampu_kegiatan_info').text(ctx.nama);
+
+        $.post(AppConfig.initGlobal + 'fetch/ikk-assigned-pengampu', { relasi_id: ctx.id, tipe_relasi: ctx.tipe }, function (res) {
+            let assignedIds = (res.status === 'success' && Array.isArray(res.data)) ? res.data : [];
+            loadOptionsTimKerja('#pengampu_timkerja_id', assignedIds, function () {
+                $('#modal-pengampu').modal('show');
+                setTimeout(function () {
+                    initSelect2Modal('#modal-pengampu', '#pengampu_timkerja_id', 'Pilih Tim Kerja Pengampu...');
+                }, 200);
+            });
         });
     });
 

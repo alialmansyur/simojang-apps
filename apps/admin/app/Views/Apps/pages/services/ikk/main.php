@@ -1216,6 +1216,42 @@
     </div>
 </div>
 
+<!-- 8. Modal Detail Tim Kerja Pengampu -->
+<div class="modal fade" id="modal-detail-pengampu" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark ikk-heading-dark">
+                    Daftar Tim Kerja Pengampu
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="p-3 bg-light rounded border mb-3">
+                    <span class="detail-label d-block" id="detail_pengampu_tipe_label">Indikator Kinerja:</span>
+                    <span class="fw-bold text-dark fs-6 d-block" id="detail_pengampu_nama">-</span>
+                    <span class="small text-secondary mt-1 d-block" id="detail_pengampu_sub">-</span>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="detail-label text-dark fw-bold mb-0">Tim Kerja Terdaftar:</span>
+                        <span class="badge bg-primary rounded-pill" id="detail_pengampu_count">0 Tim Kerja</span>
+                    </div>
+                    <ul class="list-group border rounded" id="detail_pengampu_list" style="max-height: 280px; overflow-y: auto;">
+                        <!-- Diisi via JS -->
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer bg-light d-flex justify-content-between">
+                <button type="button" class="btn btn-sm btn-outline-primary" id="btnAturPengampuFromDetail">
+                    Atur Pengampu
+                </button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?= $this->endSection(); ?>
 
 <?= $this->section('scripts'); ?>
