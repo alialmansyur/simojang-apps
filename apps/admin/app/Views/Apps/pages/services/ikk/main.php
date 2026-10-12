@@ -587,15 +587,31 @@
                         <!-- Filter Indikator -->
                         <div class="filter-card">
                             <div class="row align-items-center g-2">
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-5">
                                     <label class="form-label small fw-semibold text-dark ikk-text-dark mb-1">Filter Sasaran:</label>
                                     <select class="form-select form-select-sm" id="filter-indikator-sasaran">
                                         <option value="">-- Semua Sasaran --</option>
                                     </select>
                                 </div>
-                                <div class="col-12 col-md-6 text-md-end pt-md-3">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-reset-filter-indikator">
-                                        <i class="bi bi-x-circle me-1"></i> Reset Filter
+                                <div class="col-6 col-md-3">
+                                    <label class="form-label small fw-semibold text-dark ikk-text-dark mb-1">Filter Tahun:</label>
+                                    <select class="form-select form-select-sm" id="filter-indikator-tahun">
+                                        <option value="">-- Semua Tahun --</option>
+                                    </select>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <label class="form-label small fw-semibold text-dark ikk-text-dark mb-1">Filter Triwulan:</label>
+                                    <select class="form-select form-select-sm" id="filter-indikator-triwulan">
+                                        <option value="">-- Semua TW --</option>
+                                        <option value="1">Triwulan I</option>
+                                        <option value="2">Triwulan II</option>
+                                        <option value="3">Triwulan III</option>
+                                        <option value="4">Triwulan IV</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-1 text-md-end pt-md-3">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary w-100" id="btn-reset-filter-indikator" title="Reset Filter">
+                                        <i class="bi bi-x-circle"></i>
                                     </button>
                                 </div>
                             </div>
@@ -606,12 +622,12 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th style="width: 38px;" class="text-center no-sort"><i class="bi bi-arrows-expand text-muted" title="Buka Detail"></i></th>
-                                        <th style="width: 50px;" class="text-center">No</th>
-                                        <th>Nama Indikator Kinerja</th>
-                                        <th>Sasaran Induk</th>
-                                        <th style="width: 120px;">Target Vol</th>
-                                        <th style="width: 130px;" class="text-center">Kegiatan</th>
-                                        <th style="width: 120px;" class="text-center no-sort">Aksi</th>
+                                        <th style="width: 45px;" class="text-center">No</th>
+                                        <th>Nama Indikator Kinerja &amp; Sasaran</th>
+                                        <th style="width: 120px;">Target Induk</th>
+                                        <th style="width: 140px;">Tim Pengampu</th>
+                                        <th style="width: 160px;" class="text-center">Realisasi &amp; Progres</th>
+                                        <th style="width: 160px;" class="text-center no-sort">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -679,8 +695,8 @@
                     <div class="tab-pane fade" id="pane-transaksi" role="tabpanel" aria-labelledby="tab-transaksi-btn">
                         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
                             <div>
-                                <h5 class="fw-bold mb-1 text-dark ikk-heading-dark">Pencatatan Transaksi &amp; Realisasi Kinerja</h5>
-                                <p class="text-secondary small mb-0 ikk-text-sub">Catatan riwayat capaian mingguan/harian beserta bukti dukung fisik pekerjaan.</p>
+                                <h5 class="fw-bold mb-1 text-dark ikk-heading-dark">Log Aktivitas &amp; Bukti Transaksi Kinerja</h5>
+                                <p class="text-secondary small mb-0 ikk-text-sub">Riwayat operasional harian/mingguan pelaksanaan kegiatan sebagai dokumen pembuktian kinerja (evidence log).</p>
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <button type="button" class="btn btn-outline-success fw-semibold btn-import-transaksi" data-bs-toggle="modal" data-bs-target="#modal-import-transaksi">
@@ -918,10 +934,10 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" name="relasi_id" id="pengampu_relasi_id">
-                <input type="hidden" name="tipe_relasi" value="kegiatan">
+                <input type="hidden" name="tipe_relasi" id="pengampu_tipe_relasi" value="kegiatan">
                 
                 <div class="alert alert-light border py-2 px-3 small mb-3">
-                    <div class="fw-bold mb-1 text-dark">Kegiatan:</div>
+                    <div class="fw-bold mb-1 text-dark" id="pengampu_label_info">Kegiatan / Indikator:</div>
                     <div id="pengampu_kegiatan_info" class="text-dark fw-semibold">-</div>
                 </div>
 
@@ -1059,6 +1075,110 @@
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
                 <button type="submit" class="btn btn-primary fw-semibold" id="btnSubmitImportTransaksi">
                     <i class="bi bi-upload me-1"></i> Proses Import
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 7. Modal Input / Update Realisasi Indikator -->
+<div class="modal fade" id="modal-realisasi-indikator" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <form id="form-realisasi-indikator" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark ikk-heading-dark">
+                    <i class="bi bi-speedometer2 text-primary me-2"></i>Pencatatan Realisasi Indikator Kinerja
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <input type="hidden" name="indikator_id" id="realisasi_ind_id">
+
+                <!-- Header Info Indikator -->
+                <div class="p-3 bg-light rounded border mb-3">
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <span class="detail-label d-block">Indikator Kinerja Kegiatan:</span>
+                            <span class="fw-bold text-dark fs-6" id="realisasi_ind_nama">-</span>
+                        </div>
+                        <div class="col-md-7">
+                            <span class="detail-label d-block">Sasaran Induk:</span>
+                            <span class="small text-secondary" id="realisasi_ind_sasaran">-</span>
+                        </div>
+                        <div class="col-md-5">
+                            <span class="detail-label d-block">Tim Pengampu:</span>
+                            <div id="realisasi_ind_pengampu" class="mt-1">
+                                <span class="badge bg-light text-dark border">Belum Ada Pengampu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Inputs -->
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-dark fw-semibold">Tahun Pelaporan <span class="text-danger">*</span></label>
+                        <select class="form-select" name="tahun" id="realisasi_ind_tahun" required>
+                            <!-- Diisi via options tahun -->
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-dark fw-semibold">Triwulan Pelaporan <span class="text-danger">*</span></label>
+                        <select class="form-select" name="triwulan" id="realisasi_ind_triwulan" required>
+                            <option value="1">Triwulan I (TW 1 - Jan s/d Mar)</option>
+                            <option value="2">Triwulan II (TW 2 - Apr s/d Jun)</option>
+                            <option value="3">Triwulan III (TW 3 - Jul s/d Sep)</option>
+                            <option value="4">Triwulan IV (TW 4 - Okt s/d Des)</option>
+                        </select>
+                    </div>
+
+                    <!-- Smart Assist Notice & Button -->
+                    <div class="col-12" id="smart-assist-box">
+                        <div class="alert alert-info d-flex flex-column flex-sm-row align-items-sm-center justify-content-between p-3 border-0 bg-light-info rounded mb-0 gap-2">
+                            <div class="d-flex align-items-center me-2">
+                                <i class="bi bi-magic fs-4 text-primary me-2 flex-shrink-0"></i>
+                                <div class="small text-dark">
+                                    <strong id="smart-assist-keg-count">Indikator memiliki kegiatan terdaftar.</strong>
+                                    <div class="text-muted" id="smart-assist-sub">Anda dapat menarik estimasi capaian otomatis dari log kegiatan operasional.</div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary fw-semibold text-nowrap" id="btn-tarik-kegiatan">
+                                <i class="bi bi-arrow-repeat me-1"></i> Tarik dari Log Kegiatan
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label text-dark fw-semibold">Target Periode Ini</label>
+                        <input type="text" class="form-control" name="target_periode" id="realisasi_ind_target" placeholder="Misal: 1 Dokumen / 100%">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-dark fw-semibold">Jumlah Realisasi Angka</label>
+                        <input type="number" step="0.01" class="form-control" name="jumlah_realisasi" id="realisasi_ind_jumlah" placeholder="Misal: 1.0">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-dark fw-semibold">Progres Capaian (%) <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" min="0" max="150" class="form-control" name="progres_capaian" id="realisasi_ind_progres" required placeholder="0 - 100">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label text-dark fw-semibold">Penjelasan Capaian / Analisis Kendala</label>
+                        <textarea class="form-control" name="penjelasan_capaian" id="realisasi_ind_penjelasan" rows="2" placeholder="Faktor pendorong, hambatan/kendala, atau catatan analisis capaian pada periode ini..."></textarea>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label text-dark fw-semibold">Bukti Dukung / Tautan Dokumen</label>
+                        <input type="text" class="form-control" name="bukti_dukung" id="realisasi_ind_bukti" placeholder="Tautan Google Drive dokumen laporan atau lokasi arsip fisik...">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary fw-semibold" id="btnSubmitRealisasiIndikator">
+                    <i class="bi bi-check-lg me-1"></i> Simpan Realisasi
                 </button>
             </div>
         </form>

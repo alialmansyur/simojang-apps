@@ -15,11 +15,50 @@ class IkkModel extends Model
                       (SELECT COUNT(*) FROM data_ikk_indikator i WHERE i.sasaran_id = s.id) AS total_indikator');
     }
 
-    public function getIndikatorBuilder()
+    public function getIndikatorBuilder(array $filter = [])
     {
+        $tahun = !empty($filter['tahun']) ? (int) $filter['tahun'] : null;
+        $triwulan = !empty($filter['triwulan']) ? (int) $filter['triwulan'] : null;
+
+        $subRealWhere = '';
+        if ($tahun !== null) {
+            $subRealWhere .= " AND r.tahun = {$tahun}";
+        }
+        if ($triwulan !== null) {
+            $subRealWhere .= " AND r.triwulan = {$triwulan}";
+        }
+
+        $selectReal = "
+            (SELECT r.progres_capaian FROM txn_ikk_indikator r 
+             WHERE r.indikator_id = a.id {$subRealWhere} 
+             ORDER BY r.tahun DESC, r.triwulan DESC LIMIT 1) AS periode_progres,
+            (SELECT r.jumlah_realisasi FROM txn_ikk_indikator r 
+             WHERE r.indikator_id = a.id {$subRealWhere} 
+             ORDER BY r.tahun DESC, r.triwulan DESC LIMIT 1) AS periode_realisasi,
+            (SELECT r.target_periode FROM txn_ikk_indikator r 
+             WHERE r.indikator_id = a.id {$subRealWhere} 
+             ORDER BY r.tahun DESC, r.triwulan DESC LIMIT 1) AS periode_target,
+            (SELECT r.triwulan FROM txn_ikk_indikator r 
+             WHERE r.indikator_id = a.id {$subRealWhere} 
+             ORDER BY r.tahun DESC, r.triwulan DESC LIMIT 1) AS realisasi_tw,
+            (SELECT r.tahun FROM txn_ikk_indikator r 
+             WHERE r.indikator_id = a.id {$subRealWhere} 
+             ORDER BY r.tahun DESC, r.triwulan DESC LIMIT 1) AS realisasi_tahun,
+            (SELECT r.bukti_dukung FROM txn_ikk_indikator r 
+             WHERE r.indikator_id = a.id {$subRealWhere} 
+             ORDER BY r.tahun DESC, r.triwulan DESC LIMIT 1) AS realisasi_bukti,
+            (SELECT COUNT(*) FROM txn_ikk_indikator r WHERE r.indikator_id = a.id) AS total_realisasi_periods,
+            (SELECT GROUP_CONCAT(t.nama ORDER BY t.nama SEPARATOR ', ') 
+             FROM data_ikk_pengampu p 
+             JOIN data_timkerja t ON p.timkerja_id = t.id 
+             WHERE p.tipe_relasi = 'indikator' AND p.relasi_id = a.id) AS pengampu_list,
+            (SELECT COUNT(*) FROM data_ikk_pengampu p WHERE p.tipe_relasi = 'indikator' AND p.relasi_id = a.id) AS total_pengampu
+        ";
+
         return $this->db->table('data_ikk_indikator a')
-            ->select('a.id, a.sasaran_id, a.no_urut, a.nama_indikator, a.satuan, a.target_volume, a.created_at, a.updated_at, b.nama_sasaran,
-                      (SELECT COUNT(*) FROM data_ikk_kegiatan k WHERE k.indikator_id = a.id) AS total_kegiatan')
+            ->select("a.id, a.sasaran_id, a.no_urut, a.nama_indikator, a.satuan, a.target_volume, a.created_at, a.updated_at, b.nama_sasaran,
+                      (SELECT COUNT(*) FROM data_ikk_kegiatan k WHERE k.indikator_id = a.id) AS total_kegiatan,
+                      {$selectReal}", false)
             ->join('data_ikk_sasaran b', 'a.sasaran_id = b.id', 'left');
     }
 
@@ -127,20 +166,36 @@ class IkkModel extends Model
         }
         $totalTransaksi = $trxCountBuilder->countAllResults();
 
-        // Formulasi Capaian Hierarkis:
-        // 1. Ambil seluruh indikator
+        // Formulasi Capaian Utama Berbasis Indikator Kinerja:
+        // 1. Ambil seluruh indikator aktif
         $indikators = $this->db->table('data_ikk_indikator')->select('id')->get()->getResultArray();
         
-        // 2. Ambil seluruh kegiatan dan petakan per indikator
+        // 2. Ambil data realisasi langsung pada Tab Indikator (Primary KPI Source)
+        $indTrxBuilder = $this->db->table('txn_ikk_indikator');
+        if (!empty($filter['tahun'])) {
+            $indTrxBuilder->where('tahun', (int) $filter['tahun']);
+        }
+        if (!empty($filter['triwulan'])) {
+            $indTrxBuilder->where('triwulan <=', (int) $filter['triwulan']);
+        }
+        $indTrxBuilder->orderBy('tahun', 'DESC')->orderBy('triwulan', 'DESC');
+        $indTrxRows = $indTrxBuilder->get()->getResultArray();
+
+        $realisasiByIndikator = [];
+        foreach ($indTrxRows as $r) {
+            $indId = (int) $r['indikator_id'];
+            if (!isset($realisasiByIndikator[$indId])) {
+                $realisasiByIndikator[$indId] = $r;
+            }
+        }
+
+        // 3. Cadangan (Fallback): Ambil seluruh kegiatan & transaksi harian jika indikator belum diinput langsung
         $kegiatans = $this->db->table('data_ikk_kegiatan')->select('id, indikator_id, target_volume')->get()->getResultArray();
         $kegiatanByIndikator = [];
         foreach ($kegiatans as $keg) {
             $kegiatanByIndikator[$keg['indikator_id']][] = $keg;
         }
 
-        // 3. Ringkas data transaksi per kegiatan:
-        //    - Volume dihitung akumulasi SUM(jumlah_realisasi) s.d. periode terpilih
-        //    - Progres dihitung dari transaksi TERAKHIR (MAX(id)) pada/sebelum periode terpilih
         $subQuery = $this->db->table('txn_ikk_harian')
             ->select('kegiatan_id, COUNT(*) as total_trx, SUM(jumlah_realisasi) as sum_realisasi, MAX(id) as latest_id');
 
@@ -166,40 +221,51 @@ class IkkModel extends Model
             $trxByKegiatan[$t['kegiatan_id']] = $t;
         }
 
-        // 4. Hitung capaian per indikator berdasar kegiatan di bawahnya
+        // 4. Hitung capaian per indikator
         $capaianIndikatorList = [];
         foreach ($indikators as $ind) {
-            $kegList = $kegiatanByIndikator[$ind['id']] ?? [];
-            if (empty($kegList)) {
-                $capaianIndikatorList[] = 0.0;
+            $indId = (int) $ind['id'];
+
+            // PRIORITAS 1: Jika sudah diinput langsung di Tab Indikator
+            if (isset($realisasiByIndikator[$indId])) {
+                $capVal = (float) $realisasiByIndikator[$indId]['progres_capaian'];
+                $capaianIndikatorList[] = min(100.0, max(0.0, $capVal));
                 continue;
             }
 
-            $capaianKegList = [];
-            foreach ($kegList as $keg) {
-                $kegId = $keg['id'];
-                if (!isset($trxByKegiatan[$kegId]) || (int) $trxByKegiatan[$kegId]['total_trx'] === 0) {
-                    $capaianKegList[] = 0.0;
-                    continue;
+            // PRIORITAS 2 (Fallback): Hitung rata-rata log kegiatan di bawahnya jika ada
+            $kegList = $kegiatanByIndikator[$indId] ?? [];
+            if (!empty($kegList)) {
+                $capaianKegList = [];
+                foreach ($kegList as $keg) {
+                    $kegId = $keg['id'];
+                    if (!isset($trxByKegiatan[$kegId]) || (int) $trxByKegiatan[$kegId]['total_trx'] === 0) {
+                        $capaianKegList[] = 0.0;
+                        continue;
+                    }
+
+                    $trxInfo = $trxByKegiatan[$kegId];
+                    $targetNum = $this->parseNumericVolume($keg['target_volume']);
+                    $sumReal = (float) ($trxInfo['sum_realisasi'] ?? 0);
+                    $latestProg = (float) ($trxInfo['latest_progres'] ?? 0);
+
+                    if ($targetNum !== null && $targetNum > 0 && $sumReal > 0) {
+                        $cap = min(100.0, ($sumReal / $targetNum) * 100.0);
+                    } elseif ($latestProg > 0) {
+                        $cap = min(100.0, $latestProg);
+                    } else {
+                        $cap = 0.0;
+                    }
+                    $capaianKegList[] = $cap;
                 }
 
-                $trxInfo = $trxByKegiatan[$kegId];
-                $targetNum = $this->parseNumericVolume($keg['target_volume']);
-                $sumReal = (float) ($trxInfo['sum_realisasi'] ?? 0);
-                $latestProg = (float) ($trxInfo['latest_progres'] ?? 0);
-
-                if ($targetNum !== null && $targetNum > 0 && $sumReal > 0) {
-                    $cap = min(100.0, ($sumReal / $targetNum) * 100.0);
-                } elseif ($latestProg > 0) {
-                    $cap = min(100.0, $latestProg);
-                } else {
-                    $cap = 0.0;
-                }
-                $capaianKegList[] = $cap;
+                $capaianInd = !empty($capaianKegList) ? (array_sum($capaianKegList) / count($capaianKegList)) : 0.0;
+                $capaianIndikatorList[] = min(100.0, max(0.0, $capaianInd));
+                continue;
             }
 
-            $capaianInd = !empty($capaianKegList) ? (array_sum($capaianKegList) / count($capaianKegList)) : 0.0;
-            $capaianIndikatorList[] = $capaianInd;
+            // Jika belum diinput dan tidak ada kegiatan
+            $capaianIndikatorList[] = 0.0;
         }
 
         // 5. Hitung capaian rata-rata keseluruhan indikator instansi
@@ -409,17 +475,133 @@ class IkkModel extends Model
     public function getAvailableYears(): array
     {
         $currentYear = (int) date('Y');
-        $rows = $this->db->table('txn_ikk_harian')
+        $years = [];
+
+        // Ambil tahun dari txn_ikk_harian
+        $rows1 = $this->db->table('txn_ikk_harian')
             ->select('DISTINCT(tahun) as tahun')
             ->where('tahun IS NOT NULL')
-            ->orderBy('tahun', 'DESC')
             ->get()->getResultArray();
+        foreach ($rows1 as $r) {
+            if (!empty($r['tahun'])) $years[] = (int) $r['tahun'];
+        }
 
-        $years = array_filter(array_map('intval', array_column($rows, 'tahun')));
+        // Ambil tahun dari txn_ikk_indikator
+        $rows2 = $this->db->table('txn_ikk_indikator')
+            ->select('DISTINCT(tahun) as tahun')
+            ->where('tahun IS NOT NULL')
+            ->get()->getResultArray();
+        foreach ($rows2 as $r) {
+            if (!empty($r['tahun'])) $years[] = (int) $r['tahun'];
+        }
+
         if (!in_array($currentYear, $years)) {
             $years[] = $currentYear;
         }
+
+        $years = array_unique(array_filter($years));
         rsort($years);
-        return array_values(array_unique($years));
+        return array_values($years);
+    }
+
+    /**
+     * Mengambil matriks realisasi 4 Triwulan untuk suatu indikator pada tahun tertentu
+     */
+    public function getIndikatorMatrix(int $indikatorId, int $tahun): array
+    {
+        $rows = $this->db->table('txn_ikk_indikator')
+            ->where('indikator_id', $indikatorId)
+            ->where('tahun', $tahun)
+            ->orderBy('triwulan', 'ASC')
+            ->get()->getResultArray();
+
+        $twMap = [];
+        foreach ($rows as $r) {
+            $twMap[(int) $r['triwulan']] = $r;
+        }
+
+        $matrix = [];
+        for ($tw = 1; $tw <= 4; $tw++) {
+            $matrix[$tw] = [
+                'triwulan'    => $tw,
+                'tahun'       => $tahun,
+                'periode_key' => sprintf('%04d-TW%d', $tahun, $tw),
+                'has_data'    => isset($twMap[$tw]),
+                'data'        => $twMap[$tw] ?? null,
+            ];
+        }
+
+        return $matrix;
+    }
+
+    /**
+     * Menghitung estimasi capaian agregat dari kegiatan operasional (Smart Assist)
+     */
+    public function calcAggregatedKegiatanProgress(int $indikatorId, ?int $tahun = null, ?int $triwulan = null): array
+    {
+        $kegiatans = $this->db->table('data_ikk_kegiatan')
+            ->select('id, nama_kegiatan, satuan, target_volume')
+            ->where('indikator_id', $indikatorId)
+            ->get()->getResultArray();
+
+        if (empty($kegiatans)) {
+            return [
+                'has_kegiatan'        => false,
+                'total_kegiatan'      => 0,
+                'suggested_progres'   => 0.0,
+                'suggested_realisasi' => 0.0,
+                'message'             => 'Indikator ini tidak memiliki kegiatan operasional terdaftar.',
+            ];
+        }
+
+        $kegProgress = [];
+        $totalRealSum = 0;
+        foreach ($kegiatans as $keg) {
+            $trxQuery = $this->db->table('txn_ikk_harian')
+                ->where('kegiatan_id', $keg['id']);
+
+            if (!empty($tahun)) {
+                $trxQuery->where('tahun', (int) $tahun);
+            }
+            if (!empty($triwulan)) {
+                $trxQuery->where('triwulan <=', (int) $triwulan);
+            }
+
+            $trxQuery->orderBy('period_start_date', 'DESC')->orderBy('id', 'DESC');
+            $latestTrx = $trxQuery->get()->getRowArray();
+
+            $sumRealQuery = $this->db->table('txn_ikk_harian')
+                ->select('SUM(jumlah_realisasi) as sum_real')
+                ->where('kegiatan_id', $keg['id']);
+            if (!empty($tahun)) {
+                $sumRealQuery->where('tahun', (int) $tahun);
+            }
+            if (!empty($triwulan)) {
+                $sumRealQuery->where('triwulan <=', (int) $triwulan);
+            }
+            $sumRealRow = $sumRealQuery->get()->getRowArray();
+            $sumReal = (float) ($sumRealRow['sum_real'] ?? 0);
+            $totalRealSum += $sumReal;
+
+            $targetNum = $this->parseNumericVolume($keg['target_volume']);
+            if ($targetNum !== null && $targetNum > 0 && $sumReal > 0) {
+                $prog = min(100.0, ($sumReal / $targetNum) * 100.0);
+            } elseif ($latestTrx && $latestTrx['progres_realisasi'] !== null) {
+                $prog = (float) $latestTrx['progres_realisasi'];
+            } else {
+                $prog = 0.0;
+            }
+            $kegProgress[] = $prog;
+        }
+
+        $avgProg = !empty($kegProgress) ? round(array_sum($kegProgress) / count($kegProgress), 2) : 0.0;
+
+        return [
+            'has_kegiatan'        => true,
+            'total_kegiatan'      => count($kegiatans),
+            'suggested_progres'   => $avgProg,
+            'suggested_realisasi' => round($totalRealSum, 2),
+            'message'             => 'Nilai berhasil dihitung otomatis dari ' . count($kegiatans) . ' log kegiatan operasional.',
+        ];
     }
 }

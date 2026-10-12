@@ -23,15 +23,19 @@ $(document).ready(function () {
             }
             let htmlGlobal = '<option value="">Semua Tahun</option>';
             let htmlTrx = '<option value="">-- Semua Tahun --</option>';
+            let htmlModalInd = '';
 
             years.forEach(y => {
                 let sel = (y == currentYear) ? 'selected' : '';
                 htmlGlobal += `<option value="${y}" ${sel}>Tahun ${y}</option>`;
                 htmlTrx += `<option value="${y}">Tahun ${y}</option>`;
+                htmlModalInd += `<option value="${y}" ${sel}>Tahun ${y}</option>`;
             });
 
             $('#filter-global-tahun').html(htmlGlobal);
+            $('#filter-indikator-tahun').html(htmlTrx);
             $('#filter-transaksi-tahun').html(htmlTrx);
+            $('#realisasi_ind_tahun').html(htmlModalInd);
 
             if (callback) callback();
         });
@@ -157,11 +161,14 @@ $(document).ready(function () {
         let th = $('#filter-global-tahun').val();
         let tw = $('#filter-global-triwulan').val();
 
-        // Sync ke tab transaksi
+        // Sync ke tab indikator & transaksi
+        $('#filter-indikator-tahun').val(th);
+        $('#filter-indikator-triwulan').val(tw);
         $('#filter-transaksi-tahun').val(th);
         $('#filter-transaksi-triwulan').val(tw);
 
         loadSummary();
+        dtIndikator.ajax.reload(null, false);
         dtTransaksi.ajax.reload(null, false);
         if ($('#pane-tree').hasClass('active') || $('#pane-tree').hasClass('show')) {
             loadHierarchyTree();
@@ -172,9 +179,12 @@ $(document).ready(function () {
         let curYear = new Date().getFullYear();
         $('#filter-global-tahun').val(curYear);
         $('#filter-global-triwulan').val('');
+        $('#filter-indikator-tahun').val('');
+        $('#filter-indikator-triwulan').val('');
         $('#filter-transaksi-tahun').val('');
         $('#filter-transaksi-triwulan').val('');
         loadSummary();
+        dtIndikator.ajax.reload(null, false);
         dtTransaksi.ajax.reload(null, false);
         if ($('#pane-tree').hasClass('active') || $('#pane-tree').hasClass('show')) {
             loadHierarchyTree();
@@ -193,7 +203,7 @@ $(document).ready(function () {
         dtKegiatan.ajax.reload(null, false);
     });
 
-    $('#filter-indikator-sasaran').on('change', function () {
+    $('#filter-indikator-sasaran, #filter-indikator-tahun, #filter-indikator-triwulan').on('change', function () {
         dtIndikator.ajax.reload(null, false);
     });
 
@@ -203,6 +213,8 @@ $(document).ready(function () {
 
     $('#btn-reset-filter-indikator').on('click', function () {
         $('#filter-indikator-sasaran').val('');
+        $('#filter-indikator-tahun').val('');
+        $('#filter-indikator-triwulan').val('');
         dtIndikator.ajax.reload(null, false);
     });
 
@@ -312,15 +324,26 @@ $(document).ready(function () {
     // -------------------------------------------------------------------------
     function formatIndikatorDetail(d) {
         if (!d) return '';
-        let sasaranNama = d.nama_sasaran ? d.nama_sasaran : '<span class="text-muted">-</span>';
-        let target = (d.target_volume ? d.target_volume : '-') + (d.satuan ? ' ' + d.satuan : '');
+        let sasaranNama = d.nama_sasaran || '-';
+        let target = (d.target_volume && d.satuan) ? `${d.target_volume} ${d.satuan}` : (d.target_volume || '-');
         let totalKeg = parseInt(d.total_kegiatan) || 0;
+        let selectedYear = $('#filter-indikator-tahun').val() || $('#filter-global-tahun').val() || new Date().getFullYear();
+
+        let teamsHtml = '<span class="badge bg-light text-secondary border">Belum Ada Pengampu</span>';
+        if (d.pengampu_list) {
+            let teams = d.pengampu_list.split(',').map(t => t.trim());
+            teamsHtml = teams.map(t => `<span class="badge bg-light text-dark ikk-text-dark border me-1 mb-1">${t}</span>`).join('');
+        }
+
+        setTimeout(function () {
+            loadIndikatorQuarterlyMatrix(d.id, selectedYear);
+        }, 100);
 
         return `
             <div class="child-detail-container p-3 my-2">
                 <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
                     <div class="fw-bold fs-6 text-primary d-flex align-items-center gap-2">
-                        <i class="bi bi-info-circle-fill"></i> Rincian Terperinci Indikator Kinerja Kegiatan
+                        <i class="bi bi-speedometer2"></i> Rincian Indikator Kinerja &amp; Matriks Capaian Triwulan
                     </div>
                     <div>
                         <span class="badge bg-dark">Indikator #${d.no_urut || '-'}</span>
@@ -332,36 +355,137 @@ $(document).ready(function () {
                             <div class="detail-label">Nama Indikator Kinerja:</div>
                             <div class="detail-value text-wrap fw-bold p-2 bg-white rounded border">${d.nama_indikator || '-'}</div>
                         </div>
-                        <div>
+                        <div class="mb-3">
                             <div class="detail-label">Sasaran Strategis Induk:</div>
                             <div class="detail-value text-wrap p-2 bg-white rounded border">${sasaranNama}</div>
+                        </div>
+                        <div>
+                            <div class="detail-label">Tim Kerja Pengampu Indikator:</div>
+                            <div class="p-2 bg-white rounded border mt-1">
+                                ${teamsHtml}
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-5">
                         <div class="p-3 bg-white rounded border h-100 d-flex flex-column justify-content-between">
                             <div>
                                 <div class="mb-2">
-                                    <div class="detail-label">Target Volume & Satuan:</div>
+                                    <div class="detail-label">Target Induk Tahunan:</div>
                                     <div class="fs-6 fw-bold text-success">${target}</div>
                                 </div>
                                 <div class="mb-3">
-                                    <div class="detail-label">Kegiatan Operasional Terkait:</div>
+                                    <div class="detail-label">Rincian Kegiatan Terkait:</div>
                                     <div class="fw-semibold text-dark">${totalKeg} Kegiatan Terdaftar</div>
                                 </div>
                             </div>
                             <div class="pt-2 border-top">
-                                <button type="button" class="btn btn-sm btn-outline-primary js-jump-kegiatan px-2 py-1 me-1 mb-1" data-id="${d.id}" data-sasaran="${d.sasaran_id}">
-                                    <i class="bi bi-diagram-3 me-1"></i> Buka Kegiatan (${totalKeg})
+                                <button type="button" class="btn btn-sm btn-success btn-input-realisasi-ind px-2 py-1 me-1 mb-1" data-id="${d.id}">
+                                    <i class="bi bi-speedometer2 me-1"></i> Input Realisasi
                                 </button>
+                                <button type="button" class="btn btn-sm btn-outline-primary btn-assign-pengampu-ind px-2 py-1 me-1 mb-1" data-id="${d.id}" data-nama="${encodeURIComponent(d.nama_indikator)}">
+                                    <i class="bi bi-people me-1"></i> Atur Pengampu
+                                </button>
+                                ${totalKeg > 0 ? `
+                                    <button type="button" class="btn btn-sm btn-outline-dark js-jump-kegiatan px-2 py-1 me-1 mb-1" data-id="${d.id}" data-sasaran="${d.sasaran_id}">
+                                        <i class="bi bi-diagram-3 me-1"></i> Buka Kegiatan (${totalKeg})
+                                    </button>
+                                ` : ''}
                                 <button type="button" class="btn btn-sm btn-warning btn-edit-indikator px-2 py-1 me-1 mb-1" data-id="${d.id}">
                                     <i class="bi bi-pencil me-1"></i> Edit Indikator
                                 </button>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Matriks Capaian 4 Triwulan -->
+                    <div class="col-12 mt-3">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="detail-label text-dark fw-bold mb-0">
+                                <i class="bi bi-calendar3 me-1"></i> Riwayat Capaian Kinerja Tahun ${selectedYear} (Matriks 4 Triwulan):
+                            </div>
+                        </div>
+                        <div id="matrix-tw-ind-${d.id}" class="row g-2">
+                            <div class="col-12 text-center py-2 text-muted small">
+                                <span class="spinner-border spinner-border-sm me-1 text-primary"></span> Memuat capaian triwulan...
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
+    }
+
+    function loadIndikatorQuarterlyMatrix(indikatorId, tahun) {
+        let container = $(`#matrix-tw-ind-${indikatorId}`);
+        if (!container.length) return;
+
+        $.post(AppConfig.initGlobal + 'fetch/ikk-indikator-realisasi', { indikator_id: indikatorId, tahun: tahun }, function (res) {
+            if (res.status === 'success' && res.matrix) {
+                let m = res.matrix;
+                let html = '';
+                for (let tw = 1; tw <= 4; tw++) {
+                    let twData = m[tw];
+                    let roman = tw === 1 ? 'I' : (tw === 2 ? 'II' : (tw === 3 ? 'III' : 'IV'));
+                    if (twData && twData.has_data && twData.data) {
+                        let d = twData.data;
+                        let p = parseFloat(d.progres_capaian || 0);
+                        let pColor = p >= 100 ? 'bg-success text-white' : (p >= 50 ? 'bg-primary text-white' : 'bg-warning text-dark');
+                        html += `
+                            <div class="col-12 col-md-3">
+                                <div class="p-2 bg-white rounded border shadow-none h-100 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="fw-bold small text-dark">Triwulan ${roman}</span>
+                                            <span class="badge ${pColor} fs-8">${p}%</span>
+                                        </div>
+                                        <div class="small text-muted" style="font-size: 0.75rem;">
+                                            <div>Target: <strong class="text-dark">${d.target_periode || '-'}</strong></div>
+                                            <div>Realisasi: <strong class="text-dark">${d.jumlah_realisasi !== null ? d.jumlah_realisasi : '-'}</strong></div>
+                                        </div>
+                                        ${d.bukti_dukung ? `
+                                            <div class="mt-1" style="font-size: 0.72rem;">
+                                                <a href="${encodeURI(d.bukti_dukung)}" target="_blank" rel="noopener" class="text-primary text-truncate d-block" title="${d.bukti_dukung}">
+                                                    <i class="bi bi-link-45deg me-1"></i>Bukti Dukung
+                                                </a>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    <div class="pt-2 mt-2 border-top text-end">
+                                        <button type="button" class="btn btn-xs btn-outline-success btn-fill-tw-ind px-2 py-0" style="font-size: 0.75rem;" data-id="${indikatorId}" data-tw="${tw}" data-tahun="${tahun}" title="Ubah Capaian TW ${roman}">
+                                            <i class="bi bi-pencil-square me-1"></i>Edit TW ${roman}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="col-12 col-md-3">
+                                <div class="p-2 bg-white rounded border shadow-none h-100 d-flex flex-column justify-content-between" style="border-style: dashed !important;">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="fw-bold small text-secondary">Triwulan ${roman}</span>
+                                            <span class="badge bg-light text-muted border fs-8">Belum Diisi</span>
+                                        </div>
+                                        <p class="small text-muted mb-0" style="font-size: 0.75rem;">Belum ada catatan realisasi pada periode ini.</p>
+                                    </div>
+                                    <div class="pt-2 mt-2 border-top text-end">
+                                        <button type="button" class="btn btn-xs btn-outline-primary btn-fill-tw-ind px-2 py-0" style="font-size: 0.75rem;" data-id="${indikatorId}" data-tw="${tw}" data-tahun="${tahun}" title="Isi Capaian TW ${roman}">
+                                            <i class="bi bi-plus-circle me-1"></i>Isi TW ${roman}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                container.html(html);
+            } else {
+                container.html('<div class="col-12 text-muted small py-1">Gagal memuat rincian triwulan.</div>');
+            }
+        }).fail(function () {
+            container.html('<div class="col-12 text-muted small py-1">Gagal memuat rincian triwulan.</div>');
+        });
     }
 
     let dtIndikator = $('#table-indikator').DataTable({
@@ -376,6 +500,8 @@ $(document).ready(function () {
             type: 'POST',
             data: function (d) {
                 d.sasaran_id = $('#filter-indikator-sasaran').val();
+                d.tahun = $('#filter-indikator-tahun').val();
+                d.triwulan = $('#filter-indikator-triwulan').val();
             }
         },
         columns: [
@@ -399,14 +525,9 @@ $(document).ready(function () {
             },
             { 
                 data: 'nama_indikator',
-                render: function (data) {
-                    return `<div class="fw-semibold text-dark ikk-text-dark text-wrap">${data}</div>`;
-                }
-            },
-            { 
-                data: 'nama_sasaran',
-                render: function (data) {
-                    return `<span class="badge bg-light text-dark ikk-text-dark border text-wrap text-start">${data || '-'}</span>`;
+                render: function (data, type, row) {
+                    let sasaranBadge = row.nama_sasaran ? `<div class="mt-1"><span class="badge bg-light text-secondary border text-wrap text-start font-monospace" style="font-size: 0.72rem;">Sasaran: ${row.nama_sasaran}</span></div>` : '';
+                    return `<div><span class="fw-semibold text-dark ikk-text-dark">${data}</span>${sasaranBadge}</div>`;
                 }
             },
             { 
@@ -416,24 +537,33 @@ $(document).ready(function () {
                 } 
             },
             {
-                data: 'total_kegiatan',
+                data: 'pengampu_list',
+                orderable: false,
+                searchable: false,
+                render: function (data) {
+                    if (data) {
+                        let teams = data.split(',').map(t => t.trim());
+                        return teams.map(t => `<span class="badge bg-light text-dark ikk-text-dark border me-1 mb-1">${t}</span>`).join('');
+                    }
+                    return `<span class="badge bg-light text-secondary border">Belum Ada Pengampu</span>`;
+                }
+            },
+            {
+                data: 'periode_progres',
                 className: 'text-center',
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
-                    let count = parseInt(data) || 0;
-                    if (count > 0) {
-                        return `
-                            <button type="button" class="btn btn-sm btn-outline-dark js-jump-kegiatan ikk-btn-jump px-2 py-1" data-id="${row.id}" data-sasaran="${row.sasaran_id}" title="Buka Kegiatan">
-                                ${count} Kegiatan <i class="bi bi-chevron-right ms-1"></i>
-                            </button>
-                        `;
+                    if (data !== null && data !== undefined && data !== '') {
+                        let p = parseFloat(data);
+                        let pColor = p >= 100 ? 'bg-success text-white' : (p >= 50 ? 'bg-primary text-white' : 'bg-warning text-dark');
+                        let twLabel = row.realisasi_tw ? `<span class="badge bg-light text-dark ikk-text-dark border me-1">TW ${row.realisasi_tw}</span>` : '';
+                        let realSub = (row.periode_realisasi !== null && row.periode_realisasi !== '') 
+                            ? `<div class="small text-muted mt-1" style="font-size: 0.75rem;">Real: ${row.periode_realisasi} ${row.satuan || ''}</div>` 
+                            : '';
+                        return `<div class="text-center">${twLabel}<span class="badge ${pColor}">${p}%</span>${realSub}</div>`;
                     } else {
-                        return `
-                            <span class="badge bg-light text-secondary ikk-text-sub border p-2">
-                                0 Kegiatan
-                            </span>
-                        `;
+                        return `<div class="text-center"><span class="badge bg-light text-muted border" style="font-size: 0.75rem;">Belum Diisi</span></div>`;
                     }
                 }
             },
@@ -442,11 +572,13 @@ $(document).ready(function () {
                 orderable: false,
                 searchable: false,
                 className: 'text-center',
-                render: function (data) {
+                render: function (data, type, row) {
                     return `
-                        <div class="table-action-gap">
-                            <button type="button" class="btn btn-sm btn-warning btn-edit-indikator" data-id="${data}" title="Edit Indikator"><i class="bi bi-pencil"></i></button>
-                            <button type="button" class="btn btn-sm btn-danger btn-delete-indikator" data-id="${data}" title="Hapus Indikator"><i class="bi bi-trash"></i></button>
+                        <div class="table-action-gap d-flex align-items-center justify-content-center gap-1">
+                            <button type="button" class="btn btn-sm btn-outline-success btn-input-realisasi-ind px-2 py-1" data-id="${data}" title="Input/Update Realisasi Periode"><i class="bi bi-speedometer2"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-primary btn-assign-pengampu-ind px-2 py-1" data-id="${data}" data-nama="${encodeURIComponent(row.nama_indikator)}" title="Atur Pengampu"><i class="bi bi-people"></i></button>
+                            <button type="button" class="btn btn-sm btn-warning btn-edit-indikator px-2 py-1" data-id="${data}" title="Edit Indikator"><i class="bi bi-pencil"></i></button>
+                            <button type="button" class="btn btn-sm btn-danger btn-delete-indikator px-2 py-1" data-id="${data}" title="Hapus Indikator"><i class="bi bi-trash"></i></button>
                         </div>
                     `;
                 }
@@ -1166,11 +1298,33 @@ $(document).ready(function () {
     // -------------------------------------------------------------------------
     // 11. MANAJEMEN PENUGASAN PENGAMPU CEPAT (MODAL PENGAMPU)
     // -------------------------------------------------------------------------
+    $('#table-indikator').on('click', '.btn-assign-pengampu-ind', function () {
+        let indId = $(this).data('id');
+        let indNama = decodeURIComponent($(this).data('nama') || '');
+
+        $('#pengampu_relasi_id').val(indId);
+        $('#pengampu_tipe_relasi').val('indikator');
+        $('#pengampu_label_info').text('Indikator Kinerja:');
+        $('#pengampu_kegiatan_info').text(indNama);
+
+        $.post(AppConfig.initGlobal + 'fetch/ikk-assigned-pengampu', { relasi_id: indId, tipe_relasi: 'indikator' }, function (res) {
+            let assignedIds = (res.status === 'success' && Array.isArray(res.data)) ? res.data : [];
+            loadOptionsTimKerja('#pengampu_timkerja_id', assignedIds, function () {
+                $('#modal-pengampu').modal('show');
+                setTimeout(function () {
+                    initSelect2Modal('#modal-pengampu', '#pengampu_timkerja_id', 'Pilih Tim Kerja Pengampu...');
+                }, 200);
+            });
+        });
+    });
+
     $('#table-kegiatan').on('click', '.btn-assign-pengampu', function () {
         let kegiatanId = $(this).data('id');
         let kegiatanNama = decodeURIComponent($(this).data('nama') || '');
 
         $('#pengampu_relasi_id').val(kegiatanId);
+        $('#pengampu_tipe_relasi').val('kegiatan');
+        $('#pengampu_label_info').text('Kegiatan Operasional:');
         $('#pengampu_kegiatan_info').text(kegiatanNama);
 
         // Ambil ID tim kerja yang sudah terdaftar
@@ -1192,11 +1346,181 @@ $(document).ready(function () {
                 Swal.fire({ icon: 'success', text: res.message, timer: 1500, showConfirmButton: false });
                 $('#modal-pengampu').modal('hide');
                 dtKegiatan.ajax.reload(null, false);
+                dtIndikator.ajax.reload(null, false);
                 loadSummary();
                 loadOptionsKegiatan('#filter-transaksi-kegiatan');
             } else {
                 Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
             }
+        });
+    });
+
+    // -------------------------------------------------------------------------
+    // 11.B PENCATATAN REALISASI INDIKATOR PERIODIK & SMART ASSIST
+    // -------------------------------------------------------------------------
+    function openRealisasiIndikatorModal(indikatorId, tahun = null, triwulan = null) {
+        let curYear = tahun || $('#filter-indikator-tahun').val() || $('#filter-global-tahun').val() || new Date().getFullYear();
+        let curTw = triwulan || $('#filter-indikator-triwulan').val() || $('#filter-global-triwulan').val() || 1;
+
+        $('#form-realisasi-indikator')[0].reset();
+        $('#realisasi_ind_id').val(indikatorId);
+        $('#realisasi_ind_tahun').val(curYear);
+        $('#realisasi_ind_triwulan').val(curTw);
+
+        // Fetch indikator data & existing realisasi
+        $.post(AppConfig.initGlobal + 'fetch/ikk-indikator-realisasi', { indikator_id: indikatorId, tahun: curYear }, function (res) {
+            if (res.status === 'success') {
+                let matrix = res.matrix;
+                let activeTwData = (matrix && matrix[curTw] && matrix[curTw].has_data) ? matrix[curTw].data : null;
+
+                if (activeTwData) {
+                    $('#realisasi_ind_target').val(activeTwData.target_periode || '');
+                    $('#realisasi_ind_jumlah').val(activeTwData.jumlah_realisasi !== null ? activeTwData.jumlah_realisasi : '');
+                    $('#realisasi_ind_progres').val(activeTwData.progres_capaian || '');
+                    $('#realisasi_ind_penjelasan').val(activeTwData.penjelasan_capaian || '');
+                    $('#realisasi_ind_bukti').val(activeTwData.bukti_dukung || '');
+                } else {
+                    $('#realisasi_ind_target').val('');
+                    $('#realisasi_ind_jumlah').val('');
+                    $('#realisasi_ind_progres').val('');
+                    $('#realisasi_ind_penjelasan').val('');
+                    $('#realisasi_ind_bukti').val('');
+                }
+
+                // Smart assist box
+                let assist = res.assist;
+                if (assist && assist.has_kegiatan && assist.total_kegiatan > 0) {
+                    $('#smart-assist-box').show();
+                    $('#smart-assist-keg-count').text(`Indikator memiliki ${assist.total_kegiatan} kegiatan operasional.`);
+                    $('#smart-assist-sub').text(`Estimasi capaian log kegiatan saat ini: ${assist.suggested_progres}%.`);
+                } else {
+                    $('#smart-assist-box').hide();
+                }
+
+                $('#modal-realisasi-indikator').modal('show');
+            }
+        });
+    }
+
+    // Klik tombol Input Realisasi di tabel atau detail indikator
+    $('#table-indikator').on('click', '.btn-input-realisasi-ind', function () {
+        let indId = $(this).data('id');
+        let tr = $(this).closest('tr');
+        let row = dtIndikator.row(tr.hasClass('child') ? tr.prev() : tr).data();
+        if (row) {
+            $('#realisasi_ind_nama').text(row.nama_indikator || '-');
+            $('#realisasi_ind_sasaran').text(row.nama_sasaran || '-');
+            let teamsHtml = row.pengampu_list ? row.pengampu_list.split(',').map(t => `<span class="badge bg-light text-dark border me-1">${t.trim()}</span>`).join('') : '<span class="badge bg-light text-muted border">Belum Ada Pengampu</span>';
+            $('#realisasi_ind_pengampu').html(teamsHtml);
+            if (row.target_volume) {
+                $('#realisasi_ind_target').attr('placeholder', `Target Induk: ${row.target_volume} ${row.satuan || ''}`);
+            }
+        }
+        openRealisasiIndikatorModal(indId);
+    });
+
+    // Klik tombol isi triwulan tertentu di matriks detail
+    $('#table-indikator').on('click', '.btn-fill-tw-ind', function () {
+        let indId = $(this).data('id');
+        let tw = $(this).data('tw');
+        let thn = $(this).data('tahun');
+        let tr = $(this).closest('tr');
+        let row = dtIndikator.row(tr.hasClass('child') ? tr.prev() : tr).data();
+        if (row) {
+            $('#realisasi_ind_nama').text(row.nama_indikator || '-');
+            $('#realisasi_ind_sasaran').text(row.nama_sasaran || '-');
+            let teamsHtml = row.pengampu_list ? row.pengampu_list.split(',').map(t => `<span class="badge bg-light text-dark border me-1">${t.trim()}</span>`).join('') : '<span class="badge bg-light text-muted border">Belum Ada Pengampu</span>';
+            $('#realisasi_ind_pengampu').html(teamsHtml);
+        }
+        openRealisasiIndikatorModal(indId, thn, tw);
+    });
+
+    // Perubahan tahun atau triwulan di modal realisasi indikator -> auto reload isian TW tersebut
+    $('#realisasi_ind_tahun, #realisasi_ind_triwulan').on('change', function () {
+        let indId = $('#realisasi_ind_id').val();
+        let thn = $('#realisasi_ind_tahun').val();
+        let tw = $('#realisasi_ind_triwulan').val();
+        if (indId && thn && tw) {
+            $.post(AppConfig.initGlobal + 'fetch/ikk-indikator-realisasi', { indikator_id: indId, tahun: thn }, function (res) {
+                if (res.status === 'success' && res.matrix && res.matrix[tw]) {
+                    let d = res.matrix[tw].data;
+                    if (d) {
+                        $('#realisasi_ind_target').val(d.target_periode || '');
+                        $('#realisasi_ind_jumlah').val(d.jumlah_realisasi !== null ? d.jumlah_realisasi : '');
+                        $('#realisasi_ind_progres').val(d.progres_capaian || '');
+                        $('#realisasi_ind_penjelasan').val(d.penjelasan_capaian || '');
+                        $('#realisasi_ind_bukti').val(d.bukti_dukung || '');
+                    } else {
+                        $('#realisasi_ind_target').val('');
+                        $('#realisasi_ind_jumlah').val('');
+                        $('#realisasi_ind_progres').val('');
+                        $('#realisasi_ind_penjelasan').val('');
+                        $('#realisasi_ind_bukti').val('');
+                    }
+                }
+            });
+        }
+    });
+
+    // Tombol Smart Assist "Tarik dari Log Kegiatan"
+    $('#btn-tarik-kegiatan').on('click', function () {
+        let indId = $('#realisasi_ind_id').val();
+        let thn = $('#realisasi_ind_tahun').val();
+        let tw = $('#realisasi_ind_triwulan').val();
+
+        if (!indId) return;
+
+        let btn = $(this);
+        let origHtml = btn.html();
+        btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Menghitung...');
+
+        $.post(AppConfig.initGlobal + 'fetch/ikk-calc-kegiatan-realisasi', { indikator_id: indId, tahun: thn, triwulan: tw }, function (res) {
+            btn.prop('disabled', false).html(origHtml);
+            if (res.status === 'success' && res.has_kegiatan) {
+                $('#realisasi_ind_progres').val(res.suggested_progres);
+                if (res.suggested_realisasi > 0) {
+                    $('#realisasi_ind_jumlah').val(res.suggested_realisasi);
+                }
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Capaian Ditarik',
+                    text: `${res.message} Nilai progres terisi: ${res.suggested_progres}%.`,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } else {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Informasi',
+                    text: res.message || 'Tidak ada log kegiatan yang dapat dihitung.'
+                });
+            }
+        }).fail(function () {
+            btn.prop('disabled', false).html(origHtml);
+            Swal.fire({ icon: 'error', text: 'Gagal menghitung estimasi capaian dari kegiatan.' });
+        });
+    });
+
+    // Submit Realisasi Indikator
+    $('#form-realisasi-indikator').on('submit', function (e) {
+        e.preventDefault();
+        let btn = $('#btnSubmitRealisasiIndikator');
+        btn.prop('disabled', true);
+
+        $.post(AppConfig.initGlobal + 'store/ikk-indikator-realisasi', $(this).serialize(), function (res) {
+            btn.prop('disabled', false);
+            if (res.status === 'success') {
+                Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1800, showConfirmButton: false });
+                $('#modal-realisasi-indikator').modal('hide');
+                dtIndikator.ajax.reload(null, false);
+                loadSummary();
+                loadOptionsTahun();
+            } else {
+                Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
+            }
+        }).fail(function () {
+            btn.prop('disabled', false);
+            Swal.fire({ icon: 'error', title: 'Kesalahan Sistem', text: 'Terjadi kesalahan saat menyimpan realisasi indikator.' });
         });
     });
 

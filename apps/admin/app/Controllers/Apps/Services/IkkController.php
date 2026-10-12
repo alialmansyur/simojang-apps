@@ -191,8 +191,19 @@ class IkkController extends BaseController
     // =========================================================================
     public function getDataIndikator()
     {
-        $builder    = $this->ikk->getIndikatorBuilder();
         $sasaran_id = $this->request->getPost('sasaran_id');
+        $tahun      = $this->request->getPost('tahun');
+        $triwulan   = $this->request->getPost('triwulan');
+
+        $filter = [];
+        if (!empty($tahun)) {
+            $filter['tahun'] = (int) $tahun;
+        }
+        if (!empty($triwulan)) {
+            $filter['triwulan'] = (int) $triwulan;
+        }
+
+        $builder = $this->ikk->getIndikatorBuilder($filter);
 
         if (!empty($sasaran_id)) {
             $builder->where('a.sasaran_id', (int) $sasaran_id);
@@ -205,10 +216,183 @@ class IkkController extends BaseController
             ['data' => 'nama_indikator', 'search' => 'a.nama_indikator'],
             'satuan', 
             'target_volume',
-            'total_kegiatan'
+            'total_kegiatan',
+            'periode_progres',
+            'periode_realisasi',
+            'periode_target',
+            'realisasi_tw',
+            'realisasi_tahun',
+            'realisasi_bukti',
+            'total_realisasi_periods',
+            'pengampu_list',
+            'total_pengampu'
         ];
         $result = $this->dataTables->render($builder, $columns);
         return $this->response->setJSON($result);
+    }
+
+    /**
+     * Mengambil matriks realisasi 4 Triwulan untuk modal/detail indikator
+     */
+    public function getRealisasiIndikator()
+    {
+        $indikator_id = (int) $this->request->getPost('indikator_id');
+        $tahun = (int) ($this->request->getPost('tahun') ?: date('Y'));
+
+        if (empty($indikator_id)) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Indikator ID tidak valid.']);
+        }
+
+        $matrix = $this->ikk->getIndikatorMatrix($indikator_id, $tahun);
+        $assist = $this->ikk->calcAggregatedKegiatanProgress($indikator_id, $tahun);
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'matrix' => $matrix,
+            'assist' => $assist,
+            'tahun'  => $tahun,
+        ]);
+    }
+
+    /**
+     * Simpan / perbarui realisasi capaian indikator per periode
+     */
+    public function storeRealisasiIndikator()
+    {
+        if (!$this->checkServiceAccess()) {
+            return $this->unauthorizedResponse();
+        }
+
+        $indikator_id       = (int) $this->request->getPost('indikator_id');
+        $tahun              = (int) $this->request->getPost('tahun');
+        $triwulan           = (int) $this->request->getPost('triwulan');
+        $target_periode     = trim((string) $this->request->getPost('target_periode'));
+        $jumlah_realisasi   = $this->request->getPost('jumlah_realisasi');
+        $progres_capaian    = $this->request->getPost('progres_capaian');
+        $penjelasan_capaian = trim((string) $this->request->getPost('penjelasan_capaian'));
+        $bukti_dukung       = trim((string) $this->request->getPost('bukti_dukung'));
+
+        $rules = [
+            'indikator_id'    => 'required|is_not_unique[data_ikk_indikator.id]',
+            'tahun'           => 'required|numeric|greater_than[2020]|less_than[2100]',
+            'triwulan'        => 'required|in_list[1,2,3,4]',
+            'progres_capaian' => 'required|numeric|greater_than_equal_to[0]|less_than_equal_to[150]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => implode(', ', $this->validator->getErrors()),
+            ]);
+        }
+
+        $periodeKey = sprintf('%04d-TW%d', $tahun, $triwulan);
+        $sessionUser = session()->get('nama') ?? session()->get('username') ?? 'Pengampu IKK';
+        $now = date('Y-m-d H:i:s');
+
+        $data = [
+            'indikator_id'       => $indikator_id,
+            'tahun'              => $tahun,
+            'triwulan'           => $triwulan,
+            'periode_key'        => $periodeKey,
+            'target_periode'     => $target_periode ?: null,
+            'jumlah_realisasi'   => ($jumlah_realisasi !== '' && $jumlah_realisasi !== null) ? (float) $jumlah_realisasi : null,
+            'progres_capaian'    => (float) $progres_capaian,
+            'penjelasan_capaian' => $penjelasan_capaian ?: null,
+            'bukti_dukung'       => $bukti_dukung ?: null,
+            'updated_at'         => $now,
+        ];
+
+        $db = $this->ikk->db;
+        $db->transBegin();
+
+        try {
+            $existing = $db->table('txn_ikk_indikator')
+                ->where('indikator_id', $indikator_id)
+                ->where('tahun', $tahun)
+                ->where('triwulan', $triwulan)
+                ->get()->getRowArray();
+
+            if ($existing) {
+                $db->table('txn_ikk_indikator')
+                    ->where('id', $existing['id'])
+                    ->update($data);
+            } else {
+                $data['created_by'] = $sessionUser;
+                $data['created_at'] = $now;
+                $db->table('txn_ikk_indikator')->insert($data);
+            }
+
+            $this->apps->storeData([
+                'layanan_id' => 43,
+                'tanggal'    => date('Y-m-d'),
+                'created_by' => session()->get('username') ?? 'system',
+            ], 'activity_daily_logs');
+
+            if ($db->transStatus() === false) {
+                $db->transRollback();
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menyimpan realisasi indikator.']);
+            }
+
+            $db->transCommit();
+            return $this->response->setJSON([
+                'status'  => 'success',
+                'message' => "Realisasi Indikator Triwulan {$triwulan} Tahun {$tahun} berhasil disimpan.",
+            ]);
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Hapus record realisasi indikator
+     */
+    public function deleteRealisasiIndikator()
+    {
+        if (!$this->checkServiceAccess()) {
+            return $this->unauthorizedResponse();
+        }
+
+        $id = (int) $this->request->getPost('id');
+        if (empty($id)) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'ID realisasi tidak valid.']);
+        }
+
+        $db = $this->ikk->db;
+        $db->transBegin();
+
+        try {
+            $db->table('txn_ikk_indikator')->where('id', $id)->delete();
+
+            if ($db->transStatus() === false) {
+                $db->transRollback();
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menghapus data realisasi indikator.']);
+            }
+
+            $db->transCommit();
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Data realisasi indikator berhasil dihapus.']);
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Hitung estimasi capaian dari kegiatan operasional (Smart Assist helper)
+     */
+    public function calcFromKegiatan()
+    {
+        $indikator_id = (int) $this->request->getPost('indikator_id');
+        $tahun        = $this->request->getPost('tahun') ? (int) $this->request->getPost('tahun') : null;
+        $triwulan     = $this->request->getPost('triwulan') ? (int) $this->request->getPost('triwulan') : null;
+
+        if (empty($indikator_id)) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Indikator ID tidak valid.']);
+        }
+
+        $assist = $this->ikk->calcAggregatedKegiatanProgress($indikator_id, $tahun, $triwulan);
+        return $this->response->setJSON(array_merge(['status' => 'success'], $assist));
     }
 
     public function storeIndikator()
