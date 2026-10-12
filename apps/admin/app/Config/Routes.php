@@ -383,6 +383,12 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     $routes->post('/apps-manage-assets-detail/update', 'Apps\Services\ManageAssetsController::updateDetail');
     $routes->post('/apps-manage-assets-detail/delete', 'Apps\Services\ManageAssetsController::deleteDetail');
     $routes->post('/apps-manage-assets-detail/get-data', 'Apps\Services\ManageAssetsController::getDetail');
+
+    // Category Management
+    $routes->post('/store/save-asset-category', 'Apps\Services\ManageAssetsController::storeCategory');
+    $routes->post('/store/update-asset-category', 'Apps\Services\ManageAssetsController::updateCategory');
+    $routes->post('/fetch/asset-category', 'Apps\Services\ManageAssetsController::getCategory');
+    $routes->post('/kill/asset-category', 'Apps\Services\ManageAssetsController::removeCategory');
     
     $routes->post('/fetch/data-manage-assets', 'Apps\Services\ManageAssetsController::getData');
     $routes->post('/fetch/summary-manage-assets', 'Apps\Services\ManageAssetsController::getSummary');
