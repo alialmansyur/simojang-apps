@@ -4,13 +4,39 @@ $(document).ready(function () {
     // -------------------------------------------------------------------------
     // 1. HELPER & OPTIONS LOADER
     // -------------------------------------------------------------------------
-    function initSelect2Modal(modalId, selectId, placeholderText = '-- Pilih Tim Kerja --') {
-        if ($.fn.select2) {
-            $(selectId).select2({
-                dropdownParent: $(modalId),
-                width: '100%',
-                placeholder: placeholderText
-            });
+    function destroySelect2(selectId) {
+        let $el = $(selectId);
+        if ($el.length && $.fn.select2) {
+            if ($el.hasClass('select2-hidden-accessible')) {
+                $el.select2('destroy');
+            }
+        }
+        $(selectId).siblings('.select2-container').remove();
+        $(selectId).next('.select2-container').remove();
+    }
+
+    function initSelect2Modal(modalId, selectId, placeholderText = '-- Pilih Tim Kerja --', selectedVals = null) {
+        if (!$.fn.select2) return;
+
+        let $select = $(selectId);
+        if (!$select.length) return;
+
+        destroySelect2(selectId);
+
+        $select.select2({
+            theme: 'bootstrap-5',
+            dropdownParent: $(modalId),
+            width: '100%',
+            placeholder: placeholderText,
+            allowClear: true,
+            closeOnSelect: false
+        });
+
+        if (selectedVals !== null && selectedVals !== undefined) {
+            let vals = Array.isArray(selectedVals) 
+                ? selectedVals.map(String) 
+                : (selectedVals !== '' ? [String(selectedVals)] : []);
+            $select.val(vals).trigger('change');
         }
     }
 
@@ -129,22 +155,43 @@ $(document).ready(function () {
         });
     }
 
+    let cachedTimKerjaOptions = null;
+
     function loadOptionsTimKerja(targetSelect, selectedVals = [], callback = null) {
-        $.post(AppConfig.initGlobal + 'fetch/ikk-options-timkerja', function (res) {
-            let isMultiple = $(targetSelect).prop('multiple');
+        function renderOptions(options) {
+            let $select = $(targetSelect);
+            let isMultiple = $select.prop('multiple');
+
+            destroySelect2(targetSelect);
+
             let html = isMultiple ? '' : '<option value="">-- Semua Tim Kerja --</option>';
-            if (Array.isArray(res)) {
-                res.forEach(item => {
-                    let isSel = Array.isArray(selectedVals) 
-                        ? selectedVals.map(v => parseInt(v)).includes(parseInt(item.id)) 
-                        : (selectedVals == item.id);
-                    let sel = isSel ? 'selected' : '';
-                    html += `<option value="${item.id}" ${sel}>${item.text}</option>`;
+            if (Array.isArray(options)) {
+                options.forEach(item => {
+                    html += `<option value="${item.id}">${item.text}</option>`;
                 });
             }
-            $(targetSelect).html(html);
-            if (callback) callback();
-        });
+            $select.html(html);
+
+            if (isMultiple) {
+                let vals = Array.isArray(selectedVals) 
+                    ? selectedVals.map(String) 
+                    : (selectedVals !== '' && selectedVals !== null && selectedVals !== undefined ? [String(selectedVals)] : []);
+                $select.val(vals);
+            } else if (selectedVals) {
+                $select.val(String(selectedVals));
+            }
+
+            if (callback) callback(options);
+        }
+
+        if (cachedTimKerjaOptions && cachedTimKerjaOptions.length > 0) {
+            renderOptions(cachedTimKerjaOptions);
+        } else {
+            $.post(AppConfig.initGlobal + 'fetch/ikk-options-timkerja', function (res) {
+                cachedTimKerjaOptions = Array.isArray(res) ? res : [];
+                renderOptions(cachedTimKerjaOptions);
+            });
+        }
     }
 
     // Inisialisasi awal summary & dropdown filter
@@ -1242,9 +1289,7 @@ $(document).ready(function () {
             loadOptionsTimKerja('#kegiatan_timkerja_id', [], function () {
                 $('#modal-kegiatan-title').text('Tambah Kegiatan Operasional');
                 $('#modal-kegiatan').modal('show');
-                setTimeout(function () {
-                    initSelect2Modal('#modal-kegiatan', '#kegiatan_timkerja_id', 'Pilih Tim Kerja Pengampu...');
-                }, 200);
+                initSelect2Modal('#modal-kegiatan', '#kegiatan_timkerja_id', 'Pilih Tim Kerja Pengampu...', []);
             });
         });
     });
@@ -1266,12 +1311,15 @@ $(document).ready(function () {
                 loadOptionsTimKerja('#kegiatan_timkerja_id', assignedIds, function () {
                     $('#modal-kegiatan-title').text('Edit Kegiatan Operasional');
                     $('#modal-kegiatan').modal('show');
-                    setTimeout(function () {
-                        initSelect2Modal('#modal-kegiatan', '#kegiatan_timkerja_id', 'Pilih Tim Kerja Pengampu...');
-                    }, 200);
+                    initSelect2Modal('#modal-kegiatan', '#kegiatan_timkerja_id', 'Pilih Tim Kerja Pengampu...', assignedIds);
                 });
             });
         });
+    });
+
+    $('#modal-kegiatan').on('hidden.bs.modal', function () {
+        destroySelect2('#kegiatan_timkerja_id');
+        $('#kegiatan_timkerja_id').empty();
     });
 
     $('#form-kegiatan').on('submit', function (e) {
@@ -1319,49 +1367,47 @@ $(document).ready(function () {
     // -------------------------------------------------------------------------
     // 11. MANAJEMEN PENUGASAN PENGAMPU CEPAT (MODAL PENGAMPU)
     // -------------------------------------------------------------------------
+    function openModalPengampu(tipeRelasi, relasiId, namaRelasi) {
+        $('#pengampu_relasi_id').val(relasiId);
+        $('#pengampu_tipe_relasi').val(tipeRelasi);
+        $('#pengampu_label_info').text(tipeRelasi === 'indikator' ? 'Indikator Kinerja:' : 'Kegiatan Operasional:');
+        $('#pengampu_kegiatan_info').text(namaRelasi || '-');
+
+        destroySelect2('#pengampu_timkerja_id');
+
+        $.post(AppConfig.initGlobal + 'fetch/ikk-assigned-pengampu', { relasi_id: relasiId, tipe_relasi: tipeRelasi }, function (res) {
+            let assignedIds = (res.status === 'success' && Array.isArray(res.data)) ? res.data : [];
+            loadOptionsTimKerja('#pengampu_timkerja_id', assignedIds, function () {
+                $('#modal-pengampu').modal('show');
+                initSelect2Modal('#modal-pengampu', '#pengampu_timkerja_id', 'Pilih Tim Kerja Pengampu...', assignedIds);
+            });
+        });
+    }
+
     $('#table-indikator').on('click', '.btn-assign-pengampu-ind', function () {
         let indId = $(this).data('id');
         let indNama = decodeURIComponent($(this).data('nama') || '');
-
-        $('#pengampu_relasi_id').val(indId);
-        $('#pengampu_tipe_relasi').val('indikator');
-        $('#pengampu_label_info').text('Indikator Kinerja:');
-        $('#pengampu_kegiatan_info').text(indNama);
-
-        $.post(AppConfig.initGlobal + 'fetch/ikk-assigned-pengampu', { relasi_id: indId, tipe_relasi: 'indikator' }, function (res) {
-            let assignedIds = (res.status === 'success' && Array.isArray(res.data)) ? res.data : [];
-            loadOptionsTimKerja('#pengampu_timkerja_id', assignedIds, function () {
-                $('#modal-pengampu').modal('show');
-                setTimeout(function () {
-                    initSelect2Modal('#modal-pengampu', '#pengampu_timkerja_id', 'Pilih Tim Kerja Pengampu...');
-                }, 200);
-            });
-        });
+        openModalPengampu('indikator', indId, indNama);
     });
 
     $('#table-kegiatan').on('click', '.btn-assign-pengampu', function () {
-        let kegiatanId = $(this).data('id');
-        let kegiatanNama = decodeURIComponent($(this).data('nama') || '');
-
-        $('#pengampu_relasi_id').val(kegiatanId);
-        $('#pengampu_tipe_relasi').val('kegiatan');
-        $('#pengampu_label_info').text('Kegiatan Operasional:');
-        $('#pengampu_kegiatan_info').text(kegiatanNama);
-
-        // Ambil ID tim kerja yang sudah terdaftar
-        $.post(AppConfig.initGlobal + 'fetch/ikk-assigned-pengampu', { relasi_id: kegiatanId, tipe_relasi: 'kegiatan' }, function (res) {
-            let assignedIds = (res.status === 'success' && Array.isArray(res.data)) ? res.data : [];
-            loadOptionsTimKerja('#pengampu_timkerja_id', assignedIds, function () {
-                $('#modal-pengampu').modal('show');
-                setTimeout(function () {
-                    initSelect2Modal('#modal-pengampu', '#pengampu_timkerja_id', 'Pilih Tim Kerja Pengampu...');
-                }, 200);
-            });
-        });
+        let kegId = $(this).data('id');
+        let kegNama = decodeURIComponent($(this).data('nama') || '');
+        openModalPengampu('kegiatan', kegId, kegNama);
     });
 
     $('#form-pengampu').on('submit', function (e) {
         e.preventDefault();
+        let selectedTeams = $('#pengampu_timkerja_id').val();
+        if (!selectedTeams || selectedTeams.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Perhatian',
+                text: 'Harap pilih minimal satu Tim Kerja Pengampu sebelum menyimpan.'
+            });
+            return;
+        }
+
         $.post(AppConfig.initGlobal + 'store/ikk-pengampu', $(this).serialize(), function (res) {
             if (res.status === 'success') {
                 Swal.fire({ icon: 'success', text: res.message, timer: 1500, showConfirmButton: false });
@@ -1374,6 +1420,12 @@ $(document).ready(function () {
                 Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
             }
         });
+    });
+
+    $('#modal-pengampu').on('hidden.bs.modal', function () {
+        destroySelect2('#pengampu_timkerja_id');
+        $('#pengampu_timkerja_id').empty();
+        $('#form-pengampu')[0].reset();
     });
 
     // -------------------------------------------------------------------------
@@ -1420,23 +1472,11 @@ $(document).ready(function () {
     // Tombol "Atur Pengampu" di dalam modal detail pengampu
     $('#btnAturPengampuFromDetail').on('click', function () {
         if (!currentDetailPengampuContext) return;
-        $('#modal-detail-pengampu').modal('hide');
-
         let ctx = currentDetailPengampuContext;
-        $('#pengampu_relasi_id').val(ctx.id);
-        $('#pengampu_tipe_relasi').val(ctx.tipe);
-        $('#pengampu_label_info').text(ctx.tipe === 'indikator' ? 'Indikator Kinerja:' : 'Kegiatan Operasional:');
-        $('#pengampu_kegiatan_info').text(ctx.nama);
-
-        $.post(AppConfig.initGlobal + 'fetch/ikk-assigned-pengampu', { relasi_id: ctx.id, tipe_relasi: ctx.tipe }, function (res) {
-            let assignedIds = (res.status === 'success' && Array.isArray(res.data)) ? res.data : [];
-            loadOptionsTimKerja('#pengampu_timkerja_id', assignedIds, function () {
-                $('#modal-pengampu').modal('show');
-                setTimeout(function () {
-                    initSelect2Modal('#modal-pengampu', '#pengampu_timkerja_id', 'Pilih Tim Kerja Pengampu...');
-                }, 200);
-            });
-        });
+        $('#modal-detail-pengampu').modal('hide');
+        setTimeout(function () {
+            openModalPengampu(ctx.tipe, ctx.id, ctx.nama);
+        }, 250);
     });
 
     // -------------------------------------------------------------------------

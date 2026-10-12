@@ -354,6 +354,48 @@
         color: #111827 !important;
         font-size: 0.88rem;
     }
+
+    /* Select2 inside Bootstrap 5 Modal & Multiple Dropdown Fix */
+    .select2-container {
+        z-index: 1060 !important;
+    }
+    .select2-container .select2-dropdown {
+        z-index: 1065 !important;
+        border: 1px solid #cbd5e1;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+    }
+    .select2-container--bootstrap-5 .select2-selection--multiple {
+        min-height: 38px;
+        border-color: #cbd5e1;
+    }
+    .select2-container--bootstrap-5.select2-container--focus .select2-selection--multiple {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 3px 6px;
+    }
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+        background-color: #eff6ff;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+        font-size: 0.82rem;
+        font-weight: 600;
+        border-radius: 4px;
+        padding: 2px 8px;
+        margin: 0;
+    }
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+        margin-right: 6px;
+        color: #ef4444;
+    }
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove:hover {
+        color: #b91c1c;
+    }
 </style>
 <?= $this->endSection(); ?>
 
