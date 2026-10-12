@@ -494,7 +494,7 @@
                         <i class="bi bi-check2-circle text-danger fs-5"></i>
                     </div>
                     <div class="kpi-value js-kpi-progres">0%</div>
-                    <small class="text-secondary"><span class="js-kpi-transaksi">0</span> log transaksi harian</small>
+                    <small class="text-secondary"><span class="js-kpi-ind-terisi">0</span> dari <span class="js-kpi-ind-total">18</span> indikator terisi</small>
                 </div>
             </div>
         </div>

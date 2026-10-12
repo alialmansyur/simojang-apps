@@ -58,6 +58,8 @@ $(document).ready(function () {
                 $('.js-kpi-kegiatan').text(d.total_kegiatan);
                 $('.js-kpi-transaksi').text(d.total_transaksi);
                 $('.js-kpi-progres').text(d.avg_progres + '%');
+                $('.js-kpi-ind-terisi').text(d.total_realisasi_ind !== undefined ? d.total_realisasi_ind : 0);
+                $('.js-kpi-ind-total').text(d.total_indikator || 0);
 
                 $('.js-badge-count-sasaran').text(d.total_sasaran);
                 $('.js-badge-count-indikator').text(d.total_indikator);
