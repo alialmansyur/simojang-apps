@@ -1280,9 +1280,12 @@ $(document).ready(function () {
     // -------------------------------------------------------------------------
     // 10. CRUD KEGIATAN OPERASIONAL & TIM KERJA PENGAMPU (MULTIPLE SELECT)
     // -------------------------------------------------------------------------
+    let currentKegiatanActiveVals = [];
+
     $('.btn-add-kegiatan').on('click', function () {
         $('#form-kegiatan')[0].reset();
         $('#kegiatan_key').val('');
+        currentKegiatanActiveVals = [];
         let currentFilterInd = $('#filter-kegiatan-indikator').val();
         loadOptionsIndikator('#kegiatan_indikator_id', null, currentFilterInd, function () {
             // Load tim kerja aktif (is_show = 1) untuk multiple select
@@ -1308,6 +1311,7 @@ $(document).ready(function () {
             // Ambil ID tim kerja yang sudah terdaftar untuk kegiatan ini
             $.post(AppConfig.initGlobal + 'fetch/ikk-assigned-pengampu', { relasi_id: row.id, tipe_relasi: 'kegiatan' }, function (res) {
                 let assignedIds = (res.status === 'success' && Array.isArray(res.data)) ? res.data : [];
+                currentKegiatanActiveVals = assignedIds.map(String);
                 loadOptionsTimKerja('#kegiatan_timkerja_id', assignedIds, function () {
                     $('#modal-kegiatan-title').text('Edit Kegiatan Operasional');
                     $('#modal-kegiatan').modal('show');
@@ -1317,7 +1321,18 @@ $(document).ready(function () {
         });
     });
 
+    $('#modal-kegiatan').off('shown.bs.modal.sync').on('shown.bs.modal.sync', function () {
+        let $select = $('#kegiatan_timkerja_id');
+        if (currentKegiatanActiveVals && currentKegiatanActiveVals.length > 0) {
+            let currentVal = $select.val() || [];
+            if (currentVal.length === 0 || JSON.stringify(currentVal.sort()) !== JSON.stringify([...currentKegiatanActiveVals].sort())) {
+                $select.val(currentKegiatanActiveVals).trigger('change');
+            }
+        }
+    });
+
     $('#modal-kegiatan').on('hidden.bs.modal', function () {
+        currentKegiatanActiveVals = [];
         destroySelect2('#kegiatan_timkerja_id');
         $('#kegiatan_timkerja_id').empty();
     });
@@ -1367,6 +1382,8 @@ $(document).ready(function () {
     // -------------------------------------------------------------------------
     // 11. MANAJEMEN PENUGASAN PENGAMPU CEPAT (MODAL PENGAMPU)
     // -------------------------------------------------------------------------
+    let currentPengampuActiveVals = [];
+
     function openModalPengampu(tipeRelasi, relasiId, namaRelasi) {
         $('#pengampu_relasi_id').val(relasiId);
         $('#pengampu_tipe_relasi').val(tipeRelasi);
@@ -1377,12 +1394,23 @@ $(document).ready(function () {
 
         $.post(AppConfig.initGlobal + 'fetch/ikk-assigned-pengampu', { relasi_id: relasiId, tipe_relasi: tipeRelasi }, function (res) {
             let assignedIds = (res.status === 'success' && Array.isArray(res.data)) ? res.data : [];
+            currentPengampuActiveVals = assignedIds.map(String);
             loadOptionsTimKerja('#pengampu_timkerja_id', assignedIds, function () {
                 $('#modal-pengampu').modal('show');
                 initSelect2Modal('#modal-pengampu', '#pengampu_timkerja_id', 'Pilih Tim Kerja Pengampu...', assignedIds);
             });
         });
     }
+
+    $('#modal-pengampu').off('shown.bs.modal.sync').on('shown.bs.modal.sync', function () {
+        let $select = $('#pengampu_timkerja_id');
+        if (currentPengampuActiveVals && currentPengampuActiveVals.length > 0) {
+            let currentVal = $select.val() || [];
+            if (currentVal.length === 0 || JSON.stringify(currentVal.sort()) !== JSON.stringify([...currentPengampuActiveVals].sort())) {
+                $select.val(currentPengampuActiveVals).trigger('change');
+            }
+        }
+    });
 
     $('#table-indikator').on('click', '.btn-assign-pengampu-ind', function () {
         let indId = $(this).data('id');
@@ -1423,6 +1451,7 @@ $(document).ready(function () {
     });
 
     $('#modal-pengampu').on('hidden.bs.modal', function () {
+        currentPengampuActiveVals = [];
         destroySelect2('#pengampu_timkerja_id');
         $('#pengampu_timkerja_id').empty();
         $('#form-pengampu')[0].reset();

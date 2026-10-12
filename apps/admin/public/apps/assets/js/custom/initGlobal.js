@@ -340,7 +340,7 @@ $(document).ready(function () {
         const modalEl = e.target;
         applyModalRadius(modalEl);
 
-        $(modalEl).find('.select2').each(function () {
+        $(modalEl).find('select.select2').not('.select2-hidden-accessible').each(function () {
             $(this).select2({
                 // width: '100%',
                 theme: 'bootstrap-5',
