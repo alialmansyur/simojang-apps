@@ -450,13 +450,19 @@ $routes->group('', ['filter' => ['jwtauth', 'rbac', 'serviceaccess']], function 
     // Transaksi Harian
     $routes->post('/fetch/ikk-transaksi', 'Apps\Services\IkkController::getDataTransaksi');
     $routes->post('/store/ikk-transaksi', 'Apps\Services\IkkController::storeTransaksi');
+    $routes->post('/store/ikk-transaksi-import', 'Apps\Services\IkkController::importTransaksi');
+    $routes->get('/export/sample-transaksi-ikk', 'Apps\Services\IkkController::downloadSample');
     $routes->post('/kill/ikk-transaksi', 'Apps\Services\IkkController::deleteTransaksi');
 
-    // Options
+    // Options & Helpers
     $routes->post('/fetch/ikk-options-sasaran', 'Apps\Services\IkkController::getOptionsSasaran');
     $routes->post('/fetch/ikk-options-indikator', 'Apps\Services\IkkController::getOptionsIndikator');
     $routes->post('/fetch/ikk-options-kegiatan', 'Apps\Services\IkkController::getOptionsKegiatan');
     $routes->post('/fetch/ikk-options-timkerja', 'Apps\Services\IkkController::getOptionsTimKerja');
+    $routes->post('/fetch/ikk-summary', 'Apps\Services\IkkController::getSummary');
+    $routes->post('/fetch/ikk-assigned-pengampu', 'Apps\Services\IkkController::getAssignedPengampu');
+    $routes->post('/fetch/ikk-hierarchy', 'Apps\Services\IkkController::getHierarchyTree');
+    $routes->post('/fetch/ikk-options-tahun', 'Apps\Services\IkkController::getOptionsTahun');
 
     // ----------------------------------------------------------------      
     // Layanan Persuratan
