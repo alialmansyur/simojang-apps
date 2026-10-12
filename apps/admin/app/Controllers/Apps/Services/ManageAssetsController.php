@@ -290,6 +290,10 @@ class ManageAssetsController extends BaseController
         $kondisiInput = (string) $this->request->getPost('kondisi');
         $kondisi = in_array($kondisiInput, ['Baik', 'Rusak Ringan', 'Rusak Berat'], true) ? $kondisiInput : 'Baik';
 
+        // Area
+        $areaInput = (string) $this->request->getPost('area');
+        $area = in_array($areaInput, ['Kantor Regional III BKN', 'UPT Bandung', 'UPT Serang'], true) ? $areaInput : 'Kantor Regional III BKN';
+
         // Tahun perolehan
         $rawTahun = $this->request->getPost('tahun_perolehan');
         $tahun = (!empty($rawTahun) && is_numeric($rawTahun)) ? (int) $rawTahun : null;
@@ -314,6 +318,7 @@ class ManageAssetsController extends BaseController
             'qty'             => (float) $normalizedQty,
             'foto'            => $fotoName,
             'kondisi'         => $kondisi,
+            'area'            => $area,
             'lokasi'          => trim((string) ($this->request->getPost('lokasi') ?? '')) ?: null,
             'tahun_perolehan' => $tahun,
             'nilai_perolehan' => $nilaiPerolehan,
@@ -392,6 +397,10 @@ class ManageAssetsController extends BaseController
         $kondisiInput = (string) $this->request->getPost('kondisi');
         $kondisi = in_array($kondisiInput, ['Baik', 'Rusak Ringan', 'Rusak Berat'], true) ? $kondisiInput : ($existing['kondisi'] ?? 'Baik');
 
+        // Area
+        $areaInput = (string) $this->request->getPost('area');
+        $area = in_array($areaInput, ['Kantor Regional III BKN', 'UPT Bandung', 'UPT Serang'], true) ? $areaInput : ($existing['area'] ?? 'Kantor Regional III BKN');
+
         // Tahun perolehan
         $rawTahun = $this->request->getPost('tahun_perolehan');
         $tahun = (!empty($rawTahun) && is_numeric($rawTahun)) ? (int) $rawTahun : null;
@@ -403,6 +412,7 @@ class ManageAssetsController extends BaseController
             'satuan'          => trim((string) $this->request->getPost('satuan')),
             'qty'             => (float) $normalizedQty,
             'kondisi'         => $kondisi,
+            'area'            => $area,
             'lokasi'          => trim((string) ($this->request->getPost('lokasi') ?? '')) ?: null,
             'tahun_perolehan' => $tahun,
             'nilai_perolehan' => $nilaiPerolehan,

@@ -19,6 +19,7 @@ class ManageAssetsModel extends Model
         'foto',
         'kondisi',
         'lokasi',
+        'area',
         'tahun_perolehan',
         'nilai_perolehan',
         'keterangan',
@@ -61,6 +62,7 @@ class ManageAssetsModel extends Model
                     ['data' => 'qty', 'search' => 'a.qty', 'order' => 'a.qty'],
                     ['data' => 'nilai_perolehan', 'search' => 'a.nilai_perolehan', 'order' => 'a.nilai_perolehan'],
                     ['data' => 'kondisi', 'search' => 'a.kondisi', 'order' => 'a.kondisi'],
+                    ['data' => 'area', 'search' => 'a.area', 'order' => 'a.area'],
                     ['data' => 'lokasi', 'search' => 'a.lokasi', 'order' => 'a.lokasi'],
                     ['data' => 'tahun_perolehan', 'search' => 'a.tahun_perolehan', 'order' => 'a.tahun_perolehan'],
                     ['data' => 'created_at', 'search' => 'a.created_at', 'order' => 'a.created_at'],
@@ -150,7 +152,7 @@ class ManageAssetsModel extends Model
     public function getDataDetail($categoryUid = null)
     {
         $builder = $this->db->table('data_assets a')
-            ->select('a.id, a.uid, a.category_id, a.kode, a.subcode, a.uraian, a.satuan, a.qty, a.foto, a.kondisi, a.lokasi, a.tahun_perolehan, a.nilai_perolehan, a.keterangan, a.created_at, a.updated_at')
+            ->select('a.id, a.uid, a.category_id, a.kode, a.subcode, a.uraian, a.satuan, a.qty, a.foto, a.kondisi, a.area, a.lokasi, a.tahun_perolehan, a.nilai_perolehan, a.keterangan, a.created_at, a.updated_at')
             ->join('data_asset_categories b', 'b.id = a.category_id', 'left')
             ->where('a.deleted_at IS NULL');
 

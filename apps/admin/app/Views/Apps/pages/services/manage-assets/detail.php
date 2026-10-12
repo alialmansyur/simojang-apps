@@ -223,7 +223,7 @@
                                         <th class="text-center" style="width: 45px;"><strong>No</strong></th>
                                         <th class="text-center" style="width: 55px;"><strong>Foto</strong></th>
                                         <th><strong>Kode &amp; Subcode</strong></th>
-                                        <th><strong>Uraian &amp; Lokasi</strong></th>
+                                        <th><strong>Uraian, Area &amp; Lokasi</strong></th>
                                         <th class="text-center"><strong>Satuan</strong></th>
                                         <th class="text-end"><strong>Qty</strong></th>
                                         <th class="text-end"><strong>Nilai Perolehan</strong></th>
@@ -311,6 +311,14 @@
                                         <option value="Baik" selected>Baik (Siap Pakai)</option>
                                         <option value="Rusak Ringan">Rusak Ringan (Perlu Servis)</option>
                                         <option value="Rusak Berat">Rusak Berat (Tidak Berfungsi)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label d-block fw-bold" style="font-size: 0.875rem; color: #1a202c; margin-bottom: 0.4rem;">Area Satker <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="area" id="area" required style="background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.65rem 0.9rem; font-size: 0.9rem; color: #1e293b;">
+                                        <option value="Kantor Regional III BKN" selected>Kantor Regional III BKN</option>
+                                        <option value="UPT Bandung">UPT Bandung</option>
+                                        <option value="UPT Serang">UPT Serang</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">

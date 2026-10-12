@@ -281,14 +281,17 @@ $(document).ready(function () {
                 render: function (data, type, row) {
                     let html = `<div class="fw-semibold" style="color: #0f172a;">${escapeHtml(data)}</div>`;
                     const metaParts = [];
+                    if (row.area) {
+                        metaParts.push(`<span class="badge" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-weight: 600; font-size: 0.75rem;"><i class="bi bi-geo-alt-fill me-1"></i>${escapeHtml(row.area)}</span>`);
+                    }
                     if (row.lokasi) {
-                        metaParts.push(`<i class="bi bi-geo-alt text-primary me-1"></i>${escapeHtml(row.lokasi)}`);
+                        metaParts.push(`<span class="text-secondary"><i class="bi bi-geo-alt text-primary me-1"></i>${escapeHtml(row.lokasi)}</span>`);
                     }
                     if (row.tahun_perolehan) {
-                        metaParts.push(`<i class="bi bi-calendar-event text-secondary me-1"></i>Th. ${escapeHtml(row.tahun_perolehan)}`);
+                        metaParts.push(`<span class="text-secondary"><i class="bi bi-calendar-event text-secondary me-1"></i>Th. ${escapeHtml(row.tahun_perolehan)}</span>`);
                     }
                     if (metaParts.length > 0) {
-                        html += `<small class="text-secondary d-block mt-1">${metaParts.join(' &bull; ')}</small>`;
+                        html += `<div class="d-flex flex-wrap align-items-center gap-1 mt-1" style="font-size: 0.8rem;">${metaParts.join('<span class="text-muted mx-1">&bull;</span>')}</div>`;
                     }
                     return html;
                 }
@@ -386,6 +389,7 @@ $(document).ready(function () {
         $('#satuan').val('');
         $('#nilai_perolehan').val('');
         $('#kondisi').val('Baik');
+        $('#area').val('Kantor Regional III BKN');
         removeFotoInput.value = '0';
         resetDropzone();
         $('#DataModalLabel').text('Tambah Data Asset');
@@ -433,6 +437,7 @@ $(document).ready(function () {
                     }
 
                     $('#kondisi').val(data.kondisi || 'Baik');
+                    $('#area').val(data.area || 'Kantor Regional III BKN');
                     $('#lokasi').val(data.lokasi || '');
                     $('#tahun_perolehan').val(data.tahun_perolehan || '');
                     $('#keterangan').val(data.keterangan || '');
@@ -569,6 +574,7 @@ $(document).ready(function () {
         $('#satuan').val('');
         $('#nilai_perolehan').val('');
         $('#kondisi').val('Baik');
+        $('#area').val('Kantor Regional III BKN');
         removeFotoInput.value = '0';
         resetDropzone();
         $('#btnSubmitForm').prop('disabled', false).text('Simpan Data');
