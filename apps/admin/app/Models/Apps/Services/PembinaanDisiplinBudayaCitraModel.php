@@ -217,6 +217,8 @@ class PembinaanDisiplinBudayaCitraModel extends Model
             ->select("
                 COUNT(a.id) AS total_riwayat,
                 SUM(CASE WHEN c.jenis_layanan = 'KONSULTASI' THEN 1 ELSE 0 END) AS total_konsultasi,
+                SUM(CASE WHEN c.jenis_layanan = 'ASISTENSI' THEN 1 ELSE 0 END) AS total_asistensi,
+                SUM(CASE WHEN c.jenis_layanan = 'REGULASI' THEN 1 ELSE 0 END) AS total_regulasi,
                 SUM(CASE WHEN a.source_konsultasi = 'SURAT_MASUK' THEN 1 ELSE 0 END) AS total_surat_masuk,
                 SUM(CASE WHEN a.source_konsultasi = 'ZOOM' THEN 1 ELSE 0 END) AS total_zoom,
                 SUM(CASE WHEN a.source_konsultasi = 'PPT' THEN 1 ELSE 0 END) AS total_ppt,
@@ -241,6 +243,8 @@ class PembinaanDisiplinBudayaCitraModel extends Model
         return [
             'total_riwayat' => (int) ($row['total_riwayat'] ?? 0),
             'total_konsultasi' => (int) ($row['total_konsultasi'] ?? 0),
+            'total_asistensi' => (int) ($row['total_asistensi'] ?? 0),
+            'total_regulasi' => (int) ($row['total_regulasi'] ?? 0),
             'total_surat_masuk' => (int) ($row['total_surat_masuk'] ?? 0),
             'total_ppt' => (int) ($row['total_ppt'] ?? 0),
             'total_zoom' => (int) ($row['total_zoom'] ?? 0),
@@ -271,7 +275,7 @@ class PembinaanDisiplinBudayaCitraModel extends Model
             ->join('txn_pembinaan_disiplin_budaya_citra a', $join, 'left')
             ->where('c.is_active', 1)
             ->groupBy('c.jenis_layanan')
-            ->orderBy("FIELD(c.jenis_layanan, 'ASISTENSI', 'KONSULTASI', 'PEMBINAAN')", '', false);
+            ->orderBy("FIELD(c.jenis_layanan, 'ASISTENSI', 'KONSULTASI', 'REGULASI', 'PEMBINAAN')", '', false);
 
         if ($kategoriId > 0) {
             $builder->where('c.id', $kategoriId);

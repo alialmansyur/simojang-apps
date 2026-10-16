@@ -71,6 +71,7 @@ $(document).ready(function () {
         const kategori = getSelectedCategory();
         const jenis = String(kategori?.jenis_layanan || '').toUpperCase();
         const isKonsultasi = jenis === 'KONSULTASI';
+        const isRegulasi = jenis === 'REGULASI';
 
         $('.pdbc-konsultasi-only').toggleClass('d-none', !isKonsultasi);
         $('.pdbc-kegiatan-only').toggleClass('d-none', isKonsultasi);
@@ -81,13 +82,34 @@ $(document).ready(function () {
         const $surat = $('#pdbcForm [name="no_surat_kegiatan"]');
         const $pegawai = $('#pdbcForm [name="pegawai_ids[]"]');
 
-        $source.prop('required', isKonsultasi);
-        $tempat.prop('required', !isKonsultasi);
-        $judul.prop('required', !isKonsultasi);
-        $surat.prop('required', !isKonsultasi);
-        $pegawai.prop('required', !isKonsultasi);
+        const $tempatLabel = $('#pdbcTempatLabel');
+        const $judulLabel = $('#pdbcJudulLabel');
+        const $suratLabel = $('#pdbcSuratLabel');
+        const $pegawaiLabel = $('#pdbcPegawaiLabel');
 
-        if (isKonsultasi) {
+        if (isRegulasi) {
+            $suratLabel.text('Nomor Regulasi / SK');
+            $surat.attr('placeholder', 'Nomor regulasi / surat keputusan...');
+            $judulLabel.text('Judul Regulasi');
+            $judul.attr('placeholder', 'Judul / nama regulasi...');
+            $tempatLabel.text('Tempat / Lokasi Penetapan (Opsional)');
+            $tempat.attr('placeholder', 'Lokasi penetapan/kegiatan (opsional)...');
+            $pegawaiLabel.text('Pegawai Tim Penyusun / Pengampu (Opsional)');
+
+            $source.prop('required', false);
+            $surat.prop('required', true);
+            $judul.prop('required', true);
+            $tempat.prop('required', false);
+            $pegawai.prop('required', false);
+
+            $source.val('');
+        } else if (isKonsultasi) {
+            $source.prop('required', true);
+            $tempat.prop('required', false);
+            $judul.prop('required', false);
+            $surat.prop('required', false);
+            $pegawai.prop('required', false);
+
             $tempat.val('');
             $judul.val('');
             $surat.val('');
@@ -97,6 +119,20 @@ $(document).ready(function () {
                 $pegawai.val([]);
             }
         } else {
+            $suratLabel.text('No Surat Tugas / Undangan');
+            $surat.attr('placeholder', 'Nomor surat kegiatan...');
+            $judulLabel.text('Judul Kegiatan');
+            $judul.attr('placeholder', 'Judul kegiatan...');
+            $tempatLabel.text('Tempat Kegiatan');
+            $tempat.attr('placeholder', 'Lokasi kegiatan...');
+            $pegawaiLabel.text('Pegawai Ditunjuk / Menghadiri');
+
+            $source.prop('required', false);
+            $tempat.prop('required', true);
+            $judul.prop('required', true);
+            $surat.prop('required', true);
+            $pegawai.prop('required', true);
+
             $source.val('');
         }
     }

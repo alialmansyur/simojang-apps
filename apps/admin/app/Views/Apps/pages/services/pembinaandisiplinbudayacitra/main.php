@@ -47,7 +47,7 @@
                     <div class="collapse" id="tataCaraCollapse">
                         <hr style="border-color: #f59e0b; opacity: 0.2; margin-top: 0.85rem; margin-bottom: 0.85rem;">
                         <ol class="mb-0 ps-3" style="font-size: 0.85rem; line-height: 1.7; color: #78350f;">
-                            <li><strong>Filter Periode &amp; Layanan:</strong> Tentukan <em>Pilih Bulan</em> dan filter <em>Jenis Layanan</em> (Asistensi, Konsultasi, Pembinaan) untuk memantau riwayat kegiatan.</li>
+                            <li><strong>Filter Periode &amp; Layanan:</strong> Tentukan <em>Pilih Bulan</em> dan filter <em>Jenis Layanan</em> (Asistensi, Konsultasi/Pendampingan, Regulasi) untuk memantau riwayat kegiatan.</li>
                             <li><strong>Input Kegiatan Baru:</strong> Klik tombol <strong>"Tambah Data"</strong>, lalu pilih <em>Instansi</em>, <em>Jenis Pembinaan</em>, dan tanggal pelaksanaan.</li>
                             <li><strong>Tentukan Kanal &amp; Catatan:</strong> Untuk layanan konsultasi, pilih <em>Sumber Konsultasi</em> (Surat Masuk, Zoom, PPT) dan isi ringkasan catatan.</li>
                             <li><strong>Simpan &amp; Rekapitulasi:</strong> Klik <strong>"Simpan Data"</strong> untuk memperbarui rekapitulasi pembinaan disiplin dan budaya kerja ASN.</li>
@@ -80,8 +80,8 @@
                                 <select id="pdbcJenisFilter" class="form-select form-select-sm w-auto">
                                     <option value="ALL">Semua Jenis</option>
                                     <option value="ASISTENSI">Asistensi</option>
-                                    <option value="KONSULTASI">Konsultasi</option>
-                                    <option value="PEMBINAAN">Pembinaan</option>
+                                    <option value="KONSULTASI">Konsultasi / Pendampingan</option>
+                                    <option value="REGULASI">Regulasi</option>
                                 </select>
                             </div>
                             <div class="service-ui-topbar-actions pdbc-topbar-actions">
@@ -157,20 +157,20 @@
                                         <option value="PPT">PPT</option>
                                     </select>
                                 </div>
-                                <div class="col-12 pdbc-kegiatan-only d-none">
-                                    <label class="form-label mb-1">Tempat Kegiatan</label>
-                                    <input type="text" class="form-control" name="tempat_kegiatan" placeholder="Lokasi kegiatan...">
+                                <div class="col-12 pdbc-kegiatan-only d-none" id="pdbcTempatGroup">
+                                    <label class="form-label mb-1" id="pdbcTempatLabel">Tempat Kegiatan</label>
+                                    <input type="text" class="form-control" name="tempat_kegiatan" id="pdbcTempatInput" placeholder="Lokasi kegiatan...">
                                 </div>
-                                <div class="col-12 pdbc-kegiatan-only d-none">
-                                    <label class="form-label mb-1">Judul Kegiatan</label>
-                                    <input type="text" class="form-control" name="judul_kegiatan" placeholder="Judul kegiatan...">
+                                <div class="col-12 pdbc-kegiatan-only d-none" id="pdbcJudulGroup">
+                                    <label class="form-label mb-1" id="pdbcJudulLabel">Judul Kegiatan</label>
+                                    <input type="text" class="form-control" name="judul_kegiatan" id="pdbcJudulInput" placeholder="Judul kegiatan...">
                                 </div>
-                                <div class="col-12 pdbc-kegiatan-only d-none">
-                                    <label class="form-label mb-1">No Surat Kegiatan</label>
-                                    <input type="text" class="form-control" name="no_surat_kegiatan" placeholder="Nomor surat kegiatan...">
+                                <div class="col-12 pdbc-kegiatan-only d-none" id="pdbcSuratGroup">
+                                    <label class="form-label mb-1" id="pdbcSuratLabel">No Surat Kegiatan</label>
+                                    <input type="text" class="form-control" name="no_surat_kegiatan" id="pdbcSuratInput" placeholder="Nomor surat kegiatan...">
                                 </div>
-                                <div class="col-12 pdbc-kegiatan-only d-none">
-                                    <label class="form-label mb-1">Pegawai Ditunjuk/Menghadiri</label>
+                                <div class="col-12 pdbc-kegiatan-only d-none" id="pdbcPegawaiGroup">
+                                    <label class="form-label mb-1" id="pdbcPegawaiLabel">Pegawai Ditunjuk/Menghadiri</label>
                                     <select name="pegawai_ids[]" class="form-select select-pegawai" multiple="multiple"></select>
                                 </div>
                                 <div class="col-12">

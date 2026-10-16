@@ -359,6 +359,15 @@ class PembinaanASNController extends BaseController
             }
         }
 
+        if ($jenis === 'REGULASI') {
+            if ($judul === '' || $noSurat === '') {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Nomor surat/regulasi dan judul regulasi wajib diisi.',
+                ]);
+            }
+        }
+
         $now = date('Y-m-d H:i:s');
 
         $payload = [
@@ -368,9 +377,9 @@ class PembinaanASNController extends BaseController
             'period_year' => (int) $this->request->getPost('period_year'),
             'period_date' => $this->request->getPost('period_date'),
             'source_konsultasi' => $jenis === 'KONSULTASI' ? $sourceKonsultasi : null,
-            'tempat_kegiatan' => in_array($jenis, ['ASISTENSI', 'PEMBINAAN'], true) ? $tempat : null,
-            'judul_kegiatan' => in_array($jenis, ['ASISTENSI', 'PEMBINAAN'], true) ? $judul : null,
-            'no_surat_kegiatan' => in_array($jenis, ['ASISTENSI', 'PEMBINAAN'], true) ? $noSurat : null,
+            'tempat_kegiatan' => in_array($jenis, ['ASISTENSI', 'PEMBINAAN', 'REGULASI'], true) ? ($tempat !== '' ? $tempat : null) : null,
+            'judul_kegiatan' => in_array($jenis, ['ASISTENSI', 'PEMBINAAN', 'REGULASI'], true) ? $judul : null,
+            'no_surat_kegiatan' => in_array($jenis, ['ASISTENSI', 'PEMBINAAN', 'REGULASI'], true) ? $noSurat : null,
             'catatan' => $this->request->getPost('catatan') ?: null,
             'updated_by' => $sess['username'] ?? null,
             'updated_at' => $now,
@@ -384,7 +393,7 @@ class PembinaanASNController extends BaseController
             $key = (int) $this->appsModel->storeData($payload, 'txn_pembinaan_disiplin_budaya_citra');
         }
 
-        $this->disiplinModel->syncPegawaiByTxn($key, in_array($jenis, ['ASISTENSI', 'PEMBINAAN'], true) ? $pegawaiIds : []);
+        $this->disiplinModel->syncPegawaiByTxn($key, in_array($jenis, ['ASISTENSI', 'PEMBINAAN', 'REGULASI'], true) ? $pegawaiIds : []);
 
         $this->appsModel->storeData(
             [
@@ -458,7 +467,7 @@ class PembinaanASNController extends BaseController
         $payload = [
             'code' => $code,
             'nama' => $nama,
-            'jenis_layanan' => in_array($jenis, ['ASISTENSI', 'KONSULTASI', 'PEMBINAAN'], true) ? $jenis : 'ASISTENSI',
+            'jenis_layanan' => in_array($jenis, ['ASISTENSI', 'KONSULTASI', 'PEMBINAAN', 'REGULASI'], true) ? $jenis : 'ASISTENSI',
             'deskripsi' => $this->request->getPost('deskripsi') ?: null,
             'sort_order' => (int) ($this->request->getPost('sort_order') ?? 0),
             'is_active' => (int) (($this->request->getPost('is_active') ?? 1) ? 1 : 0),
